@@ -1,0 +1,196 @@
+.container-title-up-login {
+  padding-bottom: 20px;
+}
+
+.title-up-login {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -10px;
+}
+
+.primera-palavra {
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 700;
+  color: #374151;
+}
+
+.segunda-palavra {
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 700;
+  color: #2f4892;
+}
+
+.frase-title-up-login {
+  color: #6b7280;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #18c2ad 0%, #1aa5b6 40%, #2f80ed 100%);
+}
+
+.container-login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 40px 32px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
+}
+
+.container-login h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.label-title {
+  font-weight: 400;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.login-form .ant-input,
+.login-form .ant-input-affix-wrapper {
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.login-form .ant-input {
+  padding: 0 12px;
+}
+
+.login-form .ant-input-affix-wrapper {
+  padding: 0 12px;
+}
+
+.login-form .ant-input-affix-wrapper .ant-input {
+  height: 100%;
+  padding: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+.login-form .ant-input:focus,
+.login-form .ant-input-affix-wrapper-focused {
+  border-color: #1677ff !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+.login-form .ant-input::placeholder {
+  color: #94a3b8;
+}
+
+.login-form .ant-form-item {
+  margin-bottom: 12px; 
+}
+
+.login-form .ant-form-item-label > label {
+  margin: 0 0 4px 0;
+  font-weight: 400;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.login-form .ant-form-item .ant-input,
+.login-form .ant-form-item .ant-input-affix-wrapper {
+  margin-top: 0;
+  background-color: white;
+}
+
+.login-button,
+.criar-conta-button {
+  height: 44px; 
+  border-radius: 8px !important;
+  font-weight: 700;
+}
+
+.login-button {
+  background-color: #14b8a6 !important;
+  color: #fff !important;
+  border: none !important;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:disabled {
+    background-color: #94a3b8 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+.criar-conta-button {
+  background-color: #c3c3c3 !important;
+  color: #fff !important;
+  border: none !important;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: #a7a7a7 !important;
+  }
+}
+
+.container-esqueceu-senha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+}
+
+.container-esqueceu-senha p {
+  color: #0f172a;
+  margin: 0;
+}
+
+.esqueceu-senha-button {
+  background: none !important;
+  border: none !important;
+  color: #0ea5e9 !important;
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 0 !important;
+  margin-left: 1%;
+
+  &:hover {
+    text-decoration: underline !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+

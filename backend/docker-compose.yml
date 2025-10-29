@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: medihub
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=medhub
+      - MYSQL_USER=developmentMedHub
+      - MYSQL_PASSWORD=dev123
+      - CHAVE_CRIPTOGRAFIA=NtYbkJfxfFqDbEISUnDUOBWS/RErE1izB3gLki0+JsQ=
+
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public_html:/var/www/html
+
+  mysql:
+    image: mysql:8.0
+    container_name: medhub_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: tads2023!
+      MYSQL_DATABASE: medhub
+      MYSQL_USER: developmentMedHub
+      MYSQL_PASSWORD: dev123
+    ports:
+      - "53306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

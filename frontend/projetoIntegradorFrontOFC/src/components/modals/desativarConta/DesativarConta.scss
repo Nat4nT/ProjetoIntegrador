@@ -1,0 +1,52 @@
+.desativar-conta-modal {
+  .ant-modal-content {
+    background: #fff;
+  }
+
+  .dc-header {
+    text-align: center;
+    margin-bottom: 16px;
+
+    h2 {
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      color: #64748b;
+      line-height: 1.4;
+
+      b {
+        color: #0f172a;
+        font-weight: 700;
+      }
+    }
+
+    p + p {
+      margin-top: 8px;
+    }
+  }
+
+  .dc-buttons {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+
+    .ant-btn-primary.ant-btn-dangerous {
+      background: #ef4444;
+      border: none;
+
+      &:hover {
+        background: #dc2626 !important;
+      }
+    }
+
+    .ant-btn {
+      font-weight: 600;
+    }
+  }
+}

@@ -1,0 +1,87 @@
+.container-button-perfil {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.container-salvar-alterar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.desativar-conta-senha-button {
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+  padding: 12px;
+  background-color: red;
+  font-weight: 700;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(165, 0, 0) !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.salvar-dados-button {
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  border-radius: 6px;
+  background: white;
+  border-color: #e2e8f0;
+
+  &::placeholder {
+    color: #94a3b878;
+  }
+}
+
+.alterar-senha-button {
+  cursor: pointer;
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.ant-form-item {
+  margin-bottom: 1px !important;
+}
