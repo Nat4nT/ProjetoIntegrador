@@ -20,11 +20,11 @@ return
             ],
             'development' => [
                 'adapter' => 'mysql',
-                'host' => 'mysql',
+                'host' => 'mysql',       // nome do serviço Docker
                 'name' => 'medhub',
                 'user' => 'developmentMedHub',
                 'pass' => 'dev123',
-                'port' => '3306',
+                'port' => '3306',        // porta interna do MySQL no container
                 'charset' => 'utf8mb4'
             ],
             'testing' => [

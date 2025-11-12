@@ -21,7 +21,19 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// adiciona Authorization automaticamente
+// Trata FormData
+api.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    if (config.headers) {
+      delete (config.headers as any)["Content-Type"];
+      delete (config.headers as any)["content-type"];
+    }
+    config.transformRequest = [(data) => data];
+  }
+  return config;
+});
+
+// Adiciona Authorization automaticamente
 api.interceptors.request.use((config) => {
   const token = getToken();
   if (token) {
@@ -33,13 +45,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Interceptor de resposta para tratar 401
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
+
     if (status === 401) {
       clearToken();
+
+      // evita loop se já estiver na tela de login
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
     }
+
     return Promise.reject(error);
   }
 );

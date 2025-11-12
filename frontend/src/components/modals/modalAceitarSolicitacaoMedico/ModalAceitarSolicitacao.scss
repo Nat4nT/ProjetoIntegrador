@@ -1,0 +1,77 @@
+.pedido-acesso-modal {
+  .ant-modal-content {
+    background-color: #ffffff;
+  }
+
+  .pa-header {
+    margin-bottom: 16px;
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+      text-align: left;
+    }
+  }
+
+  .pa-content {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .pa-avatar {
+    flex-shrink: 0;
+  }
+
+  .pa-info {
+    p {
+      margin: 0 0 4px;
+      font-size: 14px;
+      color: #111827;
+    }
+  }
+
+  .pa-note {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 8px 0 20px;
+  }
+
+  .pa-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    .pa-btn-recusar {
+      height: 38px;
+    }
+
+    .pa-btn-permitir {
+      width: 138px !important;
+      height: 38px !important;
+      background-color: #14b8a6;
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background-color: #109e93 !important;
+      }
+
+      &:focus,
+      &:focus-visible,
+      &:active {
+        outline: none;
+        box-shadow: none;
+        border: none;
+      }
+    }
+  }
+}

@@ -66,7 +66,7 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
         ),
         'A' => 
         array (
-            'App\\' => 4,
+            'Api\\' => 4,
         ),
     );
 
@@ -185,9 +185,9 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
         array (
             0 => __DIR__ . '/..' . '/cakephp/chronos/src',
         ),
-        'App\\' => 
+        'Api\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app',
+            0 => __DIR__ . '/../..' . '/api',
         ),
     );
 

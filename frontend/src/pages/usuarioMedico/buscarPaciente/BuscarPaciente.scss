@@ -1,0 +1,84 @@
+.container-buscar-paciente {
+  .buscar-paciente-row {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .cpf-field {
+    position: relative;
+  }
+
+  // evita empurrar o botão para baixo
+  .cpf-field .ant-form-item {
+    margin-bottom: 0;
+  }
+
+  // posiciona o erro abaixo do input sem alterar a altura do container
+  .cpf-field .ant-form-item-explain {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .buscar-btn-item {
+    margin-bottom: 0;
+  }
+}
+
+/* Botão Buscar */
+.button-buscar-paciente {
+  width: 75px !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.button-solicitar-acesso {
+  width: 120px !important;
+  height: 32px !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+/* Input CPF */
+.input-buscar-paciente {
+  width: 80% !important;
+}

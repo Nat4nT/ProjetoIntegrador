@@ -25,7 +25,10 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/health-and-care.png";
 
 //constants
-import { items } from "../../utils/Constants";
+import {
+  itemsUsuarioMedico,
+  itemsUsuarioPaciente,
+} from "../../utils/Constants";
 
 import "./AppLayout.scss";
 
@@ -42,6 +45,7 @@ export default function AppLayout() {
 
   const isLogged = Boolean(localStorage.getItem("token"));
   const userName = localStorage.getItem("primeiroNomeUsuario") || "Usuário";
+  const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   // FUNÇÃO PARA ABRIR MENU LATERAL NO CLICK E TIRAR A AÇÃO DE ABRIR/FECHAR AO CLICAR EM ALGUM ELEMENTO DO MENU
   const abrirMenuLateral = (e: any) => {
@@ -73,6 +77,10 @@ export default function AppLayout() {
     navigate("/home");
   };
 
+  const navegacaoMenuLaretal = (key: any) => {
+    navigate(key as string);
+  };
+
   return (
     <Layout style={{ minHeight: "100vh", background: "#f5f7fa" }}>
       <Sider
@@ -102,9 +110,11 @@ export default function AppLayout() {
         <Menu
           theme="dark"
           mode="inline"
-          items={items}
+          items={
+            tipoUsuario === "medico" ? itemsUsuarioMedico : itemsUsuarioPaciente
+          }
           selectedKeys={[location.pathname]}
-          onClick={({ key }) => navigate(key as string)}
+          onClick={({ key }) => navegacaoMenuLaretal(key)}
         />
       </Sider>
 

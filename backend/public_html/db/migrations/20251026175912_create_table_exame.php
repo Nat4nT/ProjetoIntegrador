@@ -20,7 +20,10 @@ final class CreateTableExame extends AbstractMigration
             ->addColumn('arquivo_exame', 'string', ['limit' => 500])
             ->addColumn('nome_lab', 'string', ['limit' => 100])
             ->addTimestamps('data_criacao', 'data_atualizacao')
-            ->addForeignKey('usuario_id', 'usuario', 'usuario_id')
+            ->addForeignKey('usuario_id', 'usuario', 'usuario_id', [
+                'delete' => 'CASCADE',
+                'update' => 'CASCADE'
+            ])
             ->create();
     }
 }

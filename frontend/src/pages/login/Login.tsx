@@ -14,8 +14,11 @@ import CadastroModal from "../../components/modals/cadastro/ModalCadastro";
 import RecuperarSenha from "../../components/modals/recuperarSenha/RecuperarSenha";
 
 import "antd/dist/reset.css";
-import "./Login.scss";
+
+//validações
 import { showMessage } from "../../components/messageHelper/ShowMessage";
+
+import "./Login.scss";
 
 function Login() {
   const [userLogin, setUserLogin] = useState("");
@@ -26,6 +29,28 @@ function Login() {
   const [isCadastroOpen, setIsCadastroOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  // FUNÇÃO PARA PEGAR TIPO DO USUÁRIO NO TOKEN
+  function decodeJwt(token: string): any | null {
+    try {
+      const [, payloadBase64] = token.split(".");
+
+      if (!payloadBase64) return null;
+
+      // Ajusta Base64URL para Base64 normal
+      const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = base64.padEnd(
+        base64.length + ((4 - (base64.length % 4)) % 4),
+        "="
+      );
+
+      const payloadJson = atob(padded);
+      return JSON.parse(payloadJson);
+    } catch (error) {
+      console.error("Erro ao decodificar JWT:", error);
+      return null;
+    }
+  }
 
   // FUNÇÃO PARA LOGAR
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,11 +74,22 @@ function Login() {
       });
 
       if (response.data?.token) {
+        const token = response.data.token;
+
+        const claims = decodeJwt(token);
+        const tipoUsuario = claims?.tipo_usuario; 
+
         const primeiroNome = response.data.firstname;
         const ultimoNome = response.data.lastname;
-        localStorage.setItem("token", response.data.token);
+
+        localStorage.setItem("token", token);
         localStorage.setItem("primeiroNomeUsuario", primeiroNome);
         localStorage.setItem("ultimoNomeUsuario", ultimoNome);
+
+        if (tipoUsuario) {
+          localStorage.setItem("tipo_usuario", tipoUsuario);
+        }
+
         showMessage("Login realizado com sucesso!", "success");
         navigate("/home", { replace: true });
       } else {

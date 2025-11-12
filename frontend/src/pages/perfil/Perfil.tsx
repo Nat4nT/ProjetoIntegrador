@@ -26,6 +26,7 @@ import {
   dadosUsuario,
   editarUsuario,
 } from "../../services/apiInterna/FluxoIdentificacao";
+import { getAddressByCep } from "../../services/apiExterna/viaCep";
 
 //utils
 import {
@@ -46,15 +47,18 @@ import {
   SUG_MEDICACAO,
 } from "../../utils/Constants";
 
-import "./Perfil.scss";
+//validações
 import { showMessage } from "../../components/messageHelper/ShowMessage";
-import { getAddressByCep } from "../../services/apiExterna/viaCep";
 import {
   isValidCPF,
   isValidPhoneBR,
   parseMaybeJsonArray,
 } from "../../utils/Utilidades";
+
+//modals
 import DesativarContaModal from "../../components/modals/desativarConta/DesativarConta";
+
+import "./Perfil.scss";
 
 export default function Perfil() {
   const [form] = Form.useForm();
@@ -70,6 +74,7 @@ export default function Perfil() {
 
   const primeiroNomeUsuario = localStorage.getItem("primeiroNomeUsuario");
   const ultimoNomeUsuario = localStorage.getItem("ultimoNomeUsuario");
+  const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   const { Title, Paragraph } = Typography;
   const { TextArea } = Input;
@@ -91,8 +96,8 @@ export default function Perfil() {
         estado: values.estado ?? "",
       };
 
-      const payload = {
-        tipo_usuario: "paciente",
+      const payload: any = {
+        tipo_usuario: tipoUsuario,
         primeiro_nome: values.nome?.trim() ?? null,
         ultimo_nome: values.sobrenome?.trim() ?? null,
         data_nascimento: values.nascimento
@@ -117,6 +122,12 @@ export default function Perfil() {
           values.deficiencias ?? values.desc_deficiencia ?? null,
         endereco,
       };
+
+      if (tipoUsuario === "medico") {
+        payload.crm = values.crm;
+        payload.estado_atuacao = values.estado_atuacao;
+        payload.especialidade = values.especialidade;
+      }
 
       await editarUsuario(payload);
       showMessage("Dados salvos com sucesso!", "success");
@@ -180,6 +191,9 @@ export default function Perfil() {
           nascimento: user.data_nascimento ? dayjs(user.data_nascimento) : null,
           celular: maskPhoneBR(user.telefone),
           email: user.email,
+          crm: user.crm ?? null,
+          estado_atuacao: user.estado_atuacao ?? null,
+          especialidade: user.especialidade ?? null,
           cpf: maskCPF(user.cpf),
           genero: user.genero != null ? Number(user.genero) : undefined,
           tipoSanguineo: user.tipo_sanguineo,
@@ -208,7 +222,6 @@ export default function Perfil() {
 
   return (
     <Space direction="vertical" size={16} style={{ width: "100%" }}>
-      {/* Cabeçalho do perfil */}
       <Card styles={{ body: { padding: 20 } }}>
         <Flex align="center" gap={30} wrap="wrap">
           <div style={{ position: "relative", width: 96, height: 96 }}>
@@ -256,7 +269,6 @@ export default function Perfil() {
         </Flex>
       </Card>
 
-      {/* Formulário */}
       <Card
         styles={{ body: { padding: 20, overflow: "hidden" } }}
         style={{ borderRadius: 12 }}
@@ -350,7 +362,7 @@ export default function Perfil() {
                     name="email"
                     rules={[{ type: "email", required: true }]}
                   >
-                    <Input placeholder="email@exemplo.com" />
+                    <Input placeholder="email@exemplo.com" disabled={true} />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={6}>
@@ -378,7 +390,11 @@ export default function Perfil() {
                       },
                     ]}
                   >
-                    <Input placeholder="000.000.000-00" maxLength={14} />
+                    <Input
+                      placeholder="000.000.000-00"
+                      maxLength={14}
+                      disabled={true}
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={6}>
@@ -435,145 +451,226 @@ export default function Perfil() {
                     <Select options={toOptions(ESTADOS_BR)} />
                   </Form.Item>
                 </Col>
+                {tipoUsuario === "medico" && (
+                  <>
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item
+                        label="CRM"
+                        name="crm"
+                        rules={[{ required: true, message: "Informe seu CRM" }]}
+                      >
+                        <Input placeholder="Digite seu CRM" />
+                      </Form.Item>
+                    </Col>
+
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item
+                        label="Estado de atuação"
+                        name="estado_atuacao"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Selecione o estado de atuação",
+                          },
+                        ]}
+                      >
+                        <Select placeholder="Selecione a UF">
+                          <Select.Option value="AC">AC</Select.Option>
+                          <Select.Option value="AL">AL</Select.Option>
+                          <Select.Option value="AP">AP</Select.Option>
+                          <Select.Option value="AM">AM</Select.Option>
+                          <Select.Option value="BA">BA</Select.Option>
+                          <Select.Option value="CE">CE</Select.Option>
+                          <Select.Option value="DF">DF</Select.Option>
+                          <Select.Option value="ES">ES</Select.Option>
+                          <Select.Option value="GO">GO</Select.Option>
+                          <Select.Option value="MA">MA</Select.Option>
+                          <Select.Option value="MT">MT</Select.Option>
+                          <Select.Option value="MS">MS</Select.Option>
+                          <Select.Option value="MG">MG</Select.Option>
+                          <Select.Option value="PA">PA</Select.Option>
+                          <Select.Option value="PB">PB</Select.Option>
+                          <Select.Option value="PR">PR</Select.Option>
+                          <Select.Option value="PE">PE</Select.Option>
+                          <Select.Option value="PI">PI</Select.Option>
+                          <Select.Option value="RJ">RJ</Select.Option>
+                          <Select.Option value="RN">RN</Select.Option>
+                          <Select.Option value="RS">RS</Select.Option>
+                          <Select.Option value="RO">RO</Select.Option>
+                          <Select.Option value="RR">RR</Select.Option>
+                          <Select.Option value="SC">SC</Select.Option>
+                          <Select.Option value="SP">SP</Select.Option>
+                          <Select.Option value="SE">SE</Select.Option>
+                          <Select.Option value="TO">TO</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+
+                    <Col xs={24} sm={12} md={8}>
+                      <Form.Item
+                        label="Especialidade médica"
+                        name="especialidade"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Informe a especialidade médica",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Digite para buscar ou adicionar" />
+                      </Form.Item>
+                    </Col>
+                  </>
+                )}
               </Row>
             </Col>
 
             {/* DADOS OPCIONAIS */}
-            <Col xs={24} lg={10}>
-              <Title level={4} style={{ marginBottom: 12 }}>
-                Dados opcionais
-              </Title>
+            {tipoUsuario === "medico" ? (
+              ""
+            ) : (
+              <Col xs={24} lg={10}>
+                <Title level={4} style={{ marginBottom: 12 }}>
+                  Dados opcionais
+                </Title>
 
-              <Row gutter={[16, 16]}>
-                <Col xs={24}>
-                  <Form.Item
-                    label="Doenças já diagnosticadas"
-                    name="doencas"
-                    normalize={(arr) =>
-                      Array.from(new Set((arr ?? []).map((s: any) => s.trim())))
-                    }
-                  >
-                    <Select
-                      mode="tags"
-                      placeholder="Ex: Diabetes tipo 2, Hipertensão"
-                      tokenSeparators={[","]}
-                      showSearch
-                      optionFilterProp="label"
-                      options={toOptions(SUG_DOENCAS)}
-                      filterOption={(input, option) =>
-                        (option?.label as string)
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
+                <Row gutter={[16, 16]}>
+                  <Col xs={24}>
+                    <Form.Item
+                      label="Doenças já diagnosticadas"
+                      name="doencas"
+                      normalize={(arr) =>
+                        Array.from(
+                          new Set((arr ?? []).map((s: any) => s.trim()))
+                        )
                       }
-                      maxTagCount="responsive"
-                      allowClear
-                    />
-                  </Form.Item>
-                </Col>
+                    >
+                      <Select
+                        mode="tags"
+                        placeholder="Ex: Diabetes tipo 2, Hipertensão"
+                        tokenSeparators={[","]}
+                        showSearch
+                        optionFilterProp="label"
+                        options={toOptions(SUG_DOENCAS)}
+                        filterOption={(input, option) =>
+                          (option?.label as string)
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        maxTagCount="responsive"
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Col>
 
-                <Col xs={24}>
-                  <Form.Item
-                    label="Alergias"
-                    name="alergias"
-                    normalize={(arr) =>
-                      Array.from(new Set((arr ?? []).map((s: any) => s.trim())))
-                    }
-                  >
-                    <Select
-                      mode="tags"
-                      placeholder="Ex: Amendoim, Dipirona"
-                      tokenSeparators={[","]}
-                      showSearch
-                      optionFilterProp="label"
-                      options={toOptions(SUG_ALERGIAS)}
-                      filterOption={(input, option) =>
-                        (option?.label as string)
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
+                  <Col xs={24}>
+                    <Form.Item
+                      label="Alergias"
+                      name="alergias"
+                      normalize={(arr) =>
+                        Array.from(
+                          new Set((arr ?? []).map((s: any) => s.trim()))
+                        )
                       }
-                      maxTagCount="responsive"
-                      allowClear
-                    />
-                  </Form.Item>
-                </Col>
+                    >
+                      <Select
+                        mode="tags"
+                        placeholder="Ex: Amendoim, Dipirona"
+                        tokenSeparators={[","]}
+                        showSearch
+                        optionFilterProp="label"
+                        options={toOptions(SUG_ALERGIAS)}
+                        filterOption={(input, option) =>
+                          (option?.label as string)
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        maxTagCount="responsive"
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Col>
 
-                <Col xs={24}>
-                  <Form.Item
-                    label="Medicação"
-                    name="medicacao"
-                    normalize={(arr) =>
-                      Array.from(new Set((arr ?? []).map((s: any) => s.trim())))
-                    }
-                  >
-                    <Select
-                      mode="tags"
-                      placeholder="Ex: Losartana 50mg, uso contínuo"
-                      tokenSeparators={[","]}
-                      showSearch
-                      optionFilterProp="label"
-                      options={toOptions(SUG_MEDICACAO)}
-                      filterOption={(input, option) =>
-                        (option?.label as string)
-                          .toLowerCase()
-                          .includes(input.toLowerCase())
+                  <Col xs={24}>
+                    <Form.Item
+                      label="Medicação"
+                      name="medicacao"
+                      normalize={(arr) =>
+                        Array.from(
+                          new Set((arr ?? []).map((s: any) => s.trim()))
+                        )
                       }
-                      maxTagCount="responsive"
-                      allowClear
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Form.Item
-                    label="Altura (m)"
-                    name="altura"
-                    rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) return Promise.resolve();
-                          const num = parseFloat(value);
-                          if (num < 0.5 || num > 2.5)
-                            return Promise.reject(
-                              "Informe uma altura entre 0.50 e 2.50 m"
-                            );
-                          return Promise.resolve();
+                    >
+                      <Select
+                        mode="tags"
+                        placeholder="Ex: Losartana 50mg, uso contínuo"
+                        tokenSeparators={[","]}
+                        showSearch
+                        optionFilterProp="label"
+                        options={toOptions(SUG_MEDICACAO)}
+                        filterOption={(input, option) =>
+                          (option?.label as string)
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        maxTagCount="responsive"
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    <Form.Item
+                      label="Altura (m)"
+                      name="altura"
+                      rules={[
+                        {
+                          validator: (_, value) => {
+                            if (!value) return Promise.resolve();
+                            const num = parseFloat(value);
+                            if (num < 0.5 || num > 2.5)
+                              return Promise.reject(
+                                "Informe uma altura entre 0.50 e 2.50 m"
+                              );
+                            return Promise.resolve();
+                          },
                         },
-                      },
-                    ]}
-                    getValueFromEvent={(e) => maskAltura(e.target.value)}
-                  >
-                    <Input placeholder="Ex.: 1.75" inputMode="numeric" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Form.Item label="Peso (kg)" name="peso">
-                    <Input placeholder="Ex.: 70" />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Form.Item label="Tipo sanguíneo" name="tipoSanguineo">
-                    <Select
-                      options={TIPOS_SANGUINEOS.map((t) => ({
-                        label: t,
-                        value: t,
-                      }))}
-                      placeholder="Ex.: O+"
-                    />
-                  </Form.Item>
-                </Col>
+                      ]}
+                      getValueFromEvent={(e) => maskAltura(e.target.value)}
+                    >
+                      <Input placeholder="Ex.: 1.75" inputMode="numeric" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    <Form.Item label="Peso (kg)" name="peso">
+                      <Input placeholder="Ex.: 70" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={8}>
+                    <Form.Item label="Tipo sanguíneo" name="tipoSanguineo">
+                      <Select
+                        options={TIPOS_SANGUINEOS.map((t) => ({
+                          label: t,
+                          value: t,
+                        }))}
+                        placeholder="Ex.: O+"
+                      />
+                    </Form.Item>
+                  </Col>
 
-                <Col xs={24}>
-                  <Form.Item
-                    label="Descrição de deficiências"
-                    name="deficiencias"
-                  >
-                    <TextArea
-                      placeholder="Ex: Deficiência visual parcial, mobilidade reduzida"
-                      autoSize={{ minRows: 3, maxRows: 5 }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Col>
+                  <Col xs={24}>
+                    <Form.Item
+                      label="Descrição de deficiências"
+                      name="deficiencias"
+                    >
+                      <TextArea
+                        placeholder="Ex: Deficiência visual parcial, mobilidade reduzida"
+                        autoSize={{ minRows: 3, maxRows: 5 }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Col>
+            )}
           </Row>
           <div className="container-button-perfil">
             <div className="container-salvar-alterar">

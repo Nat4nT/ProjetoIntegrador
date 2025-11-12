@@ -59,7 +59,7 @@ export default function DesativarContaModal({
         },
       }}
     >
-      <div className="dc-header">
+      <div className="dc-header-desativar-conta">
         <h2>Desativar conta</h2>
         <p>
           Tem certeza de que deseja desativar sua conta?
@@ -70,7 +70,7 @@ export default function DesativarContaModal({
         <p>Esta ação é irreversível.</p>
       </div>
 
-      <div className="dc-buttons">
+      <div className="dc-buttons-desativar-conta">
         <Button
           danger
           type="primary"
@@ -82,7 +82,7 @@ export default function DesativarContaModal({
           Confirmar desativação
         </Button>
 
-        <Button size="large" block onClick={onClose} style={{ marginTop: 12 }}>
+        <Button size="large" block onClick={onClose}>
           Cancelar
         </Button>
       </div>

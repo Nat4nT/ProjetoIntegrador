@@ -20,7 +20,7 @@ import dayjs from "dayjs";
 import { getAddressByCep } from "../../../services/apiExterna/viaCep";
 import { cadastrarUsuario } from "../../../services/apiInterna/FluxoIdentificacao";
 
-//utils
+//validações
 import {
   maskCEP,
   maskCPF,
@@ -28,10 +28,13 @@ import {
   onlyDigits,
   padraoDeSenha,
 } from "../../../utils/Masks";
+import { isValidCPF } from "../../../utils/Utilidades";
+import { showMessage } from "../../messageHelper/ShowMessage";
+
+//modals
+import ModalTermoDeUso from "../termoDeUso/TermoDeUso";
 
 import "./ModalCadastro.scss";
-import { showMessage } from "../../messageHelper/ShowMessage";
-import { isValidCPF } from "../../../utils/Utilidades";
 
 type CadastroModalProps = {
   open: boolean;
@@ -46,13 +49,21 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
   const [agree, setAgree] = useState(false);
   const [loadingCep, setLoadingCep] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openModalTermoDeUso, setOpenModalTermoDeUso] = useState(false);
 
   const [cepError, setCepError] = useState<string>();
-  const [tipoUsuario, setTipoUsuario] = useState<string>();
+  const [tipoUsuario, setTipoUsuario] = useState<"paciente" | "medico">(
+    "paciente"
+  );
+  const isMedico = tipoUsuario === "medico";
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const generoMap: Record<string, number> = { m: 1, f: 2, o: 3, n: 4 };
+
+  const closeModalTermoDeUso = () => {
+    setOpenModalTermoDeUso(false);
+  };
 
   // FUNÇÃO PARA BUSCAR ENDEREÇO DO CEP
   const handleCepChange = (raw: string) => {
@@ -105,7 +116,7 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
       return;
     }
 
-    const payload = {
+    const payload: any = {
       tipo_usuario: tipoUsuario,
       primeiro_nome: values.nome?.trim(),
       ultimo_nome: values.sobrenome?.trim(),
@@ -118,13 +129,6 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
       data_nascimento: values.nascimento
         ? dayjs(values.nascimento).format("YYYY-MM-DD")
         : undefined,
-      tipo_sanguineo: values.tipo_sanguineo,
-      peso: values.peso,
-      altura: values.altura,
-      desc_deficiencia: values.desc_deficiencia,
-      alergias: values.alergias,
-      doencas_diagnosticadas: values.doencas_diagnosticadas,
-      imagem_perfil: values.imagem_perfil,
       endereco: {
         rua: values.logradouro,
         bairro: values.bairro,
@@ -135,6 +139,12 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
         complemento: values.complemento,
       },
     };
+
+    if (isMedico) {
+      payload.crm = values.crm;
+      payload.estado_atuacao = values.estado_atuacao;
+      payload.especialidade = values.especialidade;
+    }
 
     try {
       setLoading(true);
@@ -155,11 +165,12 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
       afterClose={() => form.resetFields()}
       footer={null}
       centered
-      width={890}
+      width={1000}
       title={null}
       rootClassName="cadastro-modal"
-      styles={{ content: { borderRadius: 14, padding: 24 } }}
+      styles={{ content: { borderRadius: 14 } }}
       maskClosable={false}
+      destroyOnHidden
     >
       <div className="cad-header">
         <h2>Cadastro</h2>
@@ -174,6 +185,10 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
         </div>
       </div>
 
+      <ModalTermoDeUso
+        onClose={closeModalTermoDeUso}
+        open={openModalTermoDeUso}
+      />
       <Form
         form={form}
         layout="vertical"
@@ -454,6 +469,77 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
               </Select>
             </Form.Item>
           </Col>
+          {isMedico && (
+            <>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="CRM"
+                  name="crm"
+                  rules={[{ required: true, message: "Informe seu CRM" }]}
+                >
+                  <Input placeholder="Digite seu CRM" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Estado de atuação"
+                  name="estado_atuacao"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Selecione o estado de atuação",
+                    },
+                  ]}
+                >
+                  <Select placeholder="Selecione a UF">
+                    <Select.Option value="AC">AC</Select.Option>
+                    <Select.Option value="AL">AL</Select.Option>
+                    <Select.Option value="AP">AP</Select.Option>
+                    <Select.Option value="AM">AM</Select.Option>
+                    <Select.Option value="BA">BA</Select.Option>
+                    <Select.Option value="CE">CE</Select.Option>
+                    <Select.Option value="DF">DF</Select.Option>
+                    <Select.Option value="ES">ES</Select.Option>
+                    <Select.Option value="GO">GO</Select.Option>
+                    <Select.Option value="MA">MA</Select.Option>
+                    <Select.Option value="MT">MT</Select.Option>
+                    <Select.Option value="MS">MS</Select.Option>
+                    <Select.Option value="MG">MG</Select.Option>
+                    <Select.Option value="PA">PA</Select.Option>
+                    <Select.Option value="PB">PB</Select.Option>
+                    <Select.Option value="PR">PR</Select.Option>
+                    <Select.Option value="PE">PE</Select.Option>
+                    <Select.Option value="PI">PI</Select.Option>
+                    <Select.Option value="RJ">RJ</Select.Option>
+                    <Select.Option value="RN">RN</Select.Option>
+                    <Select.Option value="RS">RS</Select.Option>
+                    <Select.Option value="RO">RO</Select.Option>
+                    <Select.Option value="RR">RR</Select.Option>
+                    <Select.Option value="SC">SC</Select.Option>
+                    <Select.Option value="SP">SP</Select.Option>
+                    <Select.Option value="SE">SE</Select.Option>
+                    <Select.Option value="TO">TO</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Especialidade médica"
+                  name="especialidade"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Informe a especialidade médica",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Digite para buscar ou adicionar" />
+                </Form.Item>
+              </Col>
+            </>
+          )}
         </Row>
 
         <p className="cad-note" style={{ marginTop: 12 }}>
@@ -467,7 +553,9 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
             onChange={(e) => setAgree(e.target.checked)}
           >
             Declaro que li e aceito o{" "}
-            <a href="#">Termo de uso e a Política de privacidade</a>
+            <a href="#" onClick={() => setOpenModalTermoDeUso(true)}>
+              Termo de uso e a Política de privacidade
+            </a>
           </Checkbox>
         </div>
 

@@ -36,3 +36,21 @@ npm run dev
 - O Vite exibirá uma URL local (ex.: `http://localhost:5173`). Acesse no navegador.
 
 
+### PARA SUBIR O DOCKER DO BACKEND
+
+#### (opcional) derruba e zera os volumes do MySQL
+docker compose down -v
+
+#### sobe de novo
+docker compose up -d --build
+
+# dentro do container app
+docker exec -it medihub bash
+
+#### migra e semeia com config explícita
+```bash
+php vendor/bin/phinx migrate -e development --configuration=/var/www/html/phinx.php -vvv
+php vendor/bin/phinx seed:run -e development --configuration=/var/www/html/phinx.php -vvv
+```
+
+

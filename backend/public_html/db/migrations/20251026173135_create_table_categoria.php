@@ -13,9 +13,10 @@ final class CreateTableCategoria extends AbstractMigration
         if ($this->hasTable($tableName)) {
             $this->table($tableName)->drop()->save();
         }
+        
         $table = $this->table($tableName,['id'=>'categoria_id']);
         $table->addColumn('nome','string',['limit'=> 255,'null'=> false])
-        ->addColumn('usuario_id','integer',['limit'=> 11,'signed'=> false])
+        ->addColumn('usuario_id','integer',['limit'=> 11,'signed'=> false,'null'=> true])
         ->addColumn('sis_cat','boolean',['default'=>0])
         ->addTimestamps('data_criacao', 'data_atualizacao')
         ->create();

@@ -1,6 +1,49 @@
 .cadastro-modal {
+  padding-top: 10px;
   .ant-modal-content {
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .ant-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: calc(24px + env(safe-area-inset-right));
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(140, 140, 140, 0.6);
+      border-radius: 10px;
+      min-height: 40px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(140, 140, 140, 0.9);
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      height: 12px;
+      display: block;
+      background: transparent;
+    }
+  }
+
+  .ant-modal-body {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(140, 140, 140, 0.6) transparent;
   }
 
   .cad-header {
@@ -29,50 +72,8 @@
     }
   }
 
-  .cad-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    label {
-      font-weight: 600;
-      color: #0f172a;
-      font-size: 14px;
-
-      .req {
-        color: #ef4444;
-        margin-left: 2px;
-      }
-    }
-
-    .ant-input,
-    .ant-select-selector,
-    .ant-picker {
-      height: 36px;
-      border-radius: 6px;
-      background: white;
-      border-color: #e2e8f0;
-
-      &::placeholder {
-        color: #9ca3af;
-      }
-    }
-
-    .ant-input:focus,
-    .ant-select-focused .ant-select-selector,
-    .ant-picker-focused,
-    .ant-input-affix-wrapper {
-      background: #fff;
-      border-color: #e2e8f0 !important;
-    }
-  }
-
   .ant-form-item {
     margin-bottom: 1px !important;
-  }
-
-  .cadastro-modal .ant-form-item {
-    margin-bottom: 12px !important;
   }
 
   .ant-picker-input > input::placeholder {

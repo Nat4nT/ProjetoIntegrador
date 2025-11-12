@@ -1,0 +1,45 @@
+.button-ver-solicitacao {
+  width: 138px !important;
+  height: 32px !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.button-cancelar-acesso {
+  width: 138px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.linha-revogada {
+  background-color: #f4f4f4 !important;
+  color: #888 !important;
+}
+
+.linha-revogada:hover > td {
+  background-color: #f0f0f0 !important;
+  cursor: not-allowed;
+}
+
+.linha-revogada button {
+  opacity: 0.6;
+  pointer-events: none;
+}

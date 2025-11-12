@@ -1,0 +1,30 @@
+.container-categoria {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.button-ver-exame {
+  width: 85px !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+

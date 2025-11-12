@@ -11,6 +11,6 @@ $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
 // Carregar rotas de outro arquivo
-(require __DIR__ . '/app/routes.php')($app);
+(require __DIR__ . '/api/routes.php')($app);
 
 $app->run();

@@ -66,7 +66,7 @@ export default function RecuperarSenha({
           value={emailRecuperarSenha}
           onChange={(e) => {
             setEmailRecuperarSenha(e.target.value);
-            if (error) setError(""); 
+            if (error) setError("");
           }}
           required
           inputMode="email"
