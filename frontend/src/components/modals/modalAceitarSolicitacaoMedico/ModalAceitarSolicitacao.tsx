@@ -78,7 +78,6 @@ export default function PedidoAcessoModal({
 
       <div className="pa-actions">
         <Button
-          size="large"
           danger
           className="pa-btn-recusar"
           onClick={onRecusar}
@@ -89,7 +88,6 @@ export default function PedidoAcessoModal({
 
         <Button
           type="primary"
-          size="large"
           className="pa-btn-permitir"
           onClick={onPermitir}
           loading={loadingPermitir}

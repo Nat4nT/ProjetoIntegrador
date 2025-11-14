@@ -9,7 +9,7 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs, { Dayjs } from "dayjs";
 
 //api
-import { buscarCategoria } from "../../../services/apiInterna/Categorias";
+import { buscarPacientes } from "../../../services/apiInterna/buscarPacientes";
 
 //interface
 import type { PacienteRow } from "../../../services/interfaces/Interfaces";
@@ -21,6 +21,7 @@ const { Title, Paragraph } = Typography;
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
+  const [pacientes, setPacientes] = useState([]);
 
   const colunas: ColumnsType<PacienteRow> = [
     { title: "Nome", dataIndex: "nome", key: "nome" },
@@ -59,20 +60,21 @@ export default function SeusExames() {
     },
   ];
 
-  // CARREGAR PACIENTES OBS: AINDA NÃO TEM
-  // useEffect(() => {
-  //   async function carregarMedicos() {
-  //     try {
-  //       setLoading(true);
-  //       const categorias = await buscarCategoria();
-  //     } catch (err: any) {
-  //       showMessage("Erro ao carregar categorias.", "error");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   carregarMedicos();
-  // }, []);
+  //FUNÇÃO CARREGAR PACIENTES
+  useEffect(() => {
+    async function carregarPacientes() {
+      try {
+        setLoading(true);
+        const response = await buscarPacientes();
+        setPacientes(response.data);
+      } catch (err: any) {
+        showMessage("Erro ao carregar pacientes.", "error");
+      } finally {
+        setLoading(false);
+      }
+    }
+    carregarPacientes();
+  }, []);
 
   return (
     <div>
@@ -100,6 +102,7 @@ export default function SeusExames() {
           rowKey="key"
           columns={colunas}
           loading={loading}
+          dataSource={pacientes}
           pagination={{ pageSize: 10 }}
         />
       </Card>

@@ -19,7 +19,7 @@ import { showMessage } from "../../components/messageHelper/ShowMessage";
 import type { SolicitacaoRow } from "../../services/interfaces/Interfaces";
 
 //modal
-import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMedico/modalAceitarSolicitacao";
+import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMedico/ModalAceitarSolicitacao";
 import { StatusAcesso } from "../../utils/Enum";
 
 import "./Medicos.scss";

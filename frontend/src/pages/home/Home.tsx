@@ -25,7 +25,6 @@ import banner from "../../assets/banner.png";
 import { showMessage } from "../../components/messageHelper/ShowMessage";
 
 //modals
-import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMedico/modalAceitarSolicitacao";
 
 //interfaces
 import type { SolicitacaoAcesso } from "../../services/interfaces/Interfaces";
@@ -34,6 +33,7 @@ import type { SolicitacaoAcesso } from "../../services/interfaces/Interfaces";
 import { StatusAcesso } from "../../utils/Enum";
 
 import "./Home.scss";
+import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMedico/ModalAceitarSolicitacao";
 
 export default function Home() {
   const navigate = useNavigate();

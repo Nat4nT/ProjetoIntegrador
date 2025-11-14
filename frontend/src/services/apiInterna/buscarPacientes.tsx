@@ -7,3 +7,7 @@ export function buscarPaciente(payload: any): Promise<any> {
 export function solicitarAcesso(payload: any): Promise<any> {
   return handleApi(api.post("/medico/solicitar-acesso", payload));
 }
+
+export function buscarPacientes(): Promise<any> {
+  return handleApi(api.get("/medico/pacientes"));
+}
