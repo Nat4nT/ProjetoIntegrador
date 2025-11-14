@@ -80,20 +80,22 @@ class MedicoService
         $dados=[];
         if ($pacientes) {
             foreach ($pacientes as $paciente) {
-                $dados['paciente_id'] = $paciente['paciente_id'];
-                $dados['cpf'] = $criptar->decriptarDado($paciente['cpf']);
-                $dados['telefone'] = $criptar->decriptarDado($paciente['telefone']);
-                $dados['tipo_sanguineo'] = $criptar->decriptarDado($paciente['tipo_sanguineo'] ?? "");
-                $dados['desc_deficiencia'] = $criptar->decriptarDado($paciente['desc_deficiencia']);
-                $dados['primeiro_nome'] = $paciente['primeiro_nome'];
-                $dados['ultimo_nome'] = $paciente['ultimo_nome'];
-                $dados['email'] = $paciente['email'];
-                $dados['imagem_perfil'] = $paciente['imagem_perfil'];
-                $dados['medicacao'] = $criptar->decriptarDado($paciente['medicacao'] ?? "");
-                $dados['altura'] = $criptar->decriptarDado($paciente['altura'] ?? "");
-                $dados['peso'] = $criptar->decriptarDado($paciente['peso'] ?? "");
-                $dados['alergias'] = $criptar->decriptarDado($paciente['alergias'] ?? "");
-                $dados['doencas_diagnosticadas'] = $criptar->decriptarDado(@$paciente['doencas_diagnosticadas'] ?? "");
+                $dados[]=[
+                    'paciente_id' => $paciente['paciente_id'],
+                    'cpf' => $criptar->decriptarDado($paciente['cpf']),
+                    'telefone' => $criptar->decriptarDado($paciente['telefone']),
+                    'tipo_sanguineo' => $criptar->decriptarDado($paciente['tipo_sanguineo'] ?? ""),
+                    'desc_deficiencia' => $criptar->decriptarDado($paciente['desc_deficiencia']),
+                    'primeiro_nome' => $paciente['primeiro_nome'],
+                    'ultimo_nome' => $paciente['ultimo_nome'],
+                    'email' => $paciente['email'],
+                    'imagem_perfil' => $paciente['imagem_perfil'],
+                    'medicacao' => $criptar->decriptarDado($paciente['medicacao'] ?? ""),
+                    'altura' => $criptar->decriptarDado($paciente['altura'] ?? ""),
+                    'peso' => $criptar->decriptarDado($paciente['peso'] ?? ""),
+                    'alergias' => $criptar->decriptarDado($paciente['alergias'] ?? ""),
+                    'doencas_diagnosticadas' => $criptar->decriptarDado(@$paciente['doencas_diagnosticadas'] ?? "")
+                    ];
             }
         }
 
