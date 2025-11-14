@@ -1,0 +1,37 @@
+{
+  "route": "localhost:8080/minha-conta",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "tipo_usuario": "paciente",
+    "primeiro_nome": "Natan Teixeira",
+    "ultimo_nome": "Silva",
+    "genero": 1,
+    "imagem_perfil": null,
+    "cpf": "19848273865",
+    "telefone": "40028922",
+    "email": "eu@examplo.com",
+    "consentimento_lgpd": 1,
+    "senha": "paciente123@",
+    "data_nascimento": "2000-05-15",
+    "tipo_sanguineo": "AB-",
+    "peso": 85.75,
+    "altura": 1.75,
+    "desc_deficiencia": null,
+    "alergias": null,
+    "doencas_diagnosticadas": "Osteoporose",
+    "endereco": {
+      "rua": "Minha rua",
+      "bairro": "Meu Bairro",
+      "numero": "1601",
+      "cep": "85869380",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "Casa"
+    }
+  },
+  "regra": "mesmos campos que criar",
+  "campos_que_podem_ser_null": "desc_deficiencia,alergias,peso,altura,imagem_perfil,tipo_sanguineo"
+}

@@ -1,0 +1,15 @@
+{
+  "route": "localhost:8080/exames/editar",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "Body": {
+    "exame_id":1,
+    "nome_exame": "nome_exame",
+    "data_realizacao": "2020-01-05",
+    "nome_lab": "nome_lab",
+    "categorias": ["1", "2"],
+    "arquivo_exame": "imagem.jpg"
+  }
+}

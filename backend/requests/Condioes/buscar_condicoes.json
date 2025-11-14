@@ -1,0 +1,7 @@
+{
+    "route": "localhost:8080/condicoes",
+    "method": "GET",
+    "Header": {
+      "Auth": "Bearer token"
+    }
+}

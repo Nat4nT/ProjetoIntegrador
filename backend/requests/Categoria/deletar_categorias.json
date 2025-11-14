@@ -1,0 +1,10 @@
+{
+    "route": "localhost:8080/cartegoria/deletar",
+    "method": "POST",
+    "Header": {
+      "Auth": "Bearer token"
+    },
+    "Body":{
+        "cartegoria_id":"id_categoria"
+    }
+}

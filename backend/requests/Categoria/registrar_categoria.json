@@ -1,0 +1,10 @@
+{
+    "route": "localhost:8080/cartegoria",
+    "method": "POST",
+    "Header": {
+      "Auth": "Bearer token"
+    },
+    "Body":{
+        "nome":"nomedacategoria"
+    }
+}
