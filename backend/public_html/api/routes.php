@@ -46,6 +46,7 @@ return function (App $app) {
         $med->post('/solicitar-acesso',[MedicoController::class,'solicitarAcesso']);
         $med->post('/buscar',[MedicoController::class,'buscarPaciente']);
         $med->post('/buscar-exames',[MedicoController::class,"buscarExamesPaciente"]);
+        $med->get('/pacientes', [MedicoController::class,'buscarPacientes']);
     })->add(TipeMiddleware::class)->add(AutenticacaoMiddleware::class);
 
     $app->group('/exames', function ($exam) {

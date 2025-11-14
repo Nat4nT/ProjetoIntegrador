@@ -1,0 +1,28 @@
+{
+  "route": "localhost:8080/registrar",
+  "body": {
+    "tipo_usuario": "medico",
+    "primeiro_nome": "Usuario",
+    "ultimo_nome": "Silva",
+    "genero": 1,
+    "imagem_perfil": null,
+    "cpf": "01218073985",
+    "telefone": "11999999999",
+    "email": "joao.pedro@example.com",
+    "consentimento_lgpd": 1,
+    "senha": "dev123@",
+    "especialidade": "Cardiologia",
+    "crm": "CRM1234567",
+    "estado_atuacao": "SP",
+    "endereco": {
+      "rua": "Minha rua",
+      "bairro": "Meu Bairro",
+      "numero": "1601",
+      "cep": "85869380",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "complemento": "Casa"
+    }
+  },
+  "campos_que_podem_ser_null": "imagem_perfil"
+}

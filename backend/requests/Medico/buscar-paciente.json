@@ -1,0 +1,10 @@
+{
+  "route": "localhost:8080/medico/buscar",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "user": "19848273865"
+  }
+}

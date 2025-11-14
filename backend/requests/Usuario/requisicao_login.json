@@ -1,0 +1,7 @@
+{
+  "route": "localhost:8080/registrar",
+  "body": {
+    "email": "joao.pedro@example.com",
+    "senha": "dev123@"
+  }
+}

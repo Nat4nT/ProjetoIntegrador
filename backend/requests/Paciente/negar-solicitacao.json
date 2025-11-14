@@ -1,0 +1,10 @@
+{
+  "route": "localhost:8080/minha-conta/solicitacoes/negar",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body":{
+    "solicitacao_id":"solicitacao_id"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "route": "localhost:8080/exames/buscar-exame",
+  "method": "GET",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "exame_id": 1
+  }
+}

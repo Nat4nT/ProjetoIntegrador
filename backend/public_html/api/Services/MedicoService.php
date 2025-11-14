@@ -37,14 +37,13 @@ class MedicoService
     {
         $usuario = (new UsuarioModel())->buscarUsuarioPorPerfil((new Criptografia())->encriptarDado($dado));
         $criptar = new Criptografia();
-        // var_dump($usuario);
         $dados = [];
 
         $dados['paciente_id'] = $usuario['paciente_id'];
         $dados['cpf'] = $criptar->decriptarDado($usuario['cpf']);
         $dados['telefone'] = $criptar->decriptarDado($usuario['telefone']);
         $dados['tipo_sanguineo'] = $criptar->decriptarDado($usuario['tipo_sanguineo'] ?? "");
-        $dados['desc_deficiencia'] = $criptar->decriptarDado($usuario['desc_deficiencia'] );
+        $dados['desc_deficiencia'] = $criptar->decriptarDado($usuario['desc_deficiencia']);
         $dados['primeiro_nome'] = $usuario['primeiro_nome'];
         $dados['ultimo_nome'] = $usuario['ultimo_nome'];
         $dados['email'] = $usuario['email'];
@@ -70,5 +69,34 @@ class MedicoService
         } else {
             return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
         }
+    }
+
+    public function buscar_pacientes($medico_id)
+    {
+        $medicoModel = new MedicoModel($medico_id);
+        $pacientes = $medicoModel->buscarPacientes();
+
+        $criptar = new Criptografia();
+        $dados=[];
+        if ($pacientes) {
+            foreach ($pacientes as $paciente) {
+                $dados['paciente_id'] = $paciente['paciente_id'];
+                $dados['cpf'] = $criptar->decriptarDado($paciente['cpf']);
+                $dados['telefone'] = $criptar->decriptarDado($paciente['telefone']);
+                $dados['tipo_sanguineo'] = $criptar->decriptarDado($paciente['tipo_sanguineo'] ?? "");
+                $dados['desc_deficiencia'] = $criptar->decriptarDado($paciente['desc_deficiencia']);
+                $dados['primeiro_nome'] = $paciente['primeiro_nome'];
+                $dados['ultimo_nome'] = $paciente['ultimo_nome'];
+                $dados['email'] = $paciente['email'];
+                $dados['imagem_perfil'] = $paciente['imagem_perfil'];
+                $dados['medicacao'] = $criptar->decriptarDado($paciente['medicacao'] ?? "");
+                $dados['altura'] = $criptar->decriptarDado($paciente['altura'] ?? "");
+                $dados['peso'] = $criptar->decriptarDado($paciente['peso'] ?? "");
+                $dados['alergias'] = $criptar->decriptarDado($paciente['alergias'] ?? "");
+                $dados['doencas_diagnosticadas'] = $criptar->decriptarDado(@$paciente['doencas_diagnosticadas'] ?? "");
+            }
+        }
+
+        return ['code' => 200, "message" => "Pacientes encontrados", 'data' => $dados];
     }
 }
