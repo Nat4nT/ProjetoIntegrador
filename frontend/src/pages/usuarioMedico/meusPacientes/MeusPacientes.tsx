@@ -102,7 +102,7 @@ export default function SeusExames() {
           rowKey="key"
           columns={colunas}
           loading={loading}
-          dataSource={pacientes}
+          // dataSource={pacientes}
           pagination={{ pageSize: 10 }}
         />
       </Card>

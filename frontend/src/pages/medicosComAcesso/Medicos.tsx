@@ -117,6 +117,34 @@ export default function SeusExames() {
       defaultSortOrder: "ascend",
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (_, record) => {
+        if (record.status === StatusAcesso.APROVADO) {
+          return (
+            <span style={{ color: "green", fontWeight: "bold" }}>Ativo</span>
+          );
+        }
+        if (record.status === StatusAcesso.PENDENTE) {
+          return (
+            <span style={{ color: "orange", fontWeight: "bold" }}>
+              Pendente
+            </span>
+          );
+        }
+
+        if (record.status === StatusAcesso.REVOGADO) {
+          return (
+            <span style={{ color: "#8888888f", fontWeight: "bold" }}>
+              Revogado
+            </span>
+          );
+        }
+        return null;
+      },
+    },
+    {
       title: "Ações",
       key: "acoes",
       render: (_, record) => {
@@ -149,7 +177,7 @@ export default function SeusExames() {
         }
 
         if (record.status === StatusAcesso.REVOGADO) {
-          return <span style={{ color: "#999" }}>Acesso revogado</span>;
+          return <span style={{ color: "#8888888f" }}>Acesso revogado</span>;
         }
 
         return null;

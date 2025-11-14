@@ -14,7 +14,6 @@ import ptBR from "antd/es/locale/pt_BR";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import Medicos from "./pages/medicosComAcesso/Medicos";
-import Configuracoes from "./pages/configuracoes/Configuracoes";
 import CadastrarExames from "./pages/exames/cadastrarExames/CadastrarExames";
 import MeusPacientes from "./pages/usuarioMedico/meusPacientes/MeusPacientes";
 import BuscarPaciente from "./pages/usuarioMedico/buscarPaciente/BuscarPaciente";
@@ -37,7 +36,6 @@ function App() {
               <Route path="/exames/cadastrar" element={<CadastrarExames />} />
               <Route path="/medicos" element={<Medicos />} />
               <Route path="/perfil" element={<Perfil />} />
-              <Route path="/configuracoes" element={<Configuracoes />} />
               <Route path="/meus/pacientes" element={<MeusPacientes />} />
               <Route path="/buscar/paciente" element={<BuscarPaciente />} />
             </Route>
