@@ -16,12 +16,13 @@ import type { PacienteRow } from "../../../services/interfaces/Interfaces";
 
 //componentes
 import { showMessage } from "../../../components/messageHelper/ShowMessage";
+import { maskCPF } from "../../../utils/Masks";
 
 const { Title, Paragraph } = Typography;
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
-  const [pacientes, setPacientes] = useState([]);
+  const [pacientes, setPacientes] = useState<PacienteRow[]>([]);
 
   const colunas: ColumnsType<PacienteRow> = [
     { title: "Nome", dataIndex: "nome", key: "nome" },
@@ -42,10 +43,11 @@ export default function SeusExames() {
         dayjs(a.autorizadoEm).valueOf() - dayjs(b.autorizadoEm).valueOf(),
       defaultSortOrder: "ascend",
     },
+    
     {
       title: "Ações",
       key: "acoes",
-      render: (_, record) => (
+      render: (_) => (
         <Space>
           <Button
             className="button-solicitar-acesso"
@@ -66,7 +68,22 @@ export default function SeusExames() {
       try {
         setLoading(true);
         const response = await buscarPacientes();
-        setPacientes(response.data);
+
+        const mapped: PacienteRow[] = response.data.map((s: any) => {
+          const nome =
+            `${s.primeiro_nome ?? ""} ${s.ultimo_nome ?? ""}`.trim() ||
+            "Médico";
+          const cpf = maskCPF(s.cpf);
+
+          return {
+            key: String(s.solcitacao_id ?? s.solicitacao_id ?? s.id),
+            nome,
+            especialidade: s.especialidade ?? "Não informado",
+            cpf,
+          };
+        });
+
+        setPacientes(mapped);
       } catch (err: any) {
         showMessage("Erro ao carregar pacientes.", "error");
       } finally {
@@ -102,7 +119,7 @@ export default function SeusExames() {
           rowKey="key"
           columns={colunas}
           loading={loading}
-          // dataSource={pacientes}
+          dataSource={pacientes}
           pagination={{ pageSize: 10 }}
         />
       </Card>
