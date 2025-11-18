@@ -12,6 +12,29 @@ use Api\Services\AutenticacaoService;
 
 class UsuarioService
 {
+    public function alterarSenha($dados_usuario, $camposFormulario)
+    {
+        $usuarioModel = new UsuarioModel($dados_usuario->usuario_id);
+        $usuarioData = $usuarioModel->getInfo();
+
+        if (!$usuarioData) return null;
+
+        if ($camposFormulario['nova-senha'] !== $camposFormulario['confirmacao-senha']) {
+            return ['message' => "Senhas diferentes", 'code' => 400];
+        }
+
+        if (!password_verify($camposFormulario['senha'], $usuarioData['senha'])) {
+            return ['message' => "Senha incorreta.", 'code' => 400];
+        }
+
+        if (password_verify($camposFormulario['nova-senha'], $usuarioData['senha'])) {
+            return ['message' => "A Senha deve ser diferente da anterior.", 'code' => 400];
+        }
+
+        $usuarioModel->editData(['senha' => password_hash($camposFormulario['nova-senha'], PASSWORD_DEFAULT)]);
+
+        return ['code' => 200, 'message' => "Senha alterada com sucesso"];
+    }
 
     private function validarCamposUsuario(array $usuario)
     {
@@ -39,6 +62,8 @@ class UsuarioService
 
         return ["erro" => $erro, "mensagem" => $mensagem];
     }
+
+
 
     private function prepareUserData(array $dados, $is_logged = 0): array
     {
@@ -196,7 +221,6 @@ class UsuarioService
         }
         $cript = new Criptografia();
 
-        // TODO dados para criptografar (Doencas,Alergias, Altura,peso e tipo sanguineo)
         $dados_usuario = [
             'paciente_id' => $usuarioId,
             'peso' => isset($dados['peso']) ? $cript->encriptarDado($dados['peso']) : "",

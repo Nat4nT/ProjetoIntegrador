@@ -24,6 +24,7 @@ return function (App $app) {
         $user->get('', [UsuarioController::class, 'pegarDadosConta']);
         $user->post('', [UsuarioController::class, 'editarUsuario']);
         $user->post('/deletar', [UsuarioController::class, 'desativarPerfil']);
+        $user->post('/alterar-senha', [UsuarioController::class, 'alterarSenha']);
         $user->group('/solicitacoes', function ($solicitacao) {
             $solicitacao->get('', [PacienteController::class, 'buscarSolicitacoes']);
             $solicitacao->post('/negar', [PacienteController::class, 'negarSolicitacao']);
@@ -46,6 +47,7 @@ return function (App $app) {
         $med->post('/solicitar-acesso',[MedicoController::class,'solicitarAcesso']);
         $med->post('/buscar',[MedicoController::class,'buscarPaciente']);
         $med->post('/buscar-exames',[MedicoController::class,"buscarExamesPaciente"]);
+        $med->post('/buscar-categorias',[MedicoController::class,"buscarCategoriasPaciente"]);
         $med->get('/pacientes', [MedicoController::class,'buscarPacientes']);
     })->add(TipeMiddleware::class)->add(AutenticacaoMiddleware::class);
 

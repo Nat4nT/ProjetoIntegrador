@@ -1,0 +1,12 @@
+{
+  "route": "localhost:8080/minha-conta",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "senha": "123",
+    "nova-senha": "1234",
+    "confirmacao-senha": "1234"
+  }
+}

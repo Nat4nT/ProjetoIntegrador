@@ -10,6 +10,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UsuarioController
 {
+    public function AlterarSenha(Request $request, Response $response)
+    {
+        $dadosUsuario = $request->getAttribute('usuario');
+        $dadosFormulario = $request->getParsedBody();
+        $resposta = (new UsuarioService())->alterarSenha($dadosUsuario, $dadosFormulario);
+        $jsonResponse = new JsonResponse();
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
     public function realizarCadastro(Request $request, Response $response): Response
 
     {

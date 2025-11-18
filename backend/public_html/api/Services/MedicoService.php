@@ -4,6 +4,7 @@ namespace Api\Services;
 
 use Api\Helpers\Criptografia;
 use Api\Models\AutorizacaoAcessoModel;
+use Api\Models\CategoriaModel;
 use Api\Models\ExameModel;
 use Api\Models\MedicoModel;
 use Api\Models\UsuarioModel;
@@ -70,6 +71,23 @@ class MedicoService
             return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
         }
     }
+    public function buscar_categorias($medico, $paciente_id)
+    {
+        $medicoModel = new MedicoModel($medico);
+        if ($medicoModel->buscarPaciente($paciente_id)->status) {
+
+            $categoriaModel = new CategoriaModel();
+            $filtros =  [
+                'where' => "{$categoriaModel->column_reference} = {$paciente_id} OR sis_cat = 1",
+            ];
+
+            $categorias = $categoriaModel->getData($filtros);
+
+            return ["code" => 200, "message" => "Exames encontrados", "data" => $categorias];
+        } else {
+            return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
+        }
+    }
 
     public function buscar_pacientes($medico_id)
     {
@@ -77,10 +95,10 @@ class MedicoService
         $pacientes = $medicoModel->buscarPacientes();
 
         $criptar = new Criptografia();
-        $dados=[];
+        $dados = [];
         if ($pacientes) {
             foreach ($pacientes as $paciente) {
-                $dados[]=[
+                $dados[] = [
                     'paciente_id' => $paciente['paciente_id'],
                     'cpf' => $criptar->decriptarDado($paciente['cpf']),
                     'telefone' => $criptar->decriptarDado($paciente['telefone']),
@@ -95,7 +113,7 @@ class MedicoService
                     'peso' => $criptar->decriptarDado($paciente['peso'] ?? ""),
                     'alergias' => $criptar->decriptarDado($paciente['alergias'] ?? ""),
                     'doencas_diagnosticadas' => $criptar->decriptarDado(@$paciente['doencas_diagnosticadas'] ?? "")
-                    ];
+                ];
             }
         }
 
