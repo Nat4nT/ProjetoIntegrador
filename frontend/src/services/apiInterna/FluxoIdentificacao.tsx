@@ -16,19 +16,21 @@ export function loginUsuario(payload: LoginPayload): Promise<LoginResponse> {
 }
 
 // MEU PERFIL
-
 export function dadosUsuario(): Promise<any> {
   return handleApi(api.get("/minha-conta"));
 }
 
 // EDITAR DADOS CADASTRAIS
-
 export function editarUsuario(payload: any): Promise<any> {
   return handleApi(api.post("/minha-conta", payload));
 }
 
 // DESATIVAR CONTA
-
 export function desativarConta(): Promise<any> {
   return handleApi(api.post("/minha-conta/deletar"));
+}
+
+// ALTERAR SENHA
+export function alterarSenha(payload: any): Promise<any> {
+  return handleApi(api.post("/minha-conta/alterar-senha", payload));
 }

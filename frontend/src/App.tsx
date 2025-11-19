@@ -33,6 +33,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/exames/seusExames" element={<SeusExamesPage />} />
+              <Route path="/exames/paciente/:pacienteId/:nome" element={<SeusExamesPage />} />
               <Route path="/exames/cadastrar" element={<CadastrarExames />} />
               <Route path="/medicos" element={<Medicos />} />
               <Route path="/perfil" element={<Perfil />} />

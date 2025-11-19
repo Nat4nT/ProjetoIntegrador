@@ -9,7 +9,9 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs, { Dayjs } from "dayjs";
 
 //api
-import { buscarPacientes } from "../../../services/apiInterna/buscarPacientes";
+import {
+  buscarPacientes,
+} from "../../../services/apiInterna/buscarPacientes";
 
 //interface
 import type { PacienteRow } from "../../../services/interfaces/Interfaces";
@@ -17,12 +19,15 @@ import type { PacienteRow } from "../../../services/interfaces/Interfaces";
 //componentes
 import { showMessage } from "../../../components/messageHelper/ShowMessage";
 import { maskCPF } from "../../../utils/Masks";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
   const [pacientes, setPacientes] = useState<PacienteRow[]>([]);
+
+  const navigate = useNavigate();
 
   const colunas: ColumnsType<PacienteRow> = [
     { title: "Nome", dataIndex: "nome", key: "nome" },
@@ -43,19 +48,19 @@ export default function SeusExames() {
         dayjs(a.autorizadoEm).valueOf() - dayjs(b.autorizadoEm).valueOf(),
       defaultSortOrder: "ascend",
     },
-    
+
     {
       title: "Ações",
       key: "acoes",
-      render: (_) => (
+      render: (_, record) => (
         <Space>
           <Button
             className="button-solicitar-acesso"
             size="small"
             type="primary"
-            onClick={() => {}}
+            onClick={() => navigate(`/exames/paciente/${record.key}/${record.nome}`)}
           >
-            Solicitar Acesso
+            Ver exames
           </Button>
         </Space>
       ),
@@ -76,7 +81,7 @@ export default function SeusExames() {
           const cpf = maskCPF(s.cpf);
 
           return {
-            key: String(s.solcitacao_id ?? s.solicitacao_id ?? s.id),
+            key: s.paciente_id,
             nome,
             especialidade: s.especialidade ?? "Não informado",
             cpf,

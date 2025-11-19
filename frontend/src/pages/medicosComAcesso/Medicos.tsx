@@ -111,8 +111,8 @@ export default function SeusExames() {
     { title: "CRM", dataIndex: "crm", key: "crm" },
     {
       title: "Data do pedido",
-      dataIndex: "dataAutorizacao",
-      key: "dataAutorizacao",
+      dataIndex: "dataPedido",
+      key: "dataPedido",
       sorter: (a, b) => dayjs(a.rawDate).valueOf() - dayjs(b.rawDate).valueOf(),
       defaultSortOrder: "ascend",
     },
@@ -212,8 +212,8 @@ export default function SeusExames() {
             nome,
             especialidade: s.especialidade ?? "Não informado",
             crm,
-            dataAutorizacao: d.isValid()
-              ? d.format("DD/MM/YYYY HH:mm")
+            dataPedido: d.isValid()
+              ? d.format("DD/MM/YYYY")
               : s.data_criacao ?? "-",
             rawDate: s.data_criacao ?? "",
             status: s.status,
@@ -264,7 +264,7 @@ export default function SeusExames() {
           onClose={handleCloseModal}
           medico={solicitacaoSelecionada.nome}
           especialidade={solicitacaoSelecionada.especialidade}
-          dataPedido={solicitacaoSelecionada.dataAutorizacao}
+          dataPedido={solicitacaoSelecionada.dataPedido}
           crm={solicitacaoSelecionada.crm}
           onPermitir={handlePermitir}
           onRecusar={handleRecusar}

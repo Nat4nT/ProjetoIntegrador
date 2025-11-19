@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
 //componentes antd
-import { Modal, Spin, Typography } from "antd";
+import { Button, Input, Modal, Spin, Typography } from "antd";
+import { SendOutlined } from "@ant-design/icons";
+
 import dayjs from "dayjs";
 
 //apis
@@ -11,6 +13,7 @@ import { api } from "../../../services/api";
 import type { ExameRow } from "../../../services/interfaces/Interfaces";
 
 import "./VisualizarExameModal.scss";
+import { showMessage } from "../../messageHelper/ShowMessage";
 
 const { Paragraph } = Typography;
 
@@ -18,16 +21,47 @@ type VisualizarExameModalProps = {
   open: boolean;
   onClose: () => void;
   exame: ExameRow | null;
+  tipoUsuario?: "paciente" | "medico" | null;
 };
 
 export default function VisualizarExameModal({
   open,
   onClose,
   exame,
+  tipoUsuario,
 }: VisualizarExameModalProps) {
   const [loadingExame, setLoadingExame] = useState(false);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [comentariosExame, setComentariosExame] = useState<any[]>([]);
+
+  const [novoComentario, setNovoComentario] = useState("");
+  const [salvandoComentario, setSalvandoComentario] = useState(false);
+
+  const handleSalvarComentario = async () => {
+    if (!exame || !novoComentario.trim()) return;
+
+    try {
+      setSalvandoComentario(true);
+
+      const resp = await api.post("/exames/comentarios", {
+        exame_id: (exame as any).id,
+        mensagem: novoComentario.trim(),
+      });
+      const comentarioSalvo = resp.data?.data || resp.data;
+
+      setComentariosExame((prev) => [...prev, comentarioSalvo]);
+      setNovoComentario("");
+      showMessage("Comentário salvo com sucesso!", "success");
+    } catch (error) {
+      console.error(error);
+      showMessage(
+        "Não foi possível salvar o comentário. Tente novamente.",
+        "error"
+      );
+    } finally {
+      setSalvandoComentario(false);
+    }
+  };
 
   // FUNÇÃO PARA ABRIR EXAME
   useEffect(() => {
@@ -135,28 +169,65 @@ export default function VisualizarExameModal({
 
           <div className="comentarios-wrapper">
             <h3>Comentários</h3>
-            {comentariosExame.length === 0 && (
-              <Paragraph type="secondary">
-                Nenhum comentário disponível para este exame.
-              </Paragraph>
-            )}
 
-            {comentariosExame.map((c: any, idx: number) => (
-              <div
-                key={c.id || c.comentario_id || idx}
-                className="comentario-card"
-              >
-                <div className="comentario-autor">
-                  {c.autor || c.nome_medico || "Profissional"}
+            <div className="comentarios-list">
+              {comentariosExame.length === 0 && (
+                <Paragraph type="secondary">
+                  Nenhum comentário disponível para este exame.
+                </Paragraph>
+              )}
+
+              {comentariosExame.map((c: any, idx: number) => (
+                <div
+                  key={c.id || c.comentario_id || idx}
+                  className="comentario-card"
+                >
+                  <div className="comentario-header">
+                    <div className="comentario-avatar">
+                      {(c.autor || c.nome_medico || "P")[0]}
+                    </div>
+                    <div>
+                      <div className="comentario-autor">
+                        {c.autor || c.nome_medico || "Profissional"}
+                      </div>
+                      {c.data && (
+                        <div className="comentario-data">
+                          {dayjs(c.data).format("DD/MM/YYYY HH:mm")}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="comentario-texto">
+                    {c.mensagem || c.texto || c.descricao || c.comentario}
+                  </div>
                 </div>
-                <div className="comentario-data">
-                  {c.data ? dayjs(c.data).format("DD/MM/YYYY HH:mm") : ""}
-                </div>
-                <div className="comentario-texto">
-                  {c.mensagem || c.texto || c.descricao || c.comentario}
-                </div>
+              ))}
+            </div>
+
+            {tipoUsuario === "medico" && (
+              <div className="novo-comentario-input">
+                <Input
+                  placeholder="Escreva um comentário..."
+                  value={novoComentario}
+                  onChange={(e) => setNovoComentario(e.target.value)}
+                  onPressEnter={(e) => {
+                    e.preventDefault();
+                    if (!salvandoComentario && novoComentario.trim()) {
+                      handleSalvarComentario();
+                    }
+                  }}
+                  suffix={
+                    <Button
+                      type="text"
+                      icon={<SendOutlined />}
+                      onClick={handleSalvarComentario}
+                      loading={salvandoComentario}
+                      disabled={!novoComentario.trim()}
+                    />
+                  }
+                />
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}

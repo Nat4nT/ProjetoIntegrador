@@ -19,7 +19,8 @@ import {
 } from "../../services/apiInterna/verificarSolicitacoesAcesso";
 
 //banners
-import banner from "../../assets/banner.png";
+import banner1 from "../../assets/banner3.png";
+import banner2 from "../../assets/banner2.png";
 
 //validações
 import { showMessage } from "../../components/messageHelper/ShowMessage";
@@ -208,11 +209,12 @@ export default function Home() {
         dotPosition="bottom"
         autoplaySpeed={5000}
       >
-        {[1, 2, 3].map((i) => (
-          <div key={i}>
-            <img src={banner} alt="Banner MedExame" className="home-banner" />
-          </div>
-        ))}
+        <div>
+          <img src={banner1} alt="Banner MedExame" className="home-banner" />
+        </div>
+        <div>
+          <img src={banner2} alt="Banner MedExame" className="home-banner" />
+        </div>
       </Carousel>
 
       <div className="home-atalhos-container">

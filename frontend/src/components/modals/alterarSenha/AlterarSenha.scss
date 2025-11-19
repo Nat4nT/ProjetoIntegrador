@@ -1,0 +1,29 @@
+.container-button-alterar-senha {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding-top: 30px;
+}
+
+.button-alterar-senha {
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}

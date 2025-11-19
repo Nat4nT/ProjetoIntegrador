@@ -38,6 +38,11 @@ import AvisoExclusaoModal from "../../../components/modals/avisoExclusão/AvisoE
 import VisualizarExameModal from "../../../components/modals/visualizarExame/VisualizarExameModal";
 
 import "./SeusExames.scss";
+import { useParams } from "react-router-dom";
+import {
+  buscarCategoriasPaciente,
+  buscarExamesPaciente,
+} from "../../../services/apiInterna/buscarPacientes";
 
 const { Title, Paragraph } = Typography;
 const { RangePicker } = DatePicker;
@@ -63,6 +68,10 @@ export default function SeusExames() {
 
   const screens = useBreakpoint();
   const isMobile = !screens.xl;
+
+  const { pacienteId } = useParams();
+  const { nome } = useParams();
+  const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   const closeModalCadastrarCat = () => {
     setModalCadastrarCategoria(false);
@@ -181,6 +190,7 @@ export default function SeusExames() {
           <Button
             danger
             style={{ borderColor: "#ef4444", color: "#ef4444" }}
+            hidden={tipoUsuario === "medico"}
             onClick={() => {
               setExameSelecionadoId(String(record.key));
               setOpenModalAvisoExclusao(true);
@@ -201,49 +211,88 @@ export default function SeusExames() {
     },
   ];
 
+  //FUNÇÃO RESPONSÁVEL PARA CARREGAR OS EXAMES COM BASE NO TIPO DE USUÁRIO.
   useEffect(() => {
     async function carregarExames() {
       try {
         setLoading(true);
-        const resp = await buscarExames();
-        const data = resp.data || [];
-        const mapped: ExameRow[] = data.map((it: any) => {
-          const catNome = it.nome;
-          const url = it.arquivo_exame;
-          const d = dayjs(it.data_realizacao);
-          return {
-            key: String(it.exame_id),
-            exame: it.nome_exame || it.nome,
-            categoria: catNome,
-            dataRealizacao: d.isValid()
-              ? d.format("DD/MM/YYYY")
-              : it.data_realizacao,
-            local: it.nome_lab,
-            url,
-            categoriaId: it.categoria_id,
-            rawDate: it.data_realizacao,
-          };
-        });
-        setRows(mapped);
+        if (tipoUsuario === "medico" && pacienteId) {
+          const resp = await buscarExamesPaciente({ paciente_id: pacienteId });
+          const data = resp.data || [];
+
+          const mapped: ExameRow[] = data.map((it: any) => {
+            const d = dayjs(it.data_realizacao);
+
+            return {
+              key: String(it.exame_id),
+              exame: it.nome_exame || it.nome,
+              categoria: it.nome,
+              dataRealizacao: d.isValid()
+                ? d.format("DD/MM/YYYY")
+                : it.data_realizacao,
+              local: it.nome_lab,
+              url: it.arquivo_exame,
+              categoriaId: it.categoria_id,
+              rawDate: it.data_realizacao,
+            };
+          });
+
+          setRows(mapped);
+        } else {
+          const resp = await buscarExames();
+          const data = resp.data || [];
+
+          const mapped: ExameRow[] = data.map((it: any) => {
+            const d = dayjs(it.data_realizacao);
+
+            return {
+              key: String(it.exame_id),
+              exame: it.nome_exame || it.nome,
+              categoria: it.nome,
+              dataRealizacao: d.isValid()
+                ? d.format("DD/MM/YYYY")
+                : it.data_realizacao,
+              local: it.nome_lab,
+              url: it.arquivo_exame,
+              categoriaId: it.categoria_id,
+              rawDate: it.data_realizacao,
+            };
+          });
+
+          setRows(mapped);
+        }
       } finally {
         setLoading(false);
       }
     }
     carregarExames();
-  }, []);
+  }, [tipoUsuario, pacienteId]);
 
   // CARREGAR CATEGORIAS
   useEffect(() => {
     async function carregarCategorias() {
       try {
         setLoading(true);
-        const categorias = await buscarCategoria();
-        setCat(
-          categorias.data.map((e: any) => ({
-            value: String(e.id ?? e.categoria_id),
-            label: e.nome ?? e.nome_categoria,
-          }))
-        );
+        if (tipoUsuario === "medico" && pacienteId) {
+          const categoriasMedicoView = await buscarCategoriasPaciente({
+            paciente_id: pacienteId,
+          });
+          const invertida = [...categoriasMedicoView.data].reverse();
+          setCat(
+            invertida.map((e: any) => ({
+              value: String(e.categoria_id ?? e.categoria_id),
+              label: e.nome ?? e.nome,
+            }))
+          );
+        } else {
+          const categorias = await buscarCategoria();
+          setCat(
+            categorias.data.map((e: any) => ({
+              value: String(e.id ?? e.categoria_id),
+              label: e.nome ?? e.nome_categoria,
+            }))
+          );
+        }
       } catch (err: any) {
         showMessage("Erro ao carregar categorias.", "error");
       } finally {
@@ -259,7 +308,7 @@ export default function SeusExames() {
 
       const resp = await buscarCategoria();
       const data = Array.isArray(resp?.data) ? resp.data : [];
-      
+
       const invertida = [...data].reverse();
 
       setCat(
@@ -276,16 +325,22 @@ export default function SeusExames() {
   }
 
   useEffect(() => {
-    carregarCategorias();
+    if (tipoUsuario === "paciente") {
+      carregarCategorias();
+    }
   }, []);
 
   return (
     <div>
       <Card>
-        <Title>Seus Exames</Title>
+        <Title>
+          {tipoUsuario === "medico"
+            ? "Exames do paciente: " + nome
+            : "Seus Exames"}
+        </Title>
         <Paragraph>
           Use as categorias acima da tabela para filtrar os resultados. Você
-          pode buscar por nome, status e período.
+          pode usar filtros como categoria e data.
         </Paragraph>
       </Card>
       <Card style={{ marginTop: 16 }}>
@@ -305,6 +360,7 @@ export default function SeusExames() {
               onChange={(k) => setTab(k)}
             />
             <PlusCircleOutlined
+              hidden={tipoUsuario === "medico"}
               onClick={() => setModalCadastrarCategoria(true)}
             />
           </div>
@@ -361,6 +417,7 @@ export default function SeusExames() {
                           <Button
                             danger
                             size="small"
+                            hidden={tipoUsuario === "medico"}
                             style={{
                               borderColor: "#ef4444",
                               color: "#ef4444",
@@ -404,6 +461,11 @@ export default function SeusExames() {
         open={openModalVisualizar}
         onClose={closeModalVisualizar}
         exame={exameVisualizar}
+        tipoUsuario={
+          tipoUsuario === "paciente" || tipoUsuario === "medico"
+            ? tipoUsuario
+            : null
+        }
       />
     </div>
   );

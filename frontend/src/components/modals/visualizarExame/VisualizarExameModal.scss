@@ -54,6 +54,7 @@
   justify-content: center;
 }
 
+/* COLUNA DE COMENTÁRIOS */
 .comentarios-wrapper {
   flex: 1;
   max-width: 380px;
@@ -62,7 +63,9 @@
   background: #e9edf5;
   border-radius: 8px;
   box-sizing: border-box;
-  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .comentarios-wrapper h3 {
@@ -71,11 +74,21 @@
   font-weight: 600;
 }
 
+/* Área rolável dos comentários */
+.comentarios-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
 .comentario-card {
   background: #ffffff;
   border-radius: 8px;
   padding: 10px 12px;
-  margin-bottom: 8px;
+  margin-bottom: 0; /* gap já é controlado pelo .comentarios-list */
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 }
 
@@ -95,6 +108,27 @@
   color: #4b5563;
 }
 
+/* Input fixo no final */
+.novo-comentario-input {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #d1d5db;
+}
+
+/* Deixa o input com cara de "bolha" + botão de enviar */
+.novo-comentario-input .ant-input-affix-wrapper {
+  border-radius: 999px;
+  background: #f9fafb;
+  padding-left: 14px;
+  padding-right: 4px;
+}
+
+.novo-comentario-input .ant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .visualizar-exame .ant-modal-content {
   max-height: 100vh !important;
   overflow: hidden !important;
@@ -112,5 +146,9 @@
     width: 100%;
     height: auto;
     max-width: none;
+  }
+
+  .comentarios-wrapper {
+    height: 60vh; /* opcional pra seguir um padrão em telas menores */
   }
 }

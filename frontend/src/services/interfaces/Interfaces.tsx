@@ -78,7 +78,7 @@ export type SolicitacaoRow = {
   nome: string;
   especialidade: string;
   crm: string;
-  dataAutorizacao: string;
+  dataPedido: string;
   rawDate: string;
   status: string;
   solcitacao_id?: number;

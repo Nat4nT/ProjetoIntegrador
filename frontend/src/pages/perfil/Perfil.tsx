@@ -59,6 +59,7 @@ import {
 import DesativarContaModal from "../../components/modals/desativarConta/DesativarConta";
 
 import "./Perfil.scss";
+import AlterarSenha from "../../components/modals/alterarSenha/AlterarSenha";
 
 export default function Perfil() {
   const [form] = Form.useForm();
@@ -66,6 +67,7 @@ export default function Perfil() {
   const [loading, setLoading] = useState(false);
   const [loadingCep, setLoadingCep] = useState(false);
   const [openModalDesativarConta, setOpenModalDesativarConta] = useState(false);
+  const [openModalAlterarSenha, setOpenModalAlterarSenha] = useState(false);
 
   const [cepError, setCepError] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
@@ -276,6 +278,10 @@ export default function Perfil() {
         <DesativarContaModal
           open={openModalDesativarConta}
           onClose={() => setOpenModalDesativarConta(false)}
+        />
+        <AlterarSenha
+          open={openModalAlterarSenha}
+          onClose={() => setOpenModalAlterarSenha(false)}
         />
 
         <Form
@@ -687,6 +693,7 @@ export default function Perfil() {
                 className="alterar-senha-button"
                 type="default"
                 htmlType="button"
+                onClick={() => setOpenModalAlterarSenha(true)}
               >
                 Alterar senha
               </Button>
