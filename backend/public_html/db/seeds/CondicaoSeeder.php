@@ -37,7 +37,39 @@ class CondicaoSeeder extends AbstractSeed
             ['nome' => 'Proteína do leite', 'tipo' => 'alergia'],
             ['nome' => 'Ovo', 'tipo' => 'alergia'],
             ['nome' => 'Picada de inseto', 'tipo' => 'alergia'],
+            ["nome" => "Losartana 50 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Enalapril 10 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Hidroclorotiazida 25 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Metformina 850 mg", 'tipo' => 'medicacao'],
+            ["nome" =>  "Insulina NPH", 'tipo' => 'medicacao'],
+            ["nome" => "Atorvastatina 20 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Sinvastatina 20 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Levotiroxina 50 mcg", 'tipo' => 'medicacao'],
+            ["nome" => "Omeprazol 20 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Sertralina 50 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Fluoxetina 20 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Paracetamol 750 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Dipirona 500 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Ibuprofeno 400 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Loratadina 10 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Cetirizina 10 mg", 'tipo' => 'medicacao'],
+            ["nome" => "Salbutamol (spray)", 'tipo' => 'medicacao'],
+            ["nome" => "Budesonida (inalatório)", "tipo" => "medicacao"],
+            ["nome" => "Deficiência física/motora", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência auditiva", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência visual (cegueira)", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência visual (baixa visão)", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência visual (visão monocular)", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência intelectual", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência múltipla", "tipo" => "deficiencia"],
+            ["nome" => "Deficiência psicossocial/saúde mental", "tipo" => "deficiencia"],
+            ["nome" => "Síndrome de Down", "tipo" => "deficiencia"],
+            ["nome" => "Transtorno do Espectro Autista (TEA)", "tipo" => "deficiencia"],
         ];
+
+        
+
+
 
         $this->table('condicao')
             ->insert($data)

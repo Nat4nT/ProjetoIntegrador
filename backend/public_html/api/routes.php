@@ -29,7 +29,6 @@ return function (App $app) {
             $solicitacao->get('', [PacienteController::class, 'buscarSolicitacoes']);
             $solicitacao->post('/negar', [PacienteController::class, 'negarSolicitacao']);
             $solicitacao->post('/aprovar', [PacienteController::class, 'aceitarSolicitacao']);
-
         });
     })->add(AutenticacaoMiddleware::class);
 
@@ -42,13 +41,14 @@ return function (App $app) {
     })->add(AutenticacaoMiddleware::class);
 
 
-    
+
     $app->group("/medico", function ($med) {
-        $med->post('/solicitar-acesso',[MedicoController::class,'solicitarAcesso']);
-        $med->post('/buscar',[MedicoController::class,'buscarPaciente']);
-        $med->post('/buscar-exames',[MedicoController::class,"buscarExamesPaciente"]);
-        $med->post('/buscar-categorias',[MedicoController::class,"buscarCategoriasPaciente"]);
-        $med->get('/pacientes', [MedicoController::class,'buscarPacientes']);
+        $med->post('/solicitar-acesso', [MedicoController::class, 'solicitarAcesso']);
+        $med->post('/buscar', [MedicoController::class, 'buscarPaciente']);
+        $med->post('/buscar-exames', [MedicoController::class, "buscarExamesPaciente"]);
+        $med->post('/buscar-exame', [MedicoController::class, "buscarExamePaciente"]);
+        $med->post('/buscar-categorias', [MedicoController::class, "buscarCategoriasPaciente"]);
+        $med->get('/pacientes', [MedicoController::class, 'buscarPacientes']);
     })->add(TipeMiddleware::class)->add(AutenticacaoMiddleware::class);
 
     $app->group('/exames', function ($exam) {
@@ -57,6 +57,7 @@ return function (App $app) {
         $exam->post('/adicionar', [ExameController::class, 'create']);
         $exam->post('/editar', [ExameController::class, 'edit']);
         $exam->post('/deletar', [ExameController::class, 'delete']);
+        $exam->post('/criar-comentario', [ExameController::class, 'criarComentario'])->add(TipeMiddleware::class);
     })->add(AutenticacaoMiddleware::class);
 
 

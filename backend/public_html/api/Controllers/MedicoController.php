@@ -42,6 +42,15 @@ class MedicoController
         return (new JsonResponse())->emitirResposta($response, ['message' => $resposta['message'], 'data' => $resposta['data'], 'code' => $resposta['code']], $resposta['code']);
     }
 
+    public function buscarExamePaciente(Request $request, Response $response)
+    {
+        $jsonResponse = new JsonResponse();
+        $medico = $request->getAttribute('usuario');
+
+        $dado_pesquisa = $request->getParsedBody();
+        $resposta = (new MedicoService())->buscar_exame($medico->usuario_id, $dado_pesquisa);
+        return $jsonResponse->emitirResposta($response, ['message' => $resposta['message'], 'code' => $resposta['code'], 'data' => $resposta['data']], $resposta['code']);
+    }
     public function buscarExamesPaciente(Request $request, Response $response)
     {
         $jsonResponse = new JsonResponse();

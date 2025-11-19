@@ -71,6 +71,17 @@ class MedicoService
             return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
         }
     }
+    public function buscar_exame($medico, $dados_pesquisa)
+    {
+        $medicoModel = new MedicoModel($medico);
+        if ($medicoModel->buscarPaciente($dados_pesquisa['paciente_id'])->status) {
+            return ["code" => 200, "message" => "Exame encontrado", "data" => (new ExameModel($dados_pesquisa['exame_id']))->getExame()];
+        } else {
+            return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
+        }
+    }
+
+
     public function buscar_categorias($medico, $paciente_id)
     {
         $medicoModel = new MedicoModel($medico);

@@ -15,7 +15,7 @@ final class CreateTableCondicao extends AbstractMigration
         }
         $table = $this->table($tableName,['id'=>'condicao_id']);
         $table->addColumn('nome','string',['limit'=> 255,'null'=> false])
-        ->addColumn('tipo','enum',['values'=>['alergia','doenca','deficiencia']])
+        ->addColumn('tipo','enum',['values'=>['alergia','doenca','deficiencia','medicacao']])
         ->addTimestamps('data_criacao', 'data_atualizacao')
         ->create();
 
