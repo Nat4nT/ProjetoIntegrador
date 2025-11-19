@@ -31,7 +31,7 @@ class ExameModel extends Model
         $stmt->execute();
         $exame = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT * FROM comentario_exame
+        $sql = "SELECT comentario_exame.*,u.primeiro_nome,u.ultimo_nome,u.imagem_perfil FROM comentario_exame
         INNER JOIN usuario u USING(usuario_id)
         WHERE {$this->id_column_name} = :exame_id ";
         $stmt = $this->conn->prepare($sql);

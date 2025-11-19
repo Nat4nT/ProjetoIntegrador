@@ -3,13 +3,13 @@
 namespace Api\Services;
 
 use Api\Models\CategoriaExameModel;
+use Api\Models\ComentarioExame;
 use Api\Models\ExameModel;
 use DateTime;
 use Exception;
 
 class ExameService
 {
-
     public function getExames($id_usuario)
     {
         $exames = (new ExameModel())->getUserExames($id_usuario);
@@ -166,12 +166,36 @@ class ExameService
             'code' => 200
         ];
     }
-    public function deleteExame($id_exame){
-        if(!$id_exame){
-            return ['code'=> 400, 'message'=> 'Exame invalido'];
+    public function deleteExame($id_exame)
+    {
+        if (!$id_exame) {
+            return ['code' => 400, 'message' => 'Exame invalido'];
         }
         (new CategoriaExameModel())->deleteAll($id_exame);
         (new ExameModel($id_exame))->deleteData();
-        return ['code'=> 200, 'message'=> 'Exame excluido com sucesso!'];
+        return ['code' => 200, 'message' => 'Exame excluido com sucesso!'];
     }
+    public function criarComentario($medico, $comentario)
+    {
+
+        if ($medico->tipo_usuario != "medico") return ['message' => "Usuario não medico", "code" => 402];
+
+        $data = [
+            'exame_id' => $comentario['exame_id'],
+            'usuario_id' => $medico->usuario_id,
+            "comentario" => $comentario['comentario']
+        ];
+
+
+        (new ComentarioExame())->AddData($data);
+
+         return [
+            'message' => 'Comentario Realizado com sucesso',
+            'code' => 200
+        ];
+    }
+    public function editarComentario($medico,$comentario){
+
+    }
+    public function deletarComentario($medico,$comentario){}
 }

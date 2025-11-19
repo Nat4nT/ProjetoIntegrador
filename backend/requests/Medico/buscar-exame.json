@@ -1,0 +1,11 @@
+{
+  "route": "localhost:8080/medico/buscar-exame",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "paciente_id": "2",
+    "exame_id": "2"
+  }
+}

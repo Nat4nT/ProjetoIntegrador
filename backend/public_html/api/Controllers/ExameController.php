@@ -64,4 +64,29 @@ class ExameController
         $resposta = (new ExameService())->getExame($id_exame);
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code'], "data" => [$resposta['data']]], $resposta['code']);
     }
+
+    public function criarComentario(Request $request, Response $response)
+    {
+        $medico = $request->getAttribute('usuario');
+        $comentario = $request->getParsedBody();
+        $resposta = (new ExameService())->criarComentario($medico,$comentario);
+
+        return (new JsonResponse())->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+    public function editarComentario(Request $request, Response $response)
+    {
+        $medico = $request->getAttribute('usuario');
+        $comentario = $request->getParsedBody();
+        $resposta = (new ExameService())->editarComentario($medico,$comentario);
+
+        return (new JsonResponse())->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+    public function deletarComentario(Request $request, Response $response)
+    {
+        $medico = $request->getAttribute('usuario');
+        $comentario = $request->getParsedBody();
+        $resposta = (new ExameService())->deletarComentario($medico,$comentario);
+
+        return (new JsonResponse())->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
 }

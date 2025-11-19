@@ -1,5 +1,5 @@
 {
-  "route": "localhost:8080/minha-conta",
+  "route": "localhost:8080/minha-conta/alterar-senha",
   "method": "POST",
   "Header": {
     "Auth": "Bearer token"

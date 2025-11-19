@@ -1,0 +1,12 @@
+{
+  "route": "localhost:8080/exames/criar-comentario",
+  "method": "POST",
+  "Header": {
+    "Auth": "Bearer token"
+  },
+  "body": {
+    "exame_id": 1,
+    "usuario_id": 2,
+    "comentario": "..."
+  }
+}
