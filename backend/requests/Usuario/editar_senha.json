@@ -6,7 +6,7 @@
   },
   "body": {
     "senha": "123",
-    "nova-senha": "1234",
-    "confirmacao-senha": "1234"
+    "nova_senha": "1234",
+    "confirmacao_senha": "1234"
   }
 }
