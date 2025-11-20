@@ -63,8 +63,6 @@ class UsuarioService
         return ["erro" => $erro, "mensagem" => $mensagem];
     }
 
-
-
     private function prepareUserData(array $dados, $is_logged = 0): array
     {
         $cript = new Criptografia();
@@ -183,6 +181,7 @@ class UsuarioService
             'mensagem' => $mensagem
         ];
     }
+
     private function prepareMedicoData($usuarioId, array $dados): array
     {
         $validacao = $this->validarCamposMedico($dados);
@@ -235,6 +234,21 @@ class UsuarioService
         return $dados_usuario;
     }
 
+    private function verificarCPF($dados)
+    {
+        $usuarioModel = new UsuarioModel();
+        $cpf =(new Criptografia())->encriptarDado($dados['cpf']);
+        $usuario = $usuarioModel->getData(['where'=>"cpf = '{$cpf}'"]);
+        if ($usuario) {
+            foreach($usuario as $user){
+                if ($user['tipo_usuario'] === $dados['tipo_usuario'] && $user['cpf'] === $cpf)
+                    return true;
+
+            }
+        }
+        return false;
+    }
+
     public function realizarCadastro(array $dados = []): array
     {
         $usuarioModel = new UsuarioModel();
@@ -248,11 +262,18 @@ class UsuarioService
             return ['code' => 401, 'message' => "Email já cadastrado!"];
         }
 
+
+
+
         $senhaLogin = $dados['senha'] ?? null;
 
         $dadosUsuario = $this->prepareUserData($dados);
         if (isset($dadosUsuario['error'])) {
             $retonro_erro[] = ['code' => 400, 'message' => $dadosUsuario['message']];
+        }
+
+        if ($this->verificarCPF($dados)) {
+            return ['code' => 401, 'message' => "CPF já cadastrado!"];
         }
 
         if (isset($dados['endereco'])) {
@@ -300,7 +321,6 @@ class UsuarioService
         return ['code' => 200, 'message' => "Cadastro realizado com sucesso", "token" => $data['token'], 'firstname' => $data['firstname'], 'lastname' => $data['lastname'], "user_photo" => $data['imagem_perfil']];
     }
 
-
     public function buscarDados($dadosUsuario): array
     {
         $dados = (new UsuarioModel($dadosUsuario->usuario_id))->buscarUsuario($dadosUsuario->tipo_usuario);
@@ -342,7 +362,6 @@ class UsuarioService
             'code' => 404
         ];
     }
-
 
     public function editarUsuario(object $dadosSessao, array $dadosFormulario): array
     {
@@ -400,7 +419,6 @@ class UsuarioService
             'code' => 200
         ];
     }
-
 
     public function desativar(int $idPerfil): array
     {

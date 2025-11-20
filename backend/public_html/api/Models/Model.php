@@ -27,7 +27,7 @@ abstract class Model
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     public function getData(array $options = []): array
     {
         $defaults = [
@@ -50,7 +50,6 @@ abstract class Model
         if (!empty($params['limit']) && is_numeric($params['limit'])) {
             $stmt->bindValue(':limit', (int)$params['limit'], PDO::PARAM_INT);
         }
-
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
