@@ -27,9 +27,7 @@ abstract class Model
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-
-
+    
     public function getData(array $options = []): array
     {
         $defaults = [

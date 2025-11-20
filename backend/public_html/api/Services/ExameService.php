@@ -178,7 +178,7 @@ class ExameService
     public function criarComentario($medico, $comentario)
     {
 
-        if ($medico->tipo_usuario != "medico") return ['message' => "Usuario não medico", "code" => 402];
+        if ($medico->tipo_usuario != "medico") return ['message' => "Usuario sem permissão", "code" => 402];
 
         $data = [
             'exame_id' => $comentario['exame_id'],
@@ -189,13 +189,43 @@ class ExameService
 
         (new ComentarioExame())->AddData($data);
 
-         return [
-            'message' => 'Comentario Realizado com sucesso',
+        return [
+            'message' => 'Comentario realizado com sucesso',
             'code' => 200
         ];
     }
-    public function editarComentario($medico,$comentario){
+    public function editarComentario($medico, $comentario)
+    {
 
+        $comentarioModel = new ComentarioExame($comentario['comentario_id']);
+        $datacomentario = $comentarioModel->getInfo();
+
+        if ($datacomentario['usuario_id'] != $medico->usuario_id) {
+            return ['message' => "Usuario sem permissão", "code" => 402];
+        }
+
+        $comentarioModel->editData(["comentario" => $comentario['comentario']]);
+
+        return [
+            'message' => 'Comentario editado com sucesso',
+            'code' => 200
+        ];
     }
-    public function deletarComentario($medico,$comentario){}
+    public function deletarComentario($medico, $comentario)
+    {
+
+        $comentarioModel = new ComentarioExame($comentario['comentario_id']);
+
+        $comentario = $comentarioModel->getInfo();
+        if ($comentario['usuario_id'] != $medico->usuario_id) {
+            return ['message' => "Usuario sem permissão", "code" => 402];
+        }
+
+
+        $comentarioModel->deleteData();
+        return [
+            'message' => 'Comentario deletado com sucesso',
+            'code' => 200
+        ];
+    }
 }

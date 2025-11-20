@@ -19,7 +19,7 @@ class UsuarioService
 
         if (!$usuarioData) return null;
 
-        if ($camposFormulario['nova-senha'] !== $camposFormulario['confirmacao-senha']) {
+        if ($camposFormulario['nova_senha'] !== $camposFormulario['confirmacao_senha']) {
             return ['message' => "Senhas diferentes", 'code' => 400];
         }
 
@@ -27,11 +27,11 @@ class UsuarioService
             return ['message' => "Senha incorreta.", 'code' => 400];
         }
 
-        if (password_verify($camposFormulario['nova-senha'], $usuarioData['senha'])) {
+        if (password_verify($camposFormulario['nova_senha'], $usuarioData['senha'])) {
             return ['message' => "A Senha deve ser diferente da anterior.", 'code' => 400];
         }
 
-        $usuarioModel->editData(['senha' => password_hash($camposFormulario['nova-senha'], PASSWORD_DEFAULT)]);
+        $usuarioModel->editData(['senha' => password_hash($camposFormulario['nova_senha'], PASSWORD_DEFAULT)]);
 
         return ['code' => 200, 'message' => "Senha alterada com sucesso"];
     }
