@@ -84,7 +84,7 @@ class EmailService
         $redis->setex("code:{$email_user}", 300, $codigoRecup);
         $retorno = (new Email())->send($email_user, "Codigo Recuperação MedExame", $bodyEmail, 'email_code.html');
 
-        if ($retorno['code'] === 400) {
+        if ($retorno['code'] == 400) {
             return [
                 'message' => $retorno['message'],
                 'code' => $retorno['code']

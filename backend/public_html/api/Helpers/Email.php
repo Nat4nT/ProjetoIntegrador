@@ -41,7 +41,12 @@ class Email
 
             $mail->Body    = $body;
 
-            return $mail->send();
+            if ($mail->send()) {
+                $message = ['code' => 200, "message" => "Email Enviado"];
+            } else {
+                $message = ['code' => 400, "message" => "Erro ao enviar"];
+            }
+            return $message;
         } catch (Exception $e) {
             return ['message' => "E-mail invalido", 'code' => 400];
         }

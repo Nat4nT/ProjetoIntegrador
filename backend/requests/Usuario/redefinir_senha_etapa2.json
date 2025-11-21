@@ -1,0 +1,27 @@
+{
+  "route": "localhost:8080/verificar-codigo",
+  "method": "POST",
+  "body": {
+    "email": "joao.pedro@example.com",
+    "validation_code": "codigo_enviado_por_email"
+  },
+  "respostas": [
+    {
+      "message": "Código validado com sucesso!",
+      "data": {
+        "token": ""
+      },
+      "code": 200
+    },
+    {
+      "message": "Código expirado.",
+      "data": [],
+      "code": 400
+    },
+    {
+      "message": "Código inválido.",
+      "data": [],
+      "code": 400
+    }
+  ]
+}
