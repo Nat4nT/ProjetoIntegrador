@@ -10,6 +10,7 @@ import { alterarSenha } from "../../../services/apiInterna/FluxoIdentificacao";
 import { showMessage } from "../../messageHelper/ShowMessage";
 
 import "./AlterarSenha.scss";
+import { padraoDeSenha } from "../../../utils/Masks";
 
 type AlterarSenhaProps = {
   open: boolean;
@@ -17,6 +18,8 @@ type AlterarSenhaProps = {
 };
 
 export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
+  const [form] = Form.useForm();
+
   const [loading, setLoading] = useState(false);
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -28,8 +31,8 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
       setLoading(true);
       const payload = {
         senha: senhaAtual,
-        "nova-senha": novaSenha,
-        "confirmacao-senha": secondNovaSenha,
+        nova_senha: novaSenha,
+        confirmacao_senha: secondNovaSenha,
       };
       await alterarSenha(payload as any);
       showMessage("Senha atualizada com sucesso.", "success");
@@ -44,6 +47,16 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
     }
   };
 
+  const onFinishFailed = () => {
+    showMessage("Preencha os campos obrigatórios destacados.", "warning");
+    form.scrollToField(
+      form.getFieldsError().find((f) => f.errors.length)?.name ?? [],
+      {
+        block: "center",
+      }
+    );
+  };
+
   return (
     <Modal
       open={open}
@@ -53,6 +66,7 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
       width={620}
       maskClosable={false}
       title={null}
+      destroyOnHidden
       rootClassName="alterar-senha-modal"
       styles={{
         content: {
@@ -63,11 +77,18 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
       }}
     >
       <div className="alterar-senha-header">
-        <h2>Alterar senha</h2>
-        <p>Preencha os campos abaixo para realizar a alteração da sua senha.</p>
+        <h2 className="title-alterar-senha">Alterar senha</h2>
+        <p className="descricao-alterar-senha">
+          Preencha os campos abaixo para realizar a alteração da sua senha.
+        </p>
       </div>
 
-      <Form layout="vertical">
+      <Form
+        layout="vertical"
+        onFinish={handleAlterarSenha}
+        onFinishFailed={onFinishFailed}
+        className="form-altetar-senha"
+      >
         <input
           type="password"
           name="password"
@@ -78,6 +99,7 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
         <Form.Item
           label="Senha atual"
           name="senhaAtual"
+          style={{ paddingTop: "10px" }}
           rules={[{ required: true, message: "Digite sua senha atual!" }]}
         >
           <Input.Password
@@ -90,7 +112,15 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
         <Form.Item
           label="Nova senha"
           name="novaSenha"
-          rules={[{ required: true, message: "Digite a nova senha!" }]}
+          style={{ paddingTop: "8px" }}
+          rules={[
+            { required: true, message: "Digite a nova senha!" },
+            {
+              pattern: padraoDeSenha,
+              message:
+                "A senha deve conter ao menos 8 caracteres, uma letra maiúscula, um número e um símbolo.",
+            },
+          ]}
         >
           <Input.Password
             placeholder="Digite a nova senha"
@@ -102,7 +132,17 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
         <Form.Item
           label="Confirmar nova senha"
           name="confirmarNovaSenha"
-          rules={[{ required: true, message: "Confirme a nova senha!" }]}
+          style={{ paddingTop: "8px" }}
+          rules={[
+            { required: true, message: "Confirme a nova senha!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("novaSenha") === value)
+                  return Promise.resolve();
+                return Promise.reject(new Error("As senhas não conferem"));
+              },
+            }),
+          ]}
         >
           <Input.Password
             placeholder="confirme a nova senha"
@@ -111,20 +151,19 @@ export default function AlterarSenha({ open, onClose }: AlterarSenhaProps) {
             autoComplete="new-password"
           />
         </Form.Item>
+        <div className="container-button-alterar-senha">
+          <Button
+            className="button-alterar-senha"
+            type="primary"
+            size="large"
+            block
+            loading={loading}
+            htmlType="submit"
+          >
+            Confirmar
+          </Button>
+        </div>
       </Form>
-
-      <div className="container-button-alterar-senha">
-        <Button
-          className="button-alterar-senha"
-          type="primary"
-          size="large"
-          block
-          loading={loading}
-          onClick={handleAlterarSenha}
-        >
-          Confirmar
-        </Button>
-      </div>
     </Modal>
   );
 }

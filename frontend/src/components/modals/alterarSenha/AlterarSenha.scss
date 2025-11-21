@@ -1,8 +1,25 @@
+.alterar-senha-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .title-alterar-senha {
+    font-weight: bold;
+    font-size: 28px;
+  }
+  .descricao-alterar-senha {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6B7280;
+  }
+}
+
 .container-button-alterar-senha {
   display: flex;
   justify-content: center;
   gap: 30px;
   padding-top: 30px;
+  padding-bottom: 20px;
 }
 
 .button-alterar-senha {
