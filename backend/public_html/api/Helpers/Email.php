@@ -18,12 +18,6 @@ class Email
             $mail->Port = 587;
             $mail->Username = 'api';
             $mail->Password = '36c88cc6f824011381e0679d8d61a0a9';
-            // $mail->Password = 'd8dbb12309bb0ebbe93a47ee29784302';
-            
-            // $mail->Port = 2525;
-            // $mail->Username = 'd740c4b84c19c6';
-            // $mail->Host = 'sandbox.smtp.mailtrap.io';
-            // $mail->Password = 'a3940e236b4137';
             $mail->setFrom('mailtrap@demomailtrap.com', 'Sistema MedExame');
             $mail->isHTML(true);
             $mail->CharSet = 'UTF-8';
@@ -49,7 +43,7 @@ class Email
 
             return $mail->send();
         } catch (Exception $e) {
-            throw new \Exception("Erro ao enviar email: " . $e->getMessage());
+            return ['message' => "E-mail invalido", 'code' => 400];
         }
     }
 }

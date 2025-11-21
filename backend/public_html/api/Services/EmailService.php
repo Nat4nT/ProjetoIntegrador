@@ -41,7 +41,7 @@ class EmailService
 
         $usuario = (new UsuarioModel())->buscarPorEmail($email);
         $redis->del("code:{$email}");
-        
+
         $data = [
             'token' => Token::gerarToken([
                 'usuario_id' => $usuario->usuario_id,
@@ -52,7 +52,7 @@ class EmailService
         return [
             'message' => 'Código validado com sucesso!',
             'code' => 200,
-            'data'=> $data
+            'data' => $data
         ];
     }
 
@@ -82,8 +82,14 @@ class EmailService
 
 
         $redis->setex("code:{$email_user}", 300, $codigoRecup);
-        (new Email())->send($email_user, "Codigo Recuperação MedExame", $bodyEmail, 'email_code.html');
+        $retorno = (new Email())->send($email_user, "Codigo Recuperação MedExame", $bodyEmail, 'email_code.html');
 
+        if ($retorno['code'] === 400) {
+            return [
+                'message' => $retorno['message'],
+                'code' => $retorno['code']
+            ];
+        }
         return [
             'message' => "E-mail enviado com sucesso!",
             'code' => 200
