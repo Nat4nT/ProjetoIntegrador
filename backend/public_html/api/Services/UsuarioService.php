@@ -24,8 +24,10 @@ class UsuarioService
             return ['message' => "Senhas diferentes", 'code' => 400];
         }
 
-        if (!password_verify($camposFormulario['senha'], $usuarioData['senha'])) {
-            return ['message' => "Senha incorreta.", 'code' => 400];
+        if(isset($camposFormulario['senha'])){
+            if (!password_verify($camposFormulario['senha'], $usuarioData['senha'])) {
+                return ['message' => "Senha incorreta.", 'code' => 400];
+            }
         }
 
         if (password_verify($camposFormulario['nova_senha'], $usuarioData['senha'])) {
