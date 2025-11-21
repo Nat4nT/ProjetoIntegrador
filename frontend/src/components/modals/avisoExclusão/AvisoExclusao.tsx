@@ -5,12 +5,18 @@ import "./AvisoExclusao.scss";
 
 type AvisoExcluir = {
   open: boolean;
+  tituloModal: String;
+  fraseUmModal: String;
+  fraseDoiModal: String;
   onClose: () => void;
   onSubmit: () => void;
 };
 
 export default function AvisoExclusaoModal({
   open,
+  tituloModal,
+  fraseUmModal,
+  fraseDoiModal,
   onClose,
   onSubmit,
 }: AvisoExcluir) {
@@ -33,9 +39,9 @@ export default function AvisoExclusaoModal({
       }}
     >
       <div className="dc-header-aviso-exclusao">
-        <h2>Excluir exame</h2>
-        <p>Tem certeza de que deseja excluir o exame?</p>
-        <p>Esta ação é irreversível.</p>
+        <h2>{tituloModal}</h2>
+        <p>{fraseUmModal}</p>
+        <p>{fraseDoiModal}</p>
       </div>
 
       <div className="dc-buttons-aviso-exclusao">

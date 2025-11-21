@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 //componentes antd
-import { Card, Typography, Table, Button, Space } from "antd";
+import { Card, Typography, Table, Button, Space, Grid } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 
@@ -9,9 +9,7 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs, { Dayjs } from "dayjs";
 
 //api
-import {
-  buscarPacientes,
-} from "../../../services/apiInterna/buscarPacientes";
+import { buscarPacientes } from "../../../services/apiInterna/buscarPacientes";
 
 //interface
 import type { PacienteRow } from "../../../services/interfaces/Interfaces";
@@ -22,16 +20,19 @@ import { maskCPF } from "../../../utils/Masks";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
+const { useBreakpoint } = Grid;
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
   const [pacientes, setPacientes] = useState<PacienteRow[]>([]);
 
   const navigate = useNavigate();
+  const screens = useBreakpoint();
+  const isMobile = !screens.xl;
 
   const colunas: ColumnsType<PacienteRow> = [
     { title: "Nome", dataIndex: "nome", key: "nome" },
-    { title: "CPF", dataIndex: "cpf", key: "cpf" },
+    { title: "CPF", dataIndex: "cpf", key: "cpf", responsive: ["md"] },
     {
       title: "Data de nascimento",
       dataIndex: "dataNascimento",
@@ -39,6 +40,7 @@ export default function SeusExames() {
       sorter: (a, b) =>
         dayjs(a.dataNascimento).valueOf() - dayjs(b.dataNascimento).valueOf(),
       defaultSortOrder: "ascend",
+      responsive: ["xl"],
     },
     {
       title: "Autorizado em",
@@ -47,18 +49,22 @@ export default function SeusExames() {
       sorter: (a, b) =>
         dayjs(a.autorizadoEm).valueOf() - dayjs(b.autorizadoEm).valueOf(),
       defaultSortOrder: "ascend",
+      responsive: ["xl"],
     },
 
     {
       title: "Ações",
       key: "acoes",
+      responsive: ["xl"],
       render: (_, record) => (
         <Space>
           <Button
             className="button-solicitar-acesso"
             size="small"
             type="primary"
-            onClick={() => navigate(`/exames/paciente/${record.key}/${record.nome}`)}
+            onClick={() =>
+              navigate(`/exames/paciente/${record.key}/${record.nome}`)
+            }
           >
             Ver exames
           </Button>
@@ -126,6 +132,52 @@ export default function SeusExames() {
           loading={loading}
           dataSource={pacientes}
           pagination={{ pageSize: 10 }}
+          expandable={
+            isMobile
+              ? {
+                  columnWidth: 40,
+                  expandedRowRender: (record) => (
+                    <div
+                      style={{
+                        padding: "8px 0",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      <div>
+                        <strong>CPF: </strong>
+                        {record.cpf}
+                      </div>
+                      <div>
+                        <strong>Data de nascimento: </strong>
+                        {record.dataNascimento}
+                      </div>
+                      <div>
+                        <strong>Autorizado em: </strong>
+                        {record.autorizadoEm}
+                      </div>
+                      <div>
+                        <Space>
+                          <Button
+                            className="button-solicitar-acesso"
+                            size="small"
+                            type="primary"
+                            onClick={() =>
+                              navigate(
+                                `/exames/paciente/${record.key}/${record.nome}`
+                              )
+                            }
+                          >
+                            Ver exames
+                          </Button>
+                        </Space>
+                      </div>
+                    </div>
+                  ),
+                }
+              : undefined
+          }
         />
       </Card>
     </div>

@@ -334,9 +334,7 @@ export default function SeusExames() {
     <div>
       <Card>
         <Title>
-          {tipoUsuario === "medico"
-            ? "Exames do paciente: " + nome
-            : "Seus Exames"}
+          {tipoUsuario === "medico" ? "Exames do " + nome : "Seus Exames"}
         </Title>
         <Paragraph>
           Use as categorias acima da tabela para filtrar os resultados. Você
@@ -456,6 +454,9 @@ export default function SeusExames() {
         onClose={closeModalAvisoExclusao}
         open={openModalAvisoExclusao}
         onSubmit={excluirExameSelecionado}
+        tituloModal={"Excluir exame"}
+        fraseUmModal={"Tem certeza de que deseja excluir o exame?"}
+        fraseDoiModal={"Esta ação é irreversível."}
       />
       <VisualizarExameModal
         open={openModalVisualizar}

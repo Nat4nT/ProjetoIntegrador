@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 //componentes antd
-import { Card, Typography, Table, Button } from "antd";
+import { Card, Typography, Table, Button, Grid } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 
@@ -23,8 +23,10 @@ import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMe
 import { StatusAcesso } from "../../utils/Enum";
 
 import "./Medicos.scss";
+import AvisoExclusaoModal from "../../components/modals/avisoExclusão/AvisoExclusao";
 
 const { Title, Paragraph } = Typography;
+const { useBreakpoint } = Grid;
 
 export default function SeusExames() {
   const tipoUsuario = localStorage.getItem("tipo_usuario");
@@ -33,10 +35,14 @@ export default function SeusExames() {
   const [modalOpen, setModalOpen] = useState(false);
   const [loadingPermitir, setLoadingPermitir] = useState(false);
   const [loadingRecusar, setLoadingRecusar] = useState(false);
+  const [openModalAvisoExclusao, setOpenModalAvisoExclusao] = useState(false);
 
   const [solicitacaoSelecionada, setSolicitacaoSelecionada] =
     useState<SolicitacaoRow | null>(null);
   const [rows, setRows] = useState<SolicitacaoRow[]>([]);
+
+  const screens = useBreakpoint();
+  const isMobile = !screens.xl;
 
   const handleAbrirModal = (record: SolicitacaoRow) => {
     setSolicitacaoSelecionada(record);
@@ -46,6 +52,10 @@ export default function SeusExames() {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSolicitacaoSelecionada(null);
+  };
+
+  const closeModalAvisoExclusao = () => {
+    setOpenModalAvisoExclusao(false);
   };
 
   // FUNÇÃO PARA ACEITAR ACESSO DO MÉDICO
@@ -90,8 +100,9 @@ export default function SeusExames() {
         )
       );
 
-      showMessage("Solicitação recusada.", "success");
+      showMessage("Solicitação recusada.", "info");
       handleCloseModal();
+      closeModalAvisoExclusao();
     } catch (err) {
       console.error(err);
       showMessage("Erro ao recusar solicitação.", "error");
@@ -107,19 +118,22 @@ export default function SeusExames() {
       title: "Especialidade",
       dataIndex: "especialidade",
       key: "especialidade",
+      responsive: ["sm"],
     },
-    { title: "CRM", dataIndex: "crm", key: "crm" },
+    { title: "CRM", dataIndex: "crm", key: "crm", responsive: ["md"] },
     {
       title: "Data do pedido",
       dataIndex: "dataPedido",
       key: "dataPedido",
       sorter: (a, b) => dayjs(a.rawDate).valueOf() - dayjs(b.rawDate).valueOf(),
       defaultSortOrder: "ascend",
+      responsive: ["xl"],
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      responsive: ["xl"],
       render: (_, record) => {
         if (record.status === StatusAcesso.APROVADO) {
           return (
@@ -147,15 +161,18 @@ export default function SeusExames() {
     {
       title: "Ações",
       key: "acoes",
+      responsive: ["md"],
       render: (_, record) => {
-        setSolicitacaoSelecionada(record);
         if (record.status === StatusAcesso.APROVADO) {
           return (
             <Button
               className="button-cancelar-acesso"
               danger
               size="small"
-              onClick={handleRecusar}
+              onClick={() => {
+                setSolicitacaoSelecionada(record);
+                setOpenModalAvisoExclusao(true);
+              }}
               loading={loadingRecusar}
             >
               Cancelar acesso
@@ -235,6 +252,14 @@ export default function SeusExames() {
 
   return (
     <div>
+      <AvisoExclusaoModal
+        onClose={closeModalAvisoExclusao}
+        open={openModalAvisoExclusao}
+        onSubmit={handleRecusar}
+        tituloModal={"Revogar acesso médico"}
+        fraseUmModal={"Tem certeza de que deseja revogar o acesso?"}
+        fraseDoiModal={""}
+      />
       <Card>
         <Title>Médicos com Acesso</Title>
         <Paragraph>
@@ -254,6 +279,77 @@ export default function SeusExames() {
           locale={{ emptyText: "Nenhuma solicitação encontrada" }}
           rowClassName={(record) =>
             record.status === StatusAcesso.REVOGADO ? "linha-revogada" : ""
+          }
+          expandable={
+            isMobile
+              ? {
+                  columnWidth: 40,
+                  expandedRowRender: (record) => (
+                    <div
+                      style={{
+                        padding: "8px 0",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      <div>
+                        <strong>Especialidade: </strong>
+                        {record.especialidade}
+                      </div>
+
+                      <div>
+                        <strong>CRM: </strong>
+                        {record.crm}
+                      </div>
+
+                      <div>
+                        <strong>Data do pedido: </strong>
+                        {record.dataPedido}
+                      </div>
+
+                      <div>
+                        <strong>Status: </strong>
+                        {record.status}
+                      </div>
+
+                      <div>
+                        {record.status === StatusAcesso.APROVADO && (
+                          <Button
+                            className="button-cancelar-acesso"
+                            danger
+                            size="small"
+                            onClick={() => {
+                              setSolicitacaoSelecionada(record);
+                              setOpenModalAvisoExclusao(true);
+                            }}
+                            loading={loadingRecusar}
+                          >
+                            Cancelar acesso
+                          </Button>
+                        )}
+
+                        {record.status === StatusAcesso.PENDENTE && (
+                          <Button
+                            className="button-ver-solicitacao"
+                            type="primary"
+                            size="small"
+                            onClick={() => handleAbrirModal(record)}
+                          >
+                            Ver solicitação
+                          </Button>
+                        )}
+
+                        {record.status === StatusAcesso.REVOGADO && (
+                          <span style={{ color: "#8888888f" }}>
+                            Acesso revogado
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ),
+                }
+              : undefined
           }
         />
       </Card>

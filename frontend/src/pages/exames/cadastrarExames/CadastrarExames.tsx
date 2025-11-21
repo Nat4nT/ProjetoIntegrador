@@ -48,12 +48,13 @@ export default function SeusExames() {
       "image/jpeg",
     ].includes(file.type);
     if (!isAllowedType) {
-      showMessage("Formato inválido. Envie PDF, PNG ou JPG/JPEG.", "error");
+      setErrorArquivoEmpty("Formato inválido. Envie PDF, PNG ou JPG/JPEG.");
+
       return Upload.LIST_IGNORE;
     }
     const isLt15M = file.size / 1024 / 1024 <= 15;
     if (!isLt15M) {
-      showMessage("Arquivo maior que 15MB.", "error");
+      setErrorArquivoEmpty("Arquivo maior que 15MB.");
       return Upload.LIST_IGNORE;
     }
     return false;
