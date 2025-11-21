@@ -20,6 +20,7 @@ return function (App $app) {
     $app->post('/login', [LoginController::class, 'realizarLogin']);
     $app->post('/registrar', [UsuarioController::class, 'realizarCadastro']);
     $app->post('/recuperar-conta',[UsuarioController::class,'recuperacaoDeConta']);
+    $app->post('/verificar-codigo',[UsuarioController::class,'validarCodigoRecup']);
 
     $app->group('/minha-conta', function ($user) {
         $user->get('', [UsuarioController::class, 'pegarDadosConta']);
@@ -28,9 +29,9 @@ return function (App $app) {
         $user->post('/alterar-senha', [UsuarioController::class, 'alterarSenha']);
         $user->group('/solicitacoes', function ($solicitacao) {
             $solicitacao->get('', [PacienteController::class, 'buscarSolicitacoes']);
-            $solicitacao->post('/negar', [PacienteController::class, 'negarSolicitacao']);
-            $solicitacao->post('/revogar', [PacienteController::class, 'revogarSolicitacao']);
-            $solicitacao->post('/aprovar', [PacienteController::class, 'aceitarSolicitacao']);
+            $solicitacao->post('/negar', [UsuarioController::class, 'negarSolicitacao']);
+            $solicitacao->post('/revogar', [UsuarioController::class, 'revogarSolicitacao']);
+            $solicitacao->post('/aprovar', [UsuarioController::class, 'aceitarSolicitacao']);
         });
     })->add(AutenticacaoMiddleware::class);
 

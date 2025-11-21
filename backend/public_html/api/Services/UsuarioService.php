@@ -3,6 +3,7 @@
 namespace Api\Services;
 
 use Api\Helpers\Criptografia;
+use Api\Models\AutorizacaoAcessoModel;
 use Api\Models\EnderecoModel;
 use Api\Models\MedicoModel;
 use Api\Models\PacienteModel;
@@ -237,13 +238,12 @@ class UsuarioService
     private function verificarCPF($dados)
     {
         $usuarioModel = new UsuarioModel();
-        $cpf =(new Criptografia())->encriptarDado($dados['cpf']);
-        $usuario = $usuarioModel->getData(['where'=>"cpf = '{$cpf}'"]);
+        $cpf = (new Criptografia())->encriptarDado($dados['cpf']);
+        $usuario = $usuarioModel->getData(['where' => "cpf = '{$cpf}'"]);
         if ($usuario) {
-            foreach($usuario as $user){
+            foreach ($usuario as $user) {
                 if ($user['tipo_usuario'] === $dados['tipo_usuario'] && $user['cpf'] === $cpf)
                     return true;
-
             }
         }
         return false;
@@ -440,5 +440,24 @@ class UsuarioService
                 'code' => 300
             ];
         }
+    }
+
+    public function revogarSolicitacao($solicitacao_id)
+    {
+        $data['status'] = "REVOGADO";
+        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
+        return ["code" => 200, "message" => "Solicitação revogada!"];
+    }
+    public function negarSolicitacao($solicitacao_id)
+    {
+        $data['status'] = "NEGADO";
+        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
+        return ["code" => 200, "message" => "Solicitação negada!"];
+    }
+    public function aceitarSolicitacao($solicitacao_id)
+    {
+        $data['status'] = 'APROVADO';
+        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
+        return ["code" => 200, "message" => "Solicitação aprovada!"];
     }
 }

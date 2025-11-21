@@ -37,22 +37,5 @@ class PacienteService
         }
     }
 
-    public function revogarSolicitacao($solicitacao_id)
-    {
-        $data['status'] = "REVOGADO";
-        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
-        return ["code" => 200, "message" => "Solicitação negada!"];
-    }
-    public function negarSolicitacao($solicitacao_id)
-    {
-        $data['status'] = "NEGADO";
-        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
-        return ["code" => 200, "message" => "Solicitação negada!"];
-    }
-    public function aceitarSolicitacao($solicitacao_id)
-    {
-        $data['status'] = 'APROVADO';
-        (new AutorizacaoAcessoModel($solicitacao_id))->editData($data);
-        return ["code" => 200, "message" => "Solicitação aprovada!"];
-    }
+    
 }

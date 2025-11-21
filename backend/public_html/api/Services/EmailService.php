@@ -3,6 +3,7 @@
 namespace Api\Services;
 
 use Api\Helpers\Email;
+use Api\Helpers\Token;
 use Api\Models\UsuarioModel;
 use Predis\Client;
 
@@ -17,6 +18,44 @@ class EmailService
 
         return $redis;
     }
+
+
+    public function validateCode($email, $code)
+    {
+        $redis = $this->generateRedis();
+
+        $codigoSalvo = $redis->get("code:{$email}");
+
+        if (!$codigoSalvo) {
+            return [
+                'message' => 'Código expirado.',
+                'code' => 400
+            ];
+        }
+        if ($codigoSalvo !== $code) {
+            return [
+                'message' => 'Código inválido.',
+                'code' => 400
+            ];
+        }
+
+        $usuario = (new UsuarioModel())->buscarPorEmail($email);
+        $redis->del("code:{$email}");
+        
+        $data = [
+            'token' => Token::gerarToken([
+                'usuario_id' => $usuario->usuario_id,
+                'tipo_usuario' => $usuario->tipo_usuario
+            ])
+        ];
+
+        return [
+            'message' => 'Código validado com sucesso!',
+            'code' => 200,
+            'data'=> $data
+        ];
+    }
+
 
     public function genereteRecupCode($email_user)
     {
@@ -43,7 +82,7 @@ class EmailService
 
 
         $redis->setex("code:{$email_user}", 300, $codigoRecup);
-        (new Email())->send($email_user, "Codigo Recuperação MedExame", $bodyEmail,'email_code.html');
+        (new Email())->send($email_user, "Codigo Recuperação MedExame", $bodyEmail, 'email_code.html');
 
         return [
             'message' => "E-mail enviado com sucesso!",
