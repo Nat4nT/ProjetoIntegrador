@@ -1,6 +1,7 @@
 import { api, handleApi } from "../api";
 import type { AdicionarExamePayload } from "../interfaces/Interfaces";
 
+// FORMDATA PARA CADASTAR EXAME
 export function adicionarExame(payload: AdicionarExamePayload): Promise<any> {
   const formData = new FormData();
   formData.append("nome_exame", payload.nome_exame);
@@ -15,7 +16,6 @@ export function adicionarExame(payload: AdicionarExamePayload): Promise<any> {
 
   categorias.forEach((c) => formData.append("categorias[]", c));
 
-  // arquivo
   if (payload.arquivo_exame) {
     formData.append(
       "arquivo_exame",
@@ -27,10 +27,12 @@ export function adicionarExame(payload: AdicionarExamePayload): Promise<any> {
   return handleApi(api.post("/exames/adicionar", formData));
 }
 
+// BUSCAR EXAMES
 export function buscarExames(): Promise<any> {
   return handleApi(api.get("/exames"));
 }
 
+// DELETAR EXAME
 export function deletarExame(payload: any): Promise<any> {
   return handleApi(api.post("/exames/deletar", payload));
 }

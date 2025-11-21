@@ -14,6 +14,7 @@ import type { ExameRow } from "../../../services/interfaces/Interfaces";
 
 import "./VisualizarExameModal.scss";
 import { showMessage } from "../../messageHelper/ShowMessage";
+import { criarComentario } from "../../../services/apiInterna/comentariosExame";
 
 const { Paragraph } = Typography;
 
@@ -43,10 +44,14 @@ export default function VisualizarExameModal({
     try {
       setSalvandoComentario(true);
 
-      const resp = await api.post("/exames/comentarios", {
-        exame_id: (exame as any).id,
-        mensagem: novoComentario.trim(),
-      });
+      const payload = {
+        exame_id: 1,
+        usuario_id: 1,
+        comentario: novoComentario.trim(),
+      };
+
+      const resp = await criarComentario(payload);
+
       const comentarioSalvo = resp.data?.data || resp.data;
 
       setComentariosExame((prev) => [...prev, comentarioSalvo]);
