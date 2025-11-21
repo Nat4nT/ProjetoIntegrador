@@ -27,6 +27,13 @@ class PacienteController
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'],  'code' => $resposta['code']], $resposta['code']);
 
     }
+    public function revogarSolicitacao(Request $request, Response $response)
+    {
+        $dadosFormulario = $request->getParsedBody()['solicitacao_id'];
+        $jsonResponse = new JsonResponse();
+        $resposta = (new PacienteService())->revogarSolicitacao($dadosFormulario);
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'],  'code' => $resposta['code']], $resposta['code']);
+    }
     public function negarSolicitacao(Request $request, Response $response)
     {
         $dadosFormulario = $request->getParsedBody()['solicitacao_id'];

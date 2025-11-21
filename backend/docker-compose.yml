@@ -17,6 +17,11 @@ services:
       - "8080:80"
     volumes:
       - ./public_html:/var/www/html
+  redis:
+    image: redis:7
+    container_name: medihub_redis
+    ports:
+      - "6379:6379"
 
   mysql:
     image: mysql:8.0

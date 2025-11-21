@@ -115,6 +115,7 @@ class MedicoService
                     'telefone' => $criptar->decriptarDado($paciente['telefone']),
                     'tipo_sanguineo' => $criptar->decriptarDado($paciente['tipo_sanguineo'] ?? ""),
                     'desc_deficiencia' => $criptar->decriptarDado($paciente['desc_deficiencia']),
+                    'data_nascimento' => $paciente['data_nascimento'],
                     'primeiro_nome' => $paciente['primeiro_nome'],
                     'ultimo_nome' => $paciente['ultimo_nome'],
                     'email' => $paciente['email'],

@@ -7,6 +7,7 @@ use Api\Controllers\CondicaoController;
 use Api\Controllers\ExameController;
 use Api\Controllers\MedicoController;
 use Api\Controllers\PacienteController;
+use Api\Helpers\Email;
 use Api\Middlewares\AutenticacaoMiddleware;
 use Api\Middlewares\TipeMiddleware;
 use Slim\App;
@@ -18,7 +19,7 @@ return function (App $app) {
 
     $app->post('/login', [LoginController::class, 'realizarLogin']);
     $app->post('/registrar', [UsuarioController::class, 'realizarCadastro']);
-
+    $app->post('/recuperar-conta',[UsuarioController::class,'recuperacaoDeConta']);
 
     $app->group('/minha-conta', function ($user) {
         $user->get('', [UsuarioController::class, 'pegarDadosConta']);
@@ -28,6 +29,7 @@ return function (App $app) {
         $user->group('/solicitacoes', function ($solicitacao) {
             $solicitacao->get('', [PacienteController::class, 'buscarSolicitacoes']);
             $solicitacao->post('/negar', [PacienteController::class, 'negarSolicitacao']);
+            $solicitacao->post('/revogar', [PacienteController::class, 'revogarSolicitacao']);
             $solicitacao->post('/aprovar', [PacienteController::class, 'aceitarSolicitacao']);
         });
     })->add(AutenticacaoMiddleware::class);
@@ -41,7 +43,7 @@ return function (App $app) {
     })->add(AutenticacaoMiddleware::class);
 
 
-
+// TODO CRUD PACIENTES
     $app->group("/medico", function ($med) {
         $med->post('/solicitar-acesso', [MedicoController::class, 'solicitarAcesso']);
         $med->post('/buscar', [MedicoController::class, 'buscarPaciente']);
@@ -64,8 +66,18 @@ return function (App $app) {
 
 
     $app->post('/teste', function ($request, $response) {
-        $authorizationHeader = $request->getHeaderLine('Authorization');
-        var_dump($authorizationHeader);
-        die;
+
+        $body = file_get_contents(__DIR__.'/HTML/email-body.html');
+
+        // (new Email())->send(
+        //     "natann875@gmail.com",
+        //     "Código de Recuperação TCC",
+        //     file_get_contents('HTML/email-body.html')
+        // );
+        echo $body;
+        return [
+            "message"=>'Agora é só horar'
+        ];
+    
     });
 };

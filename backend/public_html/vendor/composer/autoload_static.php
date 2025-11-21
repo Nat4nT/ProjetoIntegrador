@@ -44,7 +44,9 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
+            'Predis\\' => 7,
             'Phinx\\' => 6,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'L' => 
         array (
@@ -145,9 +147,17 @@ class ComposerStaticInit63661d32234c94a7c47675fbaa16f77c
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
         'Phinx\\' => 
         array (
             0 => __DIR__ . '/..' . '/robmorgan/phinx/src/Phinx',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'League\\Container\\' => 
         array (
