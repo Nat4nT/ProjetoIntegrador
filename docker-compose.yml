@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: medihub
+    env_file:
+      - .env
+    
+
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html
+  redis:
+    image: redis:7
+    container_name: medihub_redis
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql:8.0
+    container_name: medhub_db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "53306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
