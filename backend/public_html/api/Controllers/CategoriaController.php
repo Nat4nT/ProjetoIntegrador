@@ -36,7 +36,7 @@ class CategoriaController
 
   
 
-        $resposta = (new CategoriaService())->deletarCategoria($dadosFormulario['categoria_id']);
+        $resposta = (new CategoriaService())->deletarCategoria($dadosFormulario['categoria_id'],$dadosUsuario->usuario_id);
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
 }

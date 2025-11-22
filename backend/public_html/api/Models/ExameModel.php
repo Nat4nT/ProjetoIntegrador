@@ -12,14 +12,38 @@ class ExameModel extends Model
 
     public function getUserExames($id_usuario)
     {
-        $sql = "SELECT * FROM {$this->table} 
-        INNER JOIN categoria_exame USING({$this->id_column_name}) 
-        INNER JOIN categoria USING(categoria_id)
+        $data = [];
+        $sql = "SELECT {$this->table}.* FROM {$this->table} 
         WHERE {$this->table}.{$this->column_reference} = :id_usuario ";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":id_usuario", $id_usuario);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $exames = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($exames as $exame) {
+
+            $sql = "SELECT comentario_exame.*,u.primeiro_nome,u.ultimo_nome,u.imagem_perfil FROM comentario_exame
+            INNER JOIN usuario u USING(usuario_id)
+            WHERE {$this->id_column_name} = :exame_id ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(":exame_id", $exame[$this->id_column_name]);
+            $stmt->execute();
+            $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $sql = "SELECT categoria.nome,categoria.categoria_id FROM categoria_exame INNER JOIN categoria USING(categoria_id)  WHERE {$this->id_column_name}=:exame_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(":exame_id", $exame[$this->id_column_name]);
+            $stmt->execute();
+            $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $exame['categoria']=$categorias;
+            $exame['comentario']=$comentarios;
+            $data[] = [
+                'exame' => $exame,
+            ];
+        }
+
+        return $data;
     }
 
     public function getExame()
@@ -40,8 +64,8 @@ class ExameModel extends Model
         $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return [
-            "exame"=> $exame,
-            "comentarios"=>$comentarios
+            "exame" => $exame,
+            "comentarios" => $comentarios
         ];
     }
 }
