@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-
-//componentes antd
-import { Button, Input, Modal, Spin, Typography } from "antd";
+import { Button, Input, Modal, Typography } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-
 import dayjs from "dayjs";
 
-//apis
-import { api } from "../../../services/api";
-
-//interfaces
-import type { ExameRow } from "../../../services/interfaces/Interfaces";
+import type {
+  ComentarioExame,
+  ExameRow,
+} from "../../../services/interfaces/Interfaces";
 
 import "./VisualizarExameModal.scss";
 import { showMessage } from "../../messageHelper/ShowMessage";
@@ -31,12 +27,23 @@ export default function VisualizarExameModal({
   exame,
   tipoUsuario,
 }: VisualizarExameModalProps) {
-  const [loadingExame, setLoadingExame] = useState(false);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const [comentariosExame, setComentariosExame] = useState<any[]>([]);
-
+  const [comentariosExame, setComentariosExame] = useState<ComentarioExame[]>(
+    []
+  );
   const [novoComentario, setNovoComentario] = useState("");
   const [salvandoComentario, setSalvandoComentario] = useState(false);
+
+  // URL direta do arquivo
+  const fileUrl = exame?.url ? `/api${exame.url}` : null;
+
+  // carregar comentários que vêm junto no exame
+  useEffect(() => {
+    if (!exame) {
+      setComentariosExame([]);
+      return;
+    }
+    setComentariosExame(exame.comentarios ?? []);
+  }, [exame]);
 
   const handleSalvarComentario = async () => {
     if (!exame || !novoComentario.trim()) return;
@@ -45,14 +52,13 @@ export default function VisualizarExameModal({
       setSalvandoComentario(true);
 
       const payload = {
-        exame_id: 1,
-        usuario_id: 1,
+        exame_id: Number(exame.key),
         comentario: novoComentario.trim(),
       };
 
       const resp = await criarComentario(payload);
-
-      const comentarioSalvo = resp.data?.data || resp.data;
+      const comentarioSalvo: ComentarioExame =
+        resp.data?.data || resp.data || payload;
 
       setComentariosExame((prev) => [...prev, comentarioSalvo]);
       setNovoComentario("");
@@ -68,59 +74,7 @@ export default function VisualizarExameModal({
     }
   };
 
-  // FUNÇÃO PARA ABRIR EXAME
-  useEffect(() => {
-    async function carregarPdf() {
-      if (!open || !exame?.url) return;
-
-      try {
-        setLoadingExame(true);
-        if (fileUrl) {
-          URL.revokeObjectURL(fileUrl);
-          setFileUrl(null);
-        }
-
-        const resp = await api.get(exame.url, { responseType: "blob" });
-        const contentType = resp.headers["content-type"] || "application/pdf";
-
-        const blob = new Blob([resp.data], { type: contentType });
-        const url = URL.createObjectURL(blob);
-        setFileUrl(url);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingExame(false);
-      }
-    }
-
-    carregarPdf();
-  }, [open, exame?.url]);
-
-  // FUNÇÃO PARA CARREGAR EXAMES
-  useEffect(() => {
-    if (!exame) {
-      setComentariosExame([]);
-      return;
-    }
-
-    const comentarios =
-      (exame as any).comentarios ||
-      ((exame as any).mensagem ? [{ mensagem: (exame as any).mensagem }] : []);
-
-    setComentariosExame(comentarios || []);
-  }, [exame]);
-
-  useEffect(() => {
-    return () => {
-      if (fileUrl) URL.revokeObjectURL(fileUrl);
-    };
-  }, [fileUrl]);
-
   const handleClose = () => {
-    if (fileUrl) {
-      URL.revokeObjectURL(fileUrl);
-    }
-    setFileUrl(null);
     setComentariosExame([]);
     onClose();
   };
@@ -134,8 +88,6 @@ export default function VisualizarExameModal({
       centered
       rootClassName="visualizar-exame"
       afterClose={() => {
-        if (fileUrl) URL.revokeObjectURL(fileUrl);
-        setFileUrl(null);
         setComentariosExame([]);
       }}
     >
@@ -152,18 +104,12 @@ export default function VisualizarExameModal({
                   <span className="info-exame">{exame.dataRealizacao}</span>
                 </div>
                 <div className="exame-info-text">
-                  Laboratório: <span className="info-exame">{exame.local}</span>{" "}
+                  Laboratório: <span className="info-exame">{exame.local}</span>
                 </div>
               </div>
             </div>
 
-            {loadingExame && (
-              <div className="exame-loading">
-                <Spin />
-              </div>
-            )}
-
-            {fileUrl && !loadingExame && (
+            {fileUrl && (
               <iframe
                 title="Visualização do exame"
                 src={fileUrl}
@@ -182,29 +128,29 @@ export default function VisualizarExameModal({
                 </Paragraph>
               )}
 
-              {comentariosExame.map((c: any, idx: number) => (
+              {comentariosExame.map((c, idx) => (
                 <div
-                  key={c.id || c.comentario_id || idx}
+                  key={c.comentario_exame_id || idx}
                   className="comentario-card"
                 >
                   <div className="comentario-header">
                     <div className="comentario-avatar">
-                      {(c.autor || c.nome_medico || "P")[0]}
+                      {(c.nome_medico || "P")[0]}
                     </div>
                     <div>
                       <div className="comentario-autor">
-                        {c.autor || c.nome_medico || "Profissional"}
+                        {c.nome_medico || "Profissional"}
                       </div>
-                      {c.data && (
+                      {(c.data_criacao || c.created_at) && (
                         <div className="comentario-data">
-                          {dayjs(c.data).format("DD/MM/YYYY HH:mm")}
+                          {dayjs(c.data_criacao || c.created_at).format(
+                            "DD/MM/YYYY HH:mm"
+                          )}
                         </div>
                       )}
                     </div>
                   </div>
-                  <div className="comentario-texto">
-                    {c.mensagem || c.texto || c.descricao || c.comentario}
-                  </div>
+                  <div className="comentario-texto">{c.comentario}</div>
                 </div>
               ))}
             </div>

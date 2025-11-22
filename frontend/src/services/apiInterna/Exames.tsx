@@ -32,6 +32,11 @@ export function buscarExames(): Promise<any> {
   return handleApi(api.get("/exames"));
 }
 
+// BUSCAR EXAMES
+export function buscarExame(payload: any): Promise<any> {
+  return handleApi(api.post("/exames/buscar-exame", payload));
+}
+
 // DELETAR EXAME
 export function deletarExame(payload: any): Promise<any> {
   return handleApi(api.post("/exames/deletar", payload));

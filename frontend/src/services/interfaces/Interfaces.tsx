@@ -53,6 +53,16 @@ export interface AdicionarExamePayload {
 
 export interface Categoria {}
 
+export interface ComentarioExame {
+  comentario_exame_id: number;
+  exame_id: number;
+  usuario_id: number | null;
+  comentario: string;
+  nome_medico?: string;
+  data_criacao?: string;
+  created_at?: string;
+}
+
 export type ExameRow = {
   key: string;
   exame: string;
@@ -62,6 +72,7 @@ export type ExameRow = {
   url?: string;
   categoriaId: number;
   rawDate: string;
+  comentarios?: ComentarioExame[];
 };
 
 export type PacienteRow = {
@@ -92,3 +103,4 @@ export type SolicitacaoAcesso = {
   crm: string;
   status: string;
 };
+
