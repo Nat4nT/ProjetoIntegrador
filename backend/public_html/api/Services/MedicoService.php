@@ -110,6 +110,8 @@ class MedicoService
         if ($pacientes) {
             foreach ($pacientes as $paciente) {
                 $dados[] = [
+                    'status'=>$paciente['status'],
+                    'data_atualizacao'=>$paciente['data_atualizacao'],
                     'paciente_id' => $paciente['paciente_id'],
                     'cpf' => $criptar->decriptarDado($paciente['cpf']),
                     'telefone' => $criptar->decriptarDado($paciente['telefone']),

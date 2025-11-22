@@ -19,13 +19,13 @@ final class CreatePacienteTable extends AbstractMigration
             "primary_key" => ['paciente_id']
         ]);
         $table->addColumn('paciente_id', 'integer', ['signed' => false, 'null' => false])
-            ->AddColumn('peso', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
-            ->AddColumn('altura', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
+            ->AddColumn('peso', 'string', ['limit' => 200])
+            ->AddColumn('altura', 'string', ['limit' => 200])
             // ->AddColumn('peso', 'decimal', ['precision' => 5, 'scale' => 2, 'null' => true, 'default' => null])
             // ->AddColumn('altura', 'decimal', ['precision' => 3, 'scale' => 2, 'null' => true, 'default' => null])
             ->addColumn('desc_deficiencia', 'text', ['limit' => MysqlAdapter::TEXT_LONG, 'default' => null])
             // ->addColumn('tipo_sanguineo', 'enum', ['values' => ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], 'default' => null])
-            ->addColumn('tipo_sanguineo', 'text', ['limit' => MysqlAdapter::TEXT_LONG, 'default' => null])
+            ->addColumn('tipo_sanguineo', 'string', ['limit' => 200, 'default' => null])
             ->addColumn('alergias', 'text', ['limit' => MysqlAdapter::TEXT_LONG, 'default' => null])
             ->addColumn('doencas_diagnosticadas', 'text', ['limit' => MysqlAdapter::TEXT_LONG, 'default' => null])
             ->addColumn('medicacao', 'text', ['limit' => MysqlAdapter::TEXT_LONG,'default'=> null])

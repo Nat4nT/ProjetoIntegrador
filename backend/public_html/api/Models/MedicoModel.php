@@ -11,7 +11,7 @@ class MedicoModel extends Model
 
     public function buscarPacientes()
     {
-        $sql = "SELECT p.*,u.*,ac.data_atualizacao FROM autorizacao_acesso ac
+        $sql = "SELECT p.*,u.*,ac.data_atualizacao, ac.`status`  FROM autorizacao_acesso ac
         INNER JOIN paciente p USING(paciente_id)
         INNER JOIN usuario u ON p.paciente_id = u.usuario_id
         WHERE {$this->id_column_name} = {$this->id}";
@@ -19,7 +19,7 @@ class MedicoModel extends Model
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function buscarPaciente($paciente_id)
+    public function buscarPaciente($paciente_id): mixed
     {
         $sql = "SELECT * FROM autorizacao_acesso 
         INNER JOIN paciente USING(paciente_id)

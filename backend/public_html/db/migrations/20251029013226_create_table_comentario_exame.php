@@ -18,7 +18,7 @@ final class CreateTableComentarioExame extends AbstractMigration
         $table = $this->table($tableName, ['id' => 'comentario_exame_id']);
         $table->addColumn('exame_id', 'integer', ['limit'    => 11, 'signed'  => false])
             ->addColumn('usuario_id', 'integer', ['limit' => 11, 'signed' => false])
-            ->addColumn('comentario', 'text', ['limit'   => MysqlAdapter::TEXT_LONG])
+            ->addColumn('comentario', 'string', ['limit'   => 500])
             ->addTimestamps('data_criacao', 'data_atualizacao')
             ->addForeignKey('exame_id', 'exame', 'exame_id', [
                 'delete' => 'CASCADE',
