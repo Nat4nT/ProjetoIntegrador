@@ -51,42 +51,7 @@ export const TIPOS_SANGUINEOS = [
   "B-",
   "AB+",
   "AB-",
-];
-
-// Sugeridos (saúde)
-export const SUG_DOENCAS = [
-  "Hipertensão arterial",
-  "Diabetes mellitus tipo 2",
-  "Asma",
-  "DPOC (doença pulmonar obstrutiva crônica)",
-  "Doença cardíaca isquêmica",
-  "Insuficiência cardíaca",
-  "Dislipidemia (colesterol alto)",
-  "Hipotireoidismo",
-  "Artrite/Artrose (osteoartrite)",
-  "Enxaqueca",
-  "Doença renal crônica",
-  "Depressão",
-  "Transtorno de ansiedade",
-  "Apneia do sono",
-];
-
-export const SUG_ALERGIAS = [
-  "Penicilina",
-  "Amoxicilina",
-  "Cefalosporinas",
-  "Dipirona (metamizol)",
-  "AAS (aspirina)",
-  "Ibuprofeno",
-  "AINEs (anti-inflamatórios)",
-  "Iodo / contraste iodado",
-  "Látex",
-  "Frutos do mar / mariscos",
-  "Amendoim",
-  "Proteína do leite",
-  "Ovo",
-  "Picada de inseto",
-];
+]; 
 
 export const SUG_MEDICACAO = [
   "Losartana 50 mg",

@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 
 //api
 import {
+  condicoes,
   dadosUsuario,
   editarUsuario,
 } from "../../services/apiInterna/FluxoIdentificacao";
@@ -42,8 +43,6 @@ import {
   ESTADOS_BR,
   GENEROS,
   TIPOS_SANGUINEOS,
-  SUG_DOENCAS,
-  SUG_ALERGIAS,
   SUG_MEDICACAO,
 } from "../../utils/Constants";
 
@@ -73,6 +72,9 @@ export default function Perfil() {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [doencasDiagnosticadas, setDoencasDiagnosticas] = useState([]);
+   const [alergias, setAlergias] = useState([]);
 
   const primeiroNomeUsuario = localStorage.getItem("primeiroNomeUsuario");
   const ultimoNomeUsuario = localStorage.getItem("ultimoNomeUsuario");
@@ -185,6 +187,13 @@ export default function Perfil() {
     async function carregarDados() {
       try {
         setLoading(true);
+        const responseCondicoes = await condicoes();
+        setDoencasDiagnosticas(
+          responseCondicoes.data.doencas.map((e: any) => e.nome)
+        );
+
+        setAlergias(responseCondicoes.data.alergias.map((e: any) => e.nome))
+
         const response = await dadosUsuario();
         const user = response.data;
         form.setFieldsValue({
@@ -404,7 +413,11 @@ export default function Perfil() {
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={6}>
-                  <Form.Item label="Gênero" name="genero">
+                  <Form.Item
+                    label="Gênero"
+                    name="genero"
+                    rules={[{ required: true, message: "Selecione o gênero" }]}
+                  >
                     <Select options={GENEROS} />
                   </Form.Item>
                 </Col>
@@ -427,7 +440,13 @@ export default function Perfil() {
                   </Form.Item>
                 </Col>
                 <Col xs={24} md={12}>
-                  <Form.Item label="Logradouro" name="logradouro">
+                  <Form.Item
+                    label="Logradouro"
+                    name="logradouro"
+                    rules={[
+                      { required: true, message: "Informe o logradouro" },
+                    ]}
+                  >
                     <Input placeholder="Ex.: Rua das Flores" />
                   </Form.Item>
                 </Col>
@@ -438,22 +457,38 @@ export default function Perfil() {
                 </Col>
 
                 <Col xs={24} sm={12} md={8}>
-                  <Form.Item label="Bairro" name="bairro">
+                  <Form.Item
+                    label="Bairro"
+                    name="bairro"
+                    rules={[{ required: true, message: "Informe o bairro" }]}
+                  >
                     <Input />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={4}>
-                  <Form.Item label="Número" name="numero">
+                  <Form.Item
+                    label="Número"
+                    name="numero"
+                    rules={[{ required: true, message: "Informe o número" }]}
+                  >
                     <InputNumber style={{ width: "100%" }} />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={8}>
-                  <Form.Item label="Cidade" name="cidade">
+                  <Form.Item
+                    label="Cidade"
+                    name="cidade"
+                    rules={[{ required: true, message: "Informe a cidade" }]}
+                  >
                     <Input />
                   </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={4}>
-                  <Form.Item label="Estado" name="estado">
+                  <Form.Item
+                    label="Estado"
+                    name="estado"
+                    rules={[{ required: true, message: "Informe a UF" }]}
+                  >
                     <Select options={toOptions(ESTADOS_BR)} />
                   </Form.Item>
                 </Col>
@@ -557,7 +592,7 @@ export default function Perfil() {
                         tokenSeparators={[","]}
                         showSearch
                         optionFilterProp="label"
-                        options={toOptions(SUG_DOENCAS)}
+                        options={toOptions(doencasDiagnosticadas)}
                         filterOption={(input, option) =>
                           (option?.label as string)
                             .toLowerCase()
@@ -585,7 +620,7 @@ export default function Perfil() {
                         tokenSeparators={[","]}
                         showSearch
                         optionFilterProp="label"
-                        options={toOptions(SUG_ALERGIAS)}
+                        options={toOptions(alergias)}
                         filterOption={(input, option) =>
                           (option?.label as string)
                             .toLowerCase()
