@@ -4,7 +4,6 @@ namespace Helpers;
 
 class Criptografia
 {
-    // A chave DEVE ser binária, por isso, a decodificamos no construtor
     private string $key;
     private string $cipher = 'aes-256-cbc';
 
@@ -14,12 +13,10 @@ class Criptografia
         $this->key = base64_decode($base64Key);
     }
 
-    // Função de Criptografia
     public function encriptarDado(string $data): string
     {
         $ivlen = openssl_cipher_iv_length($this->cipher);
 
-        // Gera um IV fixo (determinístico) com base no valor original
         $iv = substr(hash('sha256', $data), 0, $ivlen);
 
         $encrypted = openssl_encrypt($data, $this->cipher, $this->key, 0, $iv);

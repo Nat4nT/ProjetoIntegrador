@@ -18,7 +18,9 @@ class Email
             $mail->Port = getenv("EMAIL_PORT");
             $mail->Username = getenv("EMAIL_USER");
             $mail->Password = getenv('EMAIL_TOKEN');
-            $mail->setFrom('mediexame@demomailtrap.com', 'Sistema MedExame');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+            $mail->setFrom(getenv("EMAIL_USER"), 'Sistema MedExame');
             $mail->isHTML(true);
             $mail->CharSet = 'UTF-8';
 
@@ -48,7 +50,7 @@ class Email
             }
             return $message;
         } catch (Exception $e) {
-            return ['message' => "E-mail invalido", 'code' => 400];
+            return ['message' => "E-mail invalido, {$e}", 'code' => 400];
         }
     }
 }
