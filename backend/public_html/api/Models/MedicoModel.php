@@ -11,7 +11,7 @@ class MedicoModel extends Model
 
     public function buscarPacientes()
     {
-        $sql = "SELECT p.*,u.* FROM autorizacao_acesso 
+        $sql = "SELECT p.*,u.*,ac.data_atualizacao FROM autorizacao_acesso ac
         INNER JOIN paciente p USING(paciente_id)
         INNER JOIN usuario u ON p.paciente_id = u.usuario_id
         WHERE {$this->id_column_name} = {$this->id}";

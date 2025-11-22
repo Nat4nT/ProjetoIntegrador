@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-api',
-        'version' => 'dev-api',
-        'reference' => '408d2926ec5a49d08348ceda3de001b3398b10ae',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '764ef0067d0179ee08659187502fec67723ee70b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-api',
-            'version' => 'dev-api',
-            'reference' => '408d2926ec5a49d08348ceda3de001b3398b10ae',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '764ef0067d0179ee08659187502fec67723ee70b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -105,6 +105,24 @@
             'replaced' => array(
                 0 => '~2.0',
             ),
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v7.0.0',
+            'version' => '7.0.0.0',
+            'reference' => 'c7111310c6116ba508a6a170a89eaaed2129bd42',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'predis/predis' => array(
+            'pretty_version' => 'v3.2.0',
+            'version' => '3.2.0.0',
+            'reference' => '9e9deec4dfd3ebf65d32eb368f498c646ba2ecd8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../predis/predis',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'psr/clock' => array(
             'pretty_version' => '1.0.0',

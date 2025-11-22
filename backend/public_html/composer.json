@@ -3,7 +3,9 @@
         "slim/slim": "^4.15",
         "slim/psr7": "^1.7",
         "robmorgan/phinx": "^0.16.10",
-        "firebase/php-jwt": "^6.11"
+        "firebase/php-jwt": "^6.11",
+        "phpmailer/phpmailer": "^7.0",
+        "predis/predis": "^3.2"
     },
     "autoload": {
         "psr-4": {

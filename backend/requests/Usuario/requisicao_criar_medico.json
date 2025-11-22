@@ -1,5 +1,6 @@
 {
   "route": "localhost:8080/registrar",
+  "method": "POST",
   "body": {
     "tipo_usuario": "medico",
     "primeiro_nome": "Usuario",

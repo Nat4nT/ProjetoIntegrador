@@ -4,6 +4,7 @@ namespace Api\Controllers;
 
 use Api\Services\UsuarioService;
 use Api\Helpers\JsonResponse;
+use Api\Services\EmailService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -18,6 +19,7 @@ class UsuarioController
         $jsonResponse = new JsonResponse();
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
+
     public function realizarCadastro(Request $request, Response $response): Response
 
     {
@@ -55,6 +57,7 @@ class UsuarioController
         $resposta = (new UsuarioService())->editarUsuario($dadosUsuario, $dadosFormulario);
         return (new JsonResponse())->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
+
     public function desativarPerfil(Request $request, Response $response): Response
     {
         $dadosUsuario = $request->getAttribute('usuario');
@@ -62,5 +65,47 @@ class UsuarioController
         $jsonResponse = new JsonResponse();
 
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+
+    public function recuperacaoDeConta(Request $request, Response $response)
+    {
+        $email = $request->getParsedBody()['email'];
+        $resposta = (new EmailService())->genereteRecupCode($email);
+        $jsonResponse = new JsonResponse();
+
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+
+    public function validarCodigoRecup(Request $request, Response $response)
+    {
+        $dados = $request->getParsedBody();
+
+        $resposta = (new EmailService())->validateCode($dados['email'], $dados['validation_code']);
+
+        $jsonResponse = new JsonResponse();
+
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], "data" => @$resposta['data'] ?: [], 'code' => $resposta['code']], $resposta['code']);
+    }
+
+    public function aceitarSolicitacao(Request $request, Response $response)
+    {
+        $dadosFormulario = $request->getParsedBody()['solicitacao_id'];
+        $jsonResponse = new JsonResponse();
+        $resposta = (new UsuarioService())->aceitarSolicitacao($dadosFormulario);
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'],  'code' => $resposta['code']], $resposta['code']);
+    }
+    public function revogarSolicitacao(Request $request, Response $response)
+    {
+        $dadosFormulario = $request->getParsedBody()['solicitacao_id'];
+        $jsonResponse = new JsonResponse();
+        $resposta = (new UsuarioService())->revogarSolicitacao($dadosFormulario);
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'],  'code' => $resposta['code']], $resposta['code']);
+    }
+    public function negarSolicitacao(Request $request, Response $response)
+    {
+        $dadosFormulario = $request->getParsedBody()['solicitacao_id'];
+        $jsonResponse = new JsonResponse();
+        $resposta = (new UsuarioService())->negarSolicitacao($dadosFormulario);
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'],  'code' => $resposta['code']], $resposta['code']);
     }
 }

@@ -75,18 +75,36 @@ class CategoriaService
         return ['code' => 200, 'message' => 'Categoria registrada com sucesso'];
     }
 
-    public function deletarCategoria($categoria_id)
+    public function deletarCategoria($categoria_id, $user)
     {
-        $response = (new CategoriaModel($categoria_id))->deleteData();
-        if ($response) {
-            return [
-                "message" => 'Cartegoria deletada com sucesso',
-                'code' => 200
-            ];
-        } else {
+        $categoriaModel = new CategoriaModel($categoria_id);
+        $categoria = $categoriaModel->getInfo();
+        if (!$categoria) {
             return [
                 "message" => 'Erro ao deletar categoria',
-                'code' => 300
+                'code' => 400
+            ];
+        }
+        if (!$categoria['sis_cat'] 
+        && $categoria['usuario_id'] == $user) {
+
+            $response = (new CategoriaModel($categoria_id))->deleteData();
+
+            if ($response) {
+                return [
+                    "message" => 'Cartegoria deletada com sucesso',
+                    'code' => 200
+                ];
+            } else {
+                return [
+                    "message" => 'Erro ao deletar categoria',
+                    'code' => 400
+                ];
+            }
+        } else {
+            return [
+                "message" => 'Não é possivel deletar a categoria',
+                'code' => 400
             ];
         }
     }
