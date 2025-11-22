@@ -27,7 +27,10 @@ import {
 import { buscarCategoria } from "../../../services/apiInterna/Categorias";
 
 //interface
-import type { ExameRow } from "../../../services/interfaces/Interfaces";
+import type {
+  ComentarioExame,
+  ExameRow,
+} from "../../../services/interfaces/Interfaces";
 
 //validações
 import { showMessage } from "../../../components/messageHelper/ShowMessage";
@@ -211,51 +214,110 @@ export default function SeusExames() {
     },
   ];
 
+  // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
+  const handleComentarioCriado = (
+    exameId: string,
+    comentario: ComentarioExame
+  ) => {
+    setRows((prev) =>
+      prev.map((row) =>
+        row.key === exameId
+          ? {
+              ...row,
+              comentarios: [...(row.comentarios ?? []), comentario],
+            }
+          : row
+      )
+    );
+    setExameVisualizar((prev) =>
+      prev && prev.key === exameId
+        ? {
+            ...prev,
+            comentarios: [...(prev.comentarios ?? []), comentario],
+          }
+        : prev
+    );
+  };
+
+  // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
+  const handleComentarioDeletado = (exameId: string, comentarioId: number) => {
+    setRows((prev) =>
+      prev.map((row) =>
+        row.key === exameId
+          ? {
+              ...row,
+              comentarios: (row.comentarios ?? []).filter(
+                (c) => c.comentario_exame_id !== comentarioId
+              ),
+            }
+          : row
+      )
+    );
+
+    setExameVisualizar((prev) =>
+      prev && prev.key === exameId
+        ? {
+            ...prev,
+            comentarios: (prev.comentarios ?? []).filter(
+              (c) => c.comentario_exame_id !== comentarioId
+            ),
+          }
+        : prev
+    );
+  };
+
   //FUNÇÃO RESPONSÁVEL PARA CARREGAR OS EXAMES COM BASE NO TIPO DE USUÁRIO.
   useEffect(() => {
     async function carregarExames() {
       try {
         setLoading(true);
+
+        let data: any[] = [];
+
         if (tipoUsuario === "medico" && pacienteId) {
           const resp = await buscarExamesPaciente({ paciente_id: pacienteId });
-          const data = resp.data || [];
+          data = resp.data || [];
 
           const mapped: ExameRow[] = data.map((it: any) => {
-            const d = dayjs(it.data_realizacao);
+            const e = it.exame;
+            const d = dayjs(e.data_realizacao);
 
             return {
-              key: String(it.exame_id),
-              exame: it.nome_exame || it.nome,
-              categoria: it.nome,
+              key: String(e.exame_id),
+              exame: e.nome_exame,
+              categoria: e.categoria?.[0]?.nome ?? "-",
+              categoriaId: e.categoria?.[0]?.categoria_id,
               dataRealizacao: d.isValid()
                 ? d.format("DD/MM/YYYY")
-                : it.data_realizacao,
-              local: it.nome_lab,
-              url: it.arquivo_exame,
-              categoriaId: it.categoria_id,
-              rawDate: it.data_realizacao,
+                : e.data_realizacao,
+              rawDate: e.data_realizacao,
+              local: e.nome_lab,
+              url: e.arquivo_exame,
+              comentarios: e.comentario ?? [],
             };
           });
 
           setRows(mapped);
         } else {
           const resp = await buscarExames();
-          const data = resp.data || [];
+          data = resp.data || [];
 
           const mapped: ExameRow[] = data.map((it: any) => {
-            const d = dayjs(it.data_realizacao);
+            const e = it.exame;
+            const d = dayjs(e.data_realizacao);
 
             return {
-              key: String(it.exame_id),
-              exame: it.nome_exame || it.nome,
-              categoria: it.nome,
+              key: String(e.exame_id),
+              exame: e.nome_exame,
+              categoria: e.categoria?.[0]?.nome ?? "-",
+              categoriaId: e.categoria?.[0]?.categoria_id,
               dataRealizacao: d.isValid()
                 ? d.format("DD/MM/YYYY")
-                : it.data_realizacao,
-              local: it.nome_lab,
-              url: it.arquivo_exame,
-              categoriaId: it.categoria_id,
-              rawDate: it.data_realizacao,
+                : e.data_realizacao,
+              rawDate: e.data_realizacao,
+              local: e.nome_lab,
+              url: e.arquivo_exame,
+              comentarios: e.comentario ?? [],
             };
           });
 
@@ -461,6 +523,8 @@ export default function SeusExames() {
       <VisualizarExameModal
         open={openModalVisualizar}
         onClose={closeModalVisualizar}
+        onComentarioCriado={handleComentarioCriado}
+        onComentarioDeletado={handleComentarioDeletado}
         exame={exameVisualizar}
         tipoUsuario={
           tipoUsuario === "paciente" || tipoUsuario === "medico"

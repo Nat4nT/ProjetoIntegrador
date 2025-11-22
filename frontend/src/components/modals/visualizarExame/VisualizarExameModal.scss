@@ -88,8 +88,33 @@
   background: #ffffff;
   border-radius: 8px;
   padding: 10px 12px;
-  margin-bottom: 0; /* gap já é controlado pelo .comentarios-list */
+  margin-bottom: 0;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.comentario-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.comentario-header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.comentario-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .comentario-autor {
@@ -104,18 +129,17 @@
 }
 
 .comentario-texto {
+  margin-top: 4px;
   font-size: 13px;
   color: #4b5563;
 }
 
-/* Input fixo no final */
 .novo-comentario-input {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid #d1d5db;
 }
 
-/* Deixa o input com cara de "bolha" + botão de enviar */
 .novo-comentario-input .ant-input-affix-wrapper {
   border-radius: 999px;
   background: #f9fafb;
@@ -149,6 +173,39 @@
   }
 
   .comentarios-wrapper {
-    height: 60vh; /* opcional pra seguir um padrão em telas menores */
+    height: 60vh;
   }
+}
+.comentario-edicao-actions {
+  padding-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.button-salvar-edit-comentario {
+  width: 70px !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.button-cancelar-edit-comentario {
+
 }

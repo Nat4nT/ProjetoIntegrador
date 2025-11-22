@@ -2,7 +2,6 @@ import {
   HomeOutlined,
   IdcardOutlined,
   SolutionOutlined,
-  SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -143,4 +142,53 @@ export const itemsUsuarioMedico = [
     ],
   },
   { key: "/perfil", icon: <UserOutlined />, label: "Perfil" },
+];
+
+export const PAGES = [
+  {
+    path: "/home",
+    label: "Home",
+    keywords: ["home", "início", "inicio", "dashboard"],
+  },
+  {
+    path: "/exames/seusExames",
+    label: "Seus Exames",
+    keywords: [
+      "exames",
+      "seus exames",
+      "meus exames",
+      "lista de exames",
+      "exames paciente",
+    ],
+  },
+  {
+    path: "/exames/cadastrar",
+    label: "Cadastrar Exames",
+    keywords: ["cadastrar exame", "novo exame", "upload exame", "enviar exame"],
+  },
+  {
+    path: "/medicos",
+    label: "Médicos com acesso",
+    keywords: ["médicos", "medicos", "acesso médicos", "medicos com acesso"],
+  },
+  {
+    path: "/meus/pacientes",
+    label: "Meus Pacientes",
+    keywords: ["meus pacientes", "pacientes", "lista pacientes"],
+  },
+  {
+    path: "/buscar/paciente",
+    label: "Buscar Paciente",
+    keywords: [
+      "buscar paciente",
+      "buscar pacientes",
+      "pesquisar paciente",
+      "procurar paciente",
+    ],
+  },
+  {
+    path: "/perfil",
+    label: "Perfil",
+    keywords: ["perfil", "meu perfil", "conta", "configurações"],
+  },
 ];

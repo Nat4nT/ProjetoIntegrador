@@ -90,6 +90,7 @@ export default function SeusExames() {
             key: s.paciente_id,
             nome,
             especialidade: s.especialidade ?? "Não informado",
+            dataNascimento: dayjs(s.data_nascimento).format("DD/MM/YYYY"),
             cpf,
           };
         });

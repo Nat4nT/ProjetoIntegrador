@@ -77,7 +77,8 @@ function Login() {
         const token = response.data.token;
 
         const claims = decodeJwt(token);
-        const tipoUsuario = claims?.tipo_usuario; 
+        const tipoUsuario = claims?.tipo_usuario;
+        const usuarioId = claims?.usuario_id;
 
         const primeiroNome = response.data.firstname;
         const ultimoNome = response.data.lastname;
@@ -85,6 +86,7 @@ function Login() {
         localStorage.setItem("token", token);
         localStorage.setItem("primeiroNomeUsuario", primeiroNome);
         localStorage.setItem("ultimoNomeUsuario", ultimoNome);
+        localStorage.setItem("usuario_id", usuarioId);
 
         if (tipoUsuario) {
           localStorage.setItem("tipo_usuario", tipoUsuario);

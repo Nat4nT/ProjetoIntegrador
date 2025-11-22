@@ -28,9 +28,11 @@ import logo from "../../assets/health-and-care.png";
 import {
   itemsUsuarioMedico,
   itemsUsuarioPaciente,
+  PAGES,
 } from "../../utils/Constants";
 
 import "./AppLayout.scss";
+import { showMessage } from "../messageHelper/ShowMessage";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { Search } = Input;
@@ -79,6 +81,24 @@ export default function AppLayout() {
 
   const navegacaoMenuLaretal = (key: any) => {
     navigate(key as string);
+  };
+
+  // FUNÇÃO DE BUSCA DAS PÁGINAS
+  const handleSearchPage = (value: string) => {
+    const termo = value.trim().toLowerCase();
+    if (!termo) return;
+    const match = PAGES.find((page) =>
+      page.keywords.some((kw) => kw.includes(termo) || termo.includes(kw))
+    );
+
+    if (match) {
+      navigate(match.path);
+    } else {
+      showMessage(
+        "Nenhuma página encontrada para esse termo de busca.",
+        "warning"
+      );
+    }
   };
 
   return (
@@ -152,6 +172,10 @@ export default function AppLayout() {
               placeholder="Buscar..."
               allowClear
               style={{ width: "60%" }}
+              onSearch={handleSearchPage}
+              onPressEnter={(e) =>
+                handleSearchPage((e.target as HTMLInputElement).value)
+              }
             />
           </div>
 

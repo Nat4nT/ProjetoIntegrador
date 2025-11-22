@@ -58,9 +58,11 @@ export interface ComentarioExame {
   exame_id: number;
   usuario_id: number | null;
   comentario: string;
-  nome_medico?: string;
   data_criacao?: string;
-  created_at?: string;
+  data_atualizacao: string;
+  primeiro_nome?: string;
+  ultimo_nome?: string;
+  imagem_perfil: string;
 }
 
 export type ExameRow = {
@@ -103,4 +105,3 @@ export type SolicitacaoAcesso = {
   crm: string;
   status: string;
 };
-
