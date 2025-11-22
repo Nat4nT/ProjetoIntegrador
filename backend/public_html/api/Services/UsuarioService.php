@@ -34,7 +34,7 @@ class UsuarioService
             return ['message' => "A Senha deve ser diferente da anterior.", 'code' => 400];
         }
 
-        $usuarioModel->editData(['senha' => password_hash($camposFormulario['nova_senha'], PASSWORD_DEFAULT)]);
+        $usuarioModel->editData(['status'=>1,'senha' => password_hash($camposFormulario['nova_senha'], PASSWORD_DEFAULT)]);
 
         return ['code' => 200, 'message' => "Senha alterada com sucesso"];
     }
