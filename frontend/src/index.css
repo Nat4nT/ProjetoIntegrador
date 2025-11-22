@@ -24,6 +24,10 @@ select:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s;
 }
 
+.ant-form-item-label {
+  padding: 0 !important;
+}
+
 html,
 body,
 #root {

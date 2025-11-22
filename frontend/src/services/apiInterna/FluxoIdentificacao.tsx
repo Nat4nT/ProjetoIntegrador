@@ -20,6 +20,11 @@ export function dadosUsuario(): Promise<any> {
   return handleApi(api.get("/minha-conta"));
 }
 
+// MEU PERFIL
+export function condicoes(): Promise<any> {
+  return handleApi(api.get("/condicoes"));
+}
+
 // EDITAR DADOS CADASTRAIS
 export function editarUsuario(payload: any): Promise<any> {
   return handleApi(api.post("/minha-conta", payload));

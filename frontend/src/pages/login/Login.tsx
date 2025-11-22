@@ -140,7 +140,7 @@ function Login() {
               autoComplete="new-password"
               style={{ display: "none" }}
             />
-            <Form.Item label="Login" name="email">
+            <Form.Item label="E-mail" name="email">
               <Input
                 type="email"
                 value={userLogin}
