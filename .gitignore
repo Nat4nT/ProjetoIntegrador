@@ -1,3 +1,4 @@
 backend/uploads/*
 #backend/vendor
+backend/public_html
 .env
