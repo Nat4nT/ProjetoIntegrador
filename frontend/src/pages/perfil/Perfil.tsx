@@ -43,7 +43,6 @@ import {
   ESTADOS_BR,
   GENEROS,
   TIPOS_SANGUINEOS,
-  SUG_MEDICACAO,
 } from "../../utils/Constants";
 
 //validações
@@ -74,7 +73,9 @@ export default function Perfil() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [doencasDiagnosticadas, setDoencasDiagnosticas] = useState([]);
-   const [alergias, setAlergias] = useState([]);
+  const [medicacoes, setMedicacoes] = useState([]);
+  const [alergias, setAlergias] = useState([]);
+  const [deficiencias, setDeficiencias] = useState([])
 
   const primeiroNomeUsuario = localStorage.getItem("primeiroNomeUsuario");
   const ultimoNomeUsuario = localStorage.getItem("ultimoNomeUsuario");
@@ -191,8 +192,13 @@ export default function Perfil() {
         setDoencasDiagnosticas(
           responseCondicoes.data.doencas.map((e: any) => e.nome)
         );
-
-        setAlergias(responseCondicoes.data.alergias.map((e: any) => e.nome))
+        setAlergias(responseCondicoes.data.alergias.map((e: any) => e.nome));
+        setMedicacoes(
+          responseCondicoes.data.medicacoes.map((e: any) => e.nome)
+        );
+        setDeficiencias(
+          responseCondicoes.data.deficiencia.map((e: any) => e.nome)
+        );
 
         const response = await dadosUsuario();
         const user = response.data;
@@ -648,7 +654,7 @@ export default function Perfil() {
                         tokenSeparators={[","]}
                         showSearch
                         optionFilterProp="label"
-                        options={toOptions(SUG_MEDICACAO)}
+                        options={toOptions(medicacoes)}
                         filterOption={(input, option) =>
                           (option?.label as string)
                             .toLowerCase()
@@ -702,13 +708,41 @@ export default function Perfil() {
                     <Form.Item
                       label="Descrição de deficiências"
                       name="deficiencias"
+                      normalize={(arr) =>
+                        Array.from(
+                          new Set((arr ?? []).map((s: any) => s.trim()))
+                        )
+                      }
+                    >
+                      <Select
+                        mode="tags"
+                        placeholder="Ex: Deficiência visual parcial, mobilidade reduzida"
+                        tokenSeparators={[","]}
+                        showSearch
+                        optionFilterProp="label"
+                        options={toOptions(deficiencias)}
+                        filterOption={(input, option) =>
+                          (option?.label as string)
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                        }
+                        maxTagCount="responsive"
+                        allowClear
+                      />
+                    </Form.Item>
+                  </Col>
+
+                  {/* <Col xs={24}>
+                    <Form.Item
+                      label="Descrição de deficiências"
+                      name="deficiencias"
                     >
                       <TextArea
                         placeholder="Ex: Deficiência visual parcial, mobilidade reduzida"
                         autoSize={{ minRows: 3, maxRows: 5 }}
                       />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Col>
             )}

@@ -17,6 +17,8 @@ import Medicos from "./pages/medicosComAcesso/Medicos";
 import CadastrarExames from "./pages/exames/cadastrarExames/CadastrarExames";
 import MeusPacientes from "./pages/usuarioMedico/meusPacientes/MeusPacientes";
 import BuscarPaciente from "./pages/usuarioMedico/buscarPaciente/BuscarPaciente";
+import RecuperarSenha from "./pages/recuperarSenha/RecuperarSenha";
+import RecuperarConta from "./pages/recuperarConta/RecuperarConta";
 
 dayjs.locale("pt-br");
 
@@ -27,13 +29,18 @@ function App() {
         <Routes>
           {/* pública */}
           <Route path="/" element={<Login />} />
+          <Route path="/recuperar/senha" element={<RecuperarSenha />} />
+          <Route path="/recuperar/conta" element={<RecuperarConta />} />
 
           {/* protegidas */}
           <Route element={<PrivateRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/home" element={<Home />} />
               <Route path="/exames/seusExames" element={<SeusExamesPage />} />
-              <Route path="/exames/paciente/:pacienteId/:nome" element={<SeusExamesPage />} />
+              <Route
+                path="/exames/paciente/:pacienteId/:nome"
+                element={<SeusExamesPage />}
+              />
               <Route path="/exames/cadastrar" element={<CadastrarExames />} />
               <Route path="/medicos" element={<Medicos />} />
               <Route path="/perfil" element={<Perfil />} />

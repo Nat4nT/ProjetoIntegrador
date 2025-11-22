@@ -240,6 +240,40 @@ export default function SeusExames() {
   };
 
   // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
+  const handleComentarioEditado = (
+    exameId: string,
+    comentarioEditado: ComentarioExame
+  ) => {
+    setRows((prev) =>
+      prev.map((row) =>
+        row.key === exameId
+          ? {
+              ...row,
+              comentarios: (row.comentarios ?? []).map((c) =>
+                c.comentario_exame_id === comentarioEditado.comentario_exame_id
+                  ? { ...c, ...comentarioEditado }
+                  : c
+              ),
+            }
+          : row
+      )
+    );
+
+    setExameVisualizar((prev) =>
+      prev && prev.key === exameId
+        ? {
+            ...prev,
+            comentarios: (prev.comentarios ?? []).map((c) =>
+              c.comentario_exame_id === comentarioEditado.comentario_exame_id
+                ? { ...c, ...comentarioEditado }
+                : c
+            ),
+          }
+        : prev
+    );
+  };
+
+  // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
   const handleComentarioDeletado = (exameId: string, comentarioId: number) => {
     setRows((prev) =>
       prev.map((row) =>
@@ -525,6 +559,7 @@ export default function SeusExames() {
         onClose={closeModalVisualizar}
         onComentarioCriado={handleComentarioCriado}
         onComentarioDeletado={handleComentarioDeletado}
+        onComentarioEditado={handleComentarioEditado}
         exame={exameVisualizar}
         tipoUsuario={
           tipoUsuario === "paciente" || tipoUsuario === "medico"

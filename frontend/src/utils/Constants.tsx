@@ -53,27 +53,6 @@ export const TIPOS_SANGUINEOS = [
   "AB-",
 ]; 
 
-export const SUG_MEDICACAO = [
-  "Losartana 50 mg",
-  "Enalapril 10 mg",
-  "Hidroclorotiazida 25 mg",
-  "Metformina 850 mg",
-  "Insulina NPH",
-  "Atorvastatina 20 mg",
-  "Sinvastatina 20 mg",
-  "Levotiroxina 50 mcg",
-  "Omeprazol 20 mg",
-  "Sertralina 50 mg",
-  "Fluoxetina 20 mg",
-  "Paracetamol 750 mg",
-  "Dipirona 500 mg",
-  "Ibuprofeno 400 mg",
-  "Loratadina 10 mg",
-  "Cetirizina 10 mg",
-  "Salbutamol (spray)",
-  "Budesonida (inalatório)",
-];
-
 // OPÇÕES MENU LATERAL PACIENTE NO LAYOUT PADRÃO
 export const itemsUsuarioPaciente = [
   { key: "/home", icon: <HomeOutlined />, label: "Home" },

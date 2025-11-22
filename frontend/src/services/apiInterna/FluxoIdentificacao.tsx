@@ -39,3 +39,8 @@ export function desativarConta(): Promise<any> {
 export function alterarSenha(payload: any): Promise<any> {
   return handleApi(api.post("/minha-conta/alterar-senha", payload));
 }
+
+// RECUPERAR CONTA
+export function recuperarConta(payload: any): Promise<any> {
+  return handleApi(api.post("/recuperar-conta", payload));
+}

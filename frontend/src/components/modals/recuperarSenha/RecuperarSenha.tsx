@@ -5,6 +5,8 @@ import { Modal, Input, Button } from "antd";
 
 import "./RecuperarSenha.scss";
 import { emailRegex } from "../../../utils/Masks";
+import { recuperarConta } from "../../../services/apiInterna/FluxoIdentificacao";
+import { showMessage } from "../../messageHelper/ShowMessage";
 
 type RecuperarSenhaProps = {
   open: boolean;
@@ -21,7 +23,7 @@ export default function RecuperarSenha({
   const [error, setError] = useState("");
 
   // FUNÇÃO PARA ENVIAR E-MAIL
-  const handleEnviar = () => {
+  const handleEnviar = async () => {
     if (!emailRecuperarSenha.trim()) {
       setError("Por favor, informe seu e-mail.");
       return;
@@ -30,6 +32,16 @@ export default function RecuperarSenha({
     if (!emailRegex.test(emailRecuperarSenha)) {
       setError("Informe um e-mail válido.");
       return;
+    }
+
+    const payload = {
+      email: emailRecuperarSenha,
+    };
+
+    try {
+      await recuperarConta(payload);
+    } catch (err: any) {
+      showMessage(err.message || "Usuário não encontrado", "error")
     }
 
     setError("");

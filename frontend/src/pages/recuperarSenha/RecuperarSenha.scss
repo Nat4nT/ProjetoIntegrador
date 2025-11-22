@@ -1,0 +1,143 @@
+.container-title-up-recuperar-senha {
+  padding-bottom: 20px;
+}
+
+.title-up-rescuperar-senha {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -10px;
+}
+
+.primera-palavra {
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 700;
+  color: #374151;
+}
+
+.segunda-palavra {
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 700;
+  color: #2f4892;
+}
+
+.frase-title-up-recuperar-senha {
+  color: #6b7280;
+}
+
+.container-recuperar-senha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 40px 32px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
+}
+
+.container-recuperar-senha > h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+.container-recuperar-senha > .container-recuperar-senha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 40px 32px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
+}
+
+.descricao-recuperar-senha {
+  color: #0f172a;
+  margin-top: -10px;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.form-recupperar-senha {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-recupperar-senha .ant-form-item-label > label {
+  margin: 18px 0 4px 0;
+  font-weight: 400;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.form-recupperar-senha .ant-input,
+.form-recupperar-senha .ant-input-affix-wrapper {
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.form-recupperar-senha .ant-input {
+  padding: 0 12px;
+}
+
+.form-recupperar-senha .ant-input-affix-wrapper {
+  padding: 0 12px;
+}
+
+.form-recupperar-senha .ant-input-affix-wrapper .ant-input {
+  height: 100%;
+  padding: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+.form-recupperar-senha .ant-input:focus,
+.form-recupperar-senha .ant-input-affix-wrapper-focused {
+  border-color: #1677ff !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+.form-recupperar-senha .ant-input::placeholder {
+  color: #94a3b8;
+}
+
+.form-recupperar-senha .ant-form-item {
+  margin-bottom: 12px;
+}
+
+.button-recuperar-senha {
+  height: 44px;
+  border-radius: 8px !important;
+  font-weight: 700;
+  margin-top: 10px;
+  background-color: #14b8a6 !important;
+  color: #fff !important;
+  border: none !important;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+  }
+
+  &:disabled {
+    background-color: #94a3b8 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+.container-button-alterar-senha {
+  width: 100%;
+}
