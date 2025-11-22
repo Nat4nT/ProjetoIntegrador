@@ -23,8 +23,13 @@ class CondicaoModel extends Model
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $deficiencia = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM {$this->table} WHERE tipo = 'medicacao' ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $medicacao = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return [
+            "medicacoes"=>$medicacao,
             "doencas" => $doenca,
             "deficiencia" => $deficiencia,
             "alergias" => $alergias

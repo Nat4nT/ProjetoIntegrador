@@ -190,7 +190,7 @@ class ExameService
         $comentario = (new ComentarioExame())->AddData($data);
 
         return [
-            "data"=>['comentario_exame_id'=>$comentario],
+            "data"=>(new ComentarioExame($comentario))->getInfo(),
             'message' => 'Comentario realizado com sucesso',
             'code' => 200
         ];

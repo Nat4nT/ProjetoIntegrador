@@ -152,7 +152,7 @@ abstract class Model
 
     public function deleteFile($arquivo): void
     {
-        unlink(__DIR__ . '/../../' . $arquivo);
+        unlink(__DIR__ . '/../' . $arquivo);
     }
 
     public function uploadImage(UploadedFileInterface $fileObject): ?string // Mudança: Recebe o objeto
