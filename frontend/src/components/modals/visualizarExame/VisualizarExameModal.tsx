@@ -108,6 +108,8 @@ export default function VisualizarExameModal({
         exame_id: raw.exame_id ?? Number(exame.key),
         comentario_exame_id:
           raw.comentario_exame_id ?? raw.comentario_id ?? raw.id ?? undefined,
+        usuario_id:
+          raw.usuario_id ?? (usuario_id ? Number(usuario_id) : undefined),
       };
 
       setComentariosExame((prev) => [...prev, comentarioSalvo]);
@@ -172,7 +174,7 @@ export default function VisualizarExameModal({
     setTextoEdicao("");
   };
 
-  // AÇÕES DO COMENTÁRIO (abrir edição / excluir)
+  // AÇÕES DO COMENTÁRIO
   const handleAcaoComentario = async (
     acao: string,
     comentario: ComentarioExame
@@ -205,7 +207,7 @@ export default function VisualizarExameModal({
 
         const exameId = String(comentario.exame_id ?? exame?.key);
         onComentarioDeletado?.(exameId, comentario.comentario_exame_id);
-        
+
         if (comentarioEmEdicaoId === comentario.comentario_exame_id) {
           setComentarioEmEdicaoId(null);
           setTextoEdicao("");
