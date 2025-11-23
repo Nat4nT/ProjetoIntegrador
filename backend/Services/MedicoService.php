@@ -23,11 +23,17 @@ class MedicoService
 
 
         if (!is_null($medico_id) && !is_null($paciente_id)) {
-            if (!$acessoModel->buscarSolicitacao($paciente_id, $medico_id)) {
-                (new AutorizacaoAcessoModel())->AddData($data);
+            $solicitacao = $acessoModel->buscarSolicitacao($paciente_id, $medico_id);
+            if (!$solicitacao) {
+                $acessoModel->AddData($data);
                 return ['code' => 200, 'message' => 'Solicitação enviada!'];
             } else {
-                return ['code' => 200, 'message' => 'Solicitação já envida'];
+                if ($solicitacao['status'] == 'PENDENTE') {
+                    return ['code' => 200, 'message' => 'Solicitação já envida'];
+                } else {
+                    (new AutorizacaoAcessoModel($solicitacao['autorizacao_acesso_id']))->editData(['status' => "PENDENTE"]);
+                    return ['code' => 200, 'message' => 'Solicitação enviada!'];
+                }
             }
         } else {
             return ['code' => 400, 'message' => "Dados Invalidos"];
@@ -110,8 +116,8 @@ class MedicoService
         if ($pacientes) {
             foreach ($pacientes as $paciente) {
                 $dados[] = [
-                    'status'=>$paciente['status'],
-                    'data_atualizacao'=>$paciente['data_atualizacao'],
+                    'status' => $paciente['status'],
+                    'data_atualizacao' => $paciente['data_atualizacao'],
                     'paciente_id' => $paciente['paciente_id'],
                     'cpf' => $criptar->decriptarDado($paciente['cpf']),
                     'telefone' => $criptar->decriptarDado($paciente['telefone']),
