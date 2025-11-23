@@ -66,7 +66,7 @@ export default function BuscarPaciente() {
       const row: PacienteRow = {
         key: usuario.paciente_id || usuario.usuario_id,
         nome: nomeCompleto || "Paciente",
-        cpf: usuario.cpf,
+        cpf: maskCPF(usuario.cpf),
         dataNascimento: dayjs(usuario.data_nascimento).isValid()
           ? dayjs(usuario.data_nascimento).format("DD/MM/YYYY")
           : usuario.data_nascimento,

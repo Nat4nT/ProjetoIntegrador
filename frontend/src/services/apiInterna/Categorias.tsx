@@ -15,7 +15,7 @@ export function deletarCategoria(payload: any): Promise<any> {
   return handleApi(api.post("/categoria/deletar", payload));
 }
 
-// ADICIONAR CATEGORIA
+// EDITAR CATEGORIA
 export function editarCategoria(payload: any): Promise<any> {
   return handleApi(api.post("/categoria/editar", payload));
 }

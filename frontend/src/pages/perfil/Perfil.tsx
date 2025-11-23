@@ -40,6 +40,7 @@ import {
 
 //constantes
 import {
+  ESPECIALIDADES_MEDICAS,
   ESTADOS_BR,
   GENEROS,
   TIPOS_SANGUINEOS,
@@ -75,7 +76,7 @@ export default function Perfil() {
   const [doencasDiagnosticadas, setDoencasDiagnosticas] = useState([]);
   const [medicacoes, setMedicacoes] = useState([]);
   const [alergias, setAlergias] = useState([]);
-  const [deficiencias, setDeficiencias] = useState([])
+  const [deficiencias, setDeficiencias] = useState([]);
 
   const primeiroNomeUsuario = localStorage.getItem("primeiroNomeUsuario");
   const ultimoNomeUsuario = localStorage.getItem("ultimoNomeUsuario");
@@ -217,6 +218,7 @@ export default function Perfil() {
           doencas: parseMaybeJsonArray(user.doencas_diagnosticadas),
           alergias: parseMaybeJsonArray(user.alergias),
           medicacao: parseMaybeJsonArray(user.medicacao),
+          deficiencias: parseMaybeJsonArray(user.desc_deficiencia),
           cep: user.cep,
           logradouro: user.rua,
           complemento: user.complemento,
@@ -226,7 +228,6 @@ export default function Perfil() {
           estado: user.estado,
           peso: user.peso,
           altura: user.altura,
-          deficiencias: user.desc_deficiencia,
         });
       } catch (err: any) {
         showMessage("Erro ao carregar dados pessoais.", "error");
@@ -278,10 +279,7 @@ export default function Perfil() {
             <Title level={3} style={{ marginBottom: 2 }}>
               Meu Perfil
             </Title>
-            <Paragraph
-              style={{ margin: 0 }}
-              className="descricao-pages"
-            >
+            <Paragraph style={{ margin: 0 }} className="descricao-pages">
               Aqui você pode visualizar e editar seus dados pessoais e
               opcionais.
             </Paragraph>
@@ -555,19 +553,31 @@ export default function Perfil() {
                         </Select>
                       </Form.Item>
                     </Col>
-
                     <Col xs={24} sm={12} md={8}>
                       <Form.Item
                         label="Especialidade médica"
                         name="especialidade"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Informe a especialidade médica",
-                          },
-                        ]}
+                        normalize={(arr) =>
+                          Array.from(
+                            new Set((arr ?? []).map((s: any) => s.trim()))
+                          )
+                        }
                       >
-                        <Input placeholder="Digite para buscar ou adicionar" />
+                        <Select
+                          mode="tags"
+                          placeholder="Ex: Cardiologia, Cirurgia geral"
+                          tokenSeparators={[","]}
+                          showSearch
+                          optionFilterProp="label"
+                          options={toOptions(ESPECIALIDADES_MEDICAS)}
+                          filterOption={(input, option) =>
+                            (option?.label as string)
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          maxTagCount="responsive"
+                          allowClear
+                        />
                       </Form.Item>
                     </Col>
                   </>

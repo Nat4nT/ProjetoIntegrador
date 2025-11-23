@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import {
   aprovarSolicitacao,
   recusarSolicitacao,
+  revogarAcesso,
   verificarSolicitacoes,
 } from "../../services/apiInterna/verificarSolicitacoesAcesso";
 
@@ -106,6 +107,33 @@ export default function SeusExames() {
     } catch (err) {
       console.error(err);
       showMessage("Erro ao recusar solicitação.", "error");
+    } finally {
+      setLoadingRecusar(false);
+    }
+  };
+
+  // FUNÇÃO PARA REVOGAR ACESSO
+  const handlerRevogar = async () => {
+    if (!solicitacaoSelecionada) return;
+    try {
+      setLoadingRecusar(true);
+      const solicitacao_id = Number(solicitacaoSelecionada.key);
+      await revogarAcesso({ solicitacao_id });
+
+      setRows((prev) =>
+        prev.map((r) =>
+          r.key === String(solicitacao_id)
+            ? { ...r, status: StatusAcesso.REVOGADO }
+            : r
+        )
+      );
+
+      showMessage("Acesso cancelado com sucesso.", "success");
+      handleCloseModal();
+      closeModalAvisoExclusao();
+    } catch (err) {
+      console.error(err);
+      showMessage("Erro ao cancelado acesso.", "error");
     } finally {
       setLoadingRecusar(false);
     }
@@ -255,7 +283,7 @@ export default function SeusExames() {
       <AvisoExclusaoModal
         onClose={closeModalAvisoExclusao}
         open={openModalAvisoExclusao}
-        onSubmit={handleRecusar}
+        onSubmit={handlerRevogar}
         tituloModal={"Revogar acesso médico"}
         fraseUmModal={"Tem certeza de que deseja revogar o acesso?"}
         fraseDoiModal={""}

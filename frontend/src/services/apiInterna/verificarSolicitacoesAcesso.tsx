@@ -14,3 +14,8 @@ export function aprovarSolicitacao(payload: any): Promise<any> {
 export function recusarSolicitacao(payload: any): Promise<any> {
   return handleApi(api.post("/minha-conta/solicitacoes/negar", payload));
 }
+
+// RECUSAR SOLICITAÇÃO DE ACESSO AO PERFIL
+export function revogarAcesso(payload: any): Promise<any> {
+  return handleApi(api.post("/minha-conta/solicitacoes/revogar", payload));
+}
