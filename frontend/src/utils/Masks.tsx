@@ -52,3 +52,6 @@ export function maskAltura(v: string) {
   return `${d[0]}.${d.slice(1)}`; // "190" -> "1.90"
 }
 
+export function maskCRM(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 6); // só números, máximo 6 dígitos
+}

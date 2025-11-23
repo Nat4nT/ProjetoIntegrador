@@ -137,7 +137,7 @@ export default function BuscarPaciente() {
     <div>
       <Card>
         <Title>Buscar paciente</Title>
-        <Paragraph>
+        <Paragraph className="descricao-pages">
           Digite o CPF para localizar um paciente e solicitar acesso ao seu
           perfil.
         </Paragraph>

@@ -58,6 +58,7 @@ export default function CadastrarCategoria({
       width={620}
       maskClosable={false}
       title={null}
+      destroyOnHidden
       rootClassName="desativar-conta-modal"
       styles={{
         content: {

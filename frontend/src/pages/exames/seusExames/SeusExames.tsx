@@ -12,8 +12,10 @@ import {
   Tabs,
   type TabsProps,
   Grid,
+  Dropdown,
+  Input,
 } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, MoreOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
 //data
@@ -24,7 +26,11 @@ import {
   buscarExames,
   deletarExame,
 } from "../../../services/apiInterna/Exames";
-import { buscarCategoria } from "../../../services/apiInterna/Categorias";
+import {
+  buscarCategoria,
+  deletarCategoria,
+  editarCategoria,
+} from "../../../services/apiInterna/Categorias";
 
 //interface
 import type {
@@ -40,16 +46,23 @@ import CadatrarCategoria from "../../../components/modals/cadastrarCategoria/Cad
 import AvisoExclusaoModal from "../../../components/modals/avisoExclusão/AvisoExclusao";
 import VisualizarExameModal from "../../../components/modals/visualizarExame/VisualizarExameModal";
 
-import "./SeusExames.scss";
 import { useParams } from "react-router-dom";
 import {
   buscarCategoriasPaciente,
   buscarExamesPaciente,
 } from "../../../services/apiInterna/buscarPacientes";
 
+import "./SeusExames.scss";
+
 const { Title, Paragraph } = Typography;
 const { RangePicker } = DatePicker;
 const { useBreakpoint } = Grid;
+
+type CategoriaOption = {
+  value: string;
+  label: string;
+  podeEditar: boolean; 
+};
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
@@ -59,7 +72,7 @@ export default function SeusExames() {
     useState(false);
 
   const [rows, setRows] = useState<ExameRow[]>([]);
-  const [cat, setCat] = useState<{ value: string; label: string }[]>([]);
+  const [cat, setCat] = useState<CategoriaOption[]>([]);
   const [tab, setTab] = useState<string>("Todos");
 
   const [exameSelecionadoId, setExameSelecionadoId] = useState<string | null>(
@@ -68,6 +81,11 @@ export default function SeusExames() {
   const [periodo, setPeriodo] = useState<[Dayjs, Dayjs] | null>(null);
   const [exameVisualizar, setExameVisualizar] = useState<ExameRow | null>(null);
   const [categoriaFiltro, setCategoriaFiltro] = useState<string | undefined>();
+
+  const [editingCategoriaId, setEditingCategoriaId] = useState<string | null>(
+    null
+  );
+  const [editingNome, setEditingNome] = useState("");
 
   const screens = useBreakpoint();
   const isMobile = !screens.xl;
@@ -118,6 +136,61 @@ export default function SeusExames() {
     }
   }
 
+  // EXCLUIR CATEGORIA
+  async function handleExcluirCategoria(categoriaId: string) {
+    try {
+      await deletarCategoria({ categoria_id: categoriaId });
+
+      showMessage("Categoria excluída com sucesso.", "success");
+      setCat((prev) => prev.filter((c) => c.value !== categoriaId));
+      setTab((prevTab) => (prevTab === categoriaId ? "Todos" : prevTab));
+
+      setCategoriaFiltro((prev) => (prev === categoriaId ? undefined : prev));
+    } catch (err: any) {
+      showMessage("Erro ao excluir categoria.", "error");
+    }
+  }
+
+  // INICIAR EDIÇÃO INLINE DE CATEGORIA
+  function startEditarCategoria(categoriaId: string, nomeAtual: string) {
+    setTimeout(() => {
+      setEditingCategoriaId(categoriaId);
+      setEditingNome(nomeAtual);
+    }, 0);
+  }
+
+  // SALVAR EDIÇÃO INLINE DE CATEGORIA (apenas no Enter)
+  async function salvarCategoriaEditada() {
+    if (!editingCategoriaId) return;
+    const nomeTrim = editingNome.trim();
+    if (!nomeTrim) {
+      showMessage("O nome da categoria não pode ser vazio.", "warning");
+      setEditingCategoriaId(null);
+      setEditingNome("");
+      return;
+    }
+
+    try {
+      await editarCategoria({
+        categoria_id: editingCategoriaId,
+        nome: nomeTrim,
+      });
+
+      setCat((prev) =>
+        prev.map((c) =>
+          c.value === editingCategoriaId ? { ...c, label: nomeTrim } : c
+        )
+      );
+
+      showMessage("Categoria atualizada com sucesso.", "success");
+    } catch (err: any) {
+      showMessage("Erro ao atualizar categoria.", "error");
+    } finally {
+      setEditingCategoriaId(null);
+      setEditingNome("");
+    }
+  }
+
   // FILTROS
   const dataFiltrada = useMemo(() => {
     let arr = [...rows];
@@ -151,13 +224,66 @@ export default function SeusExames() {
     return arr;
   }, [rows, tab, categoriaFiltro, periodo]);
 
-  // ARRAY PARA OS TABS ITENS
+  // ARRAY PARA OS TABS ITENS 
   const tabItems: TabsProps["items"] = useMemo(
     () => [
       { key: "Todos", label: "Todos" },
-      ...cat.map((c) => ({ key: c.value, label: c.label })),
+      ...cat.map((c) => ({
+        key: c.value,
+        label: (
+          <div className="tab-categoria-label">
+            {editingCategoriaId === c.value ? (
+              <Input
+                size="small"
+                value={editingNome}
+                autoFocus
+                onChange={(e) => setEditingNome(e.target.value)}
+                onPressEnter={salvarCategoriaEditada}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setEditingCategoriaId(null);
+                    setEditingNome("");
+                  }
+                }}
+                style={{ maxWidth: 140 }}
+              />
+            ) : (
+              <>
+                <span>{c.label}</span>
+                {tipoUsuario === "paciente" && c.podeEditar && (
+                  <Dropdown
+                    trigger={["click"]}
+                    menu={{
+                      items: [
+                        { key: "editar", label: "Editar" },
+                        { key: "excluir", label: "Excluir", danger: true },
+                      ],
+                      onClick: ({ key }) => {
+                        if (key === "editar") {
+                          startEditarCategoria(c.value, c.label);
+                        }
+                        if (key === "excluir") {
+                          handleExcluirCategoria(c.value);
+                        }
+                      },
+                    }}
+                  >
+                    <Button
+                      type="text"
+                      size="small"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreOutlined />
+                    </Button>
+                  </Dropdown>
+                )}
+              </>
+            )}
+          </div>
+        ),
+      })),
     ],
-    [cat]
+    [cat, tipoUsuario, editingCategoriaId, editingNome]
   );
 
   //COLUNAS TABELA
@@ -239,7 +365,6 @@ export default function SeusExames() {
     );
   };
 
-  // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
   const handleComentarioEditado = (
     exameId: string,
     comentarioEditado: ComentarioExame
@@ -273,7 +398,6 @@ export default function SeusExames() {
     );
   };
 
-  // RESPONSÁVEL POR ATUALIZAR OS COMENTÁRIOS NO MODAL SEM PRECISAR RECARREGAR A PÁGINA.
   const handleComentarioDeletado = (exameId: string, comentarioId: number) => {
     setRows((prev) =>
       prev.map((row) =>
@@ -364,9 +488,9 @@ export default function SeusExames() {
     carregarExames();
   }, [tipoUsuario, pacienteId]);
 
-  // CARREGAR CATEGORIAS
+  // CARREGAR CATEGORIAS (inicial)
   useEffect(() => {
-    async function carregarCategorias() {
+    async function carregarCategoriasInicial() {
       try {
         setLoading(true);
         if (tipoUsuario === "medico" && pacienteId) {
@@ -376,16 +500,18 @@ export default function SeusExames() {
           const invertida = [...categoriasMedicoView.data].reverse();
           setCat(
             invertida.map((e: any) => ({
-              value: String(e.categoria_id ?? e.categoria_id),
-              label: e.nome ?? e.nome,
+              value: String(e.categoria_id),
+              label: e.nome,
+              podeEditar: e.sis_cat === 0,
             }))
           );
         } else {
           const categorias = await buscarCategoria();
           setCat(
             categorias.data.map((e: any) => ({
-              value: String(e.id ?? e.categoria_id),
+              value: String(e.categoria_id ?? e.id),
               label: e.nome ?? e.nome_categoria,
+              podeEditar: e.sis_cat === 0,
             }))
           );
         }
@@ -395,9 +521,10 @@ export default function SeusExames() {
         setLoading(false);
       }
     }
-    carregarCategorias();
+    carregarCategoriasInicial();
   }, []);
 
+  // CARREGAR CATEGORIAS (para onSuccess do modal)
   async function carregarCategorias() {
     try {
       setLoading(true);
@@ -409,8 +536,9 @@ export default function SeusExames() {
 
       setCat(
         invertida.map((e: any) => ({
-          value: String(e.id ?? e.categoria_id),
+          value: String(e.categoria_id ?? e.id),
           label: e.nome ?? e.nome_categoria,
+          podeEditar: e.sis_cat === 0,
         }))
       );
     } catch (err: any) {
@@ -424,7 +552,7 @@ export default function SeusExames() {
     if (tipoUsuario === "paciente") {
       carregarCategorias();
     }
-  }, []);
+  }, [tipoUsuario]);
 
   return (
     <div>
@@ -432,7 +560,7 @@ export default function SeusExames() {
         <Title>
           {tipoUsuario === "medico" ? "Exames do " + nome : "Seus Exames"}
         </Title>
-        <Paragraph>
+        <Paragraph className="descricao-pages">
           Use as categorias acima da tabela para filtrar os resultados. Você
           pode usar filtros como categoria e data.
         </Paragraph>

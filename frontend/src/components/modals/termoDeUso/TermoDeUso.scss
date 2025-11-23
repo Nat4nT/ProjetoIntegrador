@@ -27,5 +27,35 @@
 .conteudo-termo {
   text-align: justify;
   line-height: 1.6;
-  padding: 10px 40px 40px 40px;
+  padding: 0px 30px 20px 30px;
+}
+
+.button-fechar-modal {
+  width: 30% !important;
+  background-color: #14b8a6;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #109e93 !important;
+    color: white !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.container-button-fechar {
+  display: flex;
+  justify-content: center;
 }

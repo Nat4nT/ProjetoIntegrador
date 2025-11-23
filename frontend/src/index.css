@@ -66,3 +66,12 @@ h1 {
   }
 }
 
+.descricao-pages {
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.ant-typography {
+  height: 30px;
+}
+

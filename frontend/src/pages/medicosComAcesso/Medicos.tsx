@@ -262,7 +262,7 @@ export default function SeusExames() {
       />
       <Card>
         <Title>Médicos com Acesso</Title>
-        <Paragraph>
+        <Paragraph className="descricao-pages">
           Aqui você pode visualizar os médicos que têm acesso ao seu perfil e
           gerenciar essas permissões. Caso queira, é possível revogar o acesso a
           qualquer momento.

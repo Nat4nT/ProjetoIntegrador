@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 //componentes antd
-import { Carousel, Card, Row, Col } from "antd";
+import { Carousel, Card, Row, Col, Typography } from "antd";
 import {
   FileAddOutlined,
   FileSearchOutlined,
@@ -35,6 +35,8 @@ import { StatusAcesso } from "../../utils/Enum";
 
 import "./Home.scss";
 import PedidoAcessoModal from "../../components/modals/modalAceitarSolicitacaoMedico/ModalAceitarSolicitacao";
+
+const { Title, Paragraph } = Typography;
 
 export default function Home() {
   const navigate = useNavigate();
@@ -197,10 +199,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="home-header">
-        <h1>Home</h1>
-        <p>Acesse rapidamente as principais funcionalidades.</p>
-      </div>
+      <Card>
+        <Title>Home</Title>
+        <Paragraph className="descricao-pages">
+          Acesse rapidamente as principais funcionalidades.
+        </Paragraph>
+      </Card>
 
       <Carousel
         autoplay
@@ -208,6 +212,7 @@ export default function Home() {
         draggable={false}
         dotPosition="bottom"
         autoplaySpeed={5000}
+        style={{marginTop: 18}}
       >
         <div>
           <img src={banner1} alt="Banner MedExame" className="home-banner" />

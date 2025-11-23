@@ -135,7 +135,7 @@ export default function SeusExames() {
     <div>
       <Card>
         <Title>Cadastrar Exame</Title>
-        <Paragraph>
+        <Paragraph className="descricao-pages">
           Utilize esse formulário para anexar um novo exame ao seu perfil.
         </Paragraph>
       </Card>

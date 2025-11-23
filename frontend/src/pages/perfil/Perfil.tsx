@@ -82,7 +82,7 @@ export default function Perfil() {
   const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   const { Title, Paragraph } = Typography;
-  const { TextArea } = Input;
+  // const { TextArea } = Input;
 
   // CONVERTE ARRAY SIMPLES PARA {label: "", value: ""}
   const toOptions = (arr: string[]) => arr.map((v) => ({ label: v, value: v }));
@@ -278,7 +278,10 @@ export default function Perfil() {
             <Title level={3} style={{ marginBottom: 2 }}>
               Meu Perfil
             </Title>
-            <Paragraph type="secondary" style={{ margin: 0 }}>
+            <Paragraph
+              style={{ margin: 0 }}
+              className="descricao-pages"
+            >
               Aqui você pode visualizar e editar seus dados pessoais e
               opcionais.
             </Paragraph>
@@ -746,8 +749,45 @@ export default function Perfil() {
                 </Row>
               </Col>
             )}
+            <Col
+              xs={24}
+              lg={tipoUsuario === "medico" ? 14 : 24}
+              style={{ marginTop: 16 }}
+            >
+              <div className="container-button-perfil">
+                <div className="container-salvar-alterar">
+                  <Button
+                    className="salvar-dados-button"
+                    type="primary"
+                    loading={loading}
+                    htmlType="submit"
+                  >
+                    Salvar dados
+                  </Button>
+
+                  <Button
+                    className="alterar-senha-button"
+                    type="default"
+                    htmlType="button"
+                    onClick={() => setOpenModalAlterarSenha(true)}
+                  >
+                    Alterar senha
+                  </Button>
+                </div>
+                <div>
+                  <Button
+                    className="desativar-conta-senha-button"
+                    type="primary"
+                    htmlType="button"
+                    onClick={() => setOpenModalDesativarConta(true)}
+                  >
+                    Desativar conta
+                  </Button>
+                </div>
+              </div>
+            </Col>
           </Row>
-          <div className="container-button-perfil">
+          {/* <div className="container-button-perfil">
             <div className="container-salvar-alterar">
               <Button
                 className="salvar-dados-button"
@@ -777,7 +817,7 @@ export default function Perfil() {
                 Desativar conta
               </Button>
             </div>
-          </div>
+          </div> */}
         </Form>
       </Card>
     </Space>

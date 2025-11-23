@@ -24,6 +24,7 @@ import { cadastrarUsuario } from "../../../services/apiInterna/FluxoIdentificaca
 import {
   maskCEP,
   maskCPF,
+  maskCRM,
   maskPhoneBR,
   onlyDigits,
   padraoDeSenha,
@@ -35,6 +36,7 @@ import { showMessage } from "../../messageHelper/ShowMessage";
 import ModalTermoDeUso from "../termoDeUso/TermoDeUso";
 
 import "./ModalCadastro.scss";
+import { ESPECIALIDADES_MEDICAS } from "../../../utils/Constants";
 
 type CadastroModalProps = {
   open: boolean;
@@ -64,6 +66,9 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
   const closeModalTermoDeUso = () => {
     setOpenModalTermoDeUso(false);
   };
+
+  // CONVERTE ARRAY SIMPLES PARA {label: "", value: ""}
+  const toOptions = (arr: string[]) => arr.map((v) => ({ label: v, value: v }));
 
   // FUNÇÃO PARA BUSCAR ENDEREÇO DO CEP
   const handleCepChange = (raw: string) => {
@@ -477,7 +482,13 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
                   name="crm"
                   rules={[{ required: true, message: "Informe seu CRM" }]}
                 >
-                  <Input placeholder="Digite seu CRM" />
+                  <Input
+                    placeholder="Digite seu CRM"
+                    maxLength={6}
+                    onChange={(e) =>
+                      form.setFieldsValue({ crm: maskCRM(e.target.value) })
+                    }
+                  />
                 </Form.Item>
               </Col>
 
@@ -524,7 +535,7 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
                 </Form.Item>
               </Col>
 
-              <Col xs={24} md={8}>
+              {/* <Col xs={24} md={8}>
                 <Form.Item
                   label="Especialidade médica"
                   name="especialidade"
@@ -536,6 +547,31 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
                   ]}
                 >
                   <Input placeholder="Digite para buscar ou adicionar" />
+                </Form.Item>
+              </Col> */}
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Especialidade médica"
+                  name="especialidade"
+                  normalize={(arr) =>
+                    Array.from(new Set((arr ?? []).map((s: any) => s.trim())))
+                  }
+                >
+                  <Select
+                    mode="tags"
+                    placeholder="Ex: Cardiologia, Cirurgia geral"
+                    tokenSeparators={[","]}
+                    showSearch
+                    optionFilterProp="label"
+                    options={toOptions(ESPECIALIDADES_MEDICAS)}
+                    filterOption={(input, option) =>
+                      (option?.label as string)
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    maxTagCount="responsive"
+                    allowClear
+                  />
                 </Form.Item>
               </Col>
             </>

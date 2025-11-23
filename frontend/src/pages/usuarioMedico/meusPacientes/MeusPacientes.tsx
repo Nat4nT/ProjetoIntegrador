@@ -172,7 +172,7 @@ export default function SeusExames() {
     <div>
       <Card>
         <Title>Meus pacientes</Title>
-        <Paragraph>
+        <Paragraph className="descricao-pages">
           Aqui você encontra os pacientes que concederam acesso e as
           solicitações pendentes. Você pode visualizar os exames autorizados ou
           encerrar o acesso quando não for mais necessário.
