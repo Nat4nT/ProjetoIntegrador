@@ -3,8 +3,9 @@
 Após clonar o projeto é necessario seguir os seguintes passos
 
 ## Etapa 1 - Backend
-### PARA SUBIR O DOCKER DO BACKEND
-
+### Configuração
+  Altere o arquivo .env.exemple com os dados desejado e após isso, renomeie para .env
+### Subir o docker
 Caso esteja utilizando Windows como sistema operacional é necessario iniciar o docker desktop para realizar o comando a seguir.
 
 ````bash
