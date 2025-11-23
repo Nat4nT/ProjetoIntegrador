@@ -11,7 +11,7 @@ import { loginUsuario } from "../../services/apiInterna/FluxoIdentificacao";
 
 // modals
 import CadastroModal from "../../components/modals/cadastro/ModalCadastro";
-import RecuperarSenha from "../../components/modals/recuperarSenha/RecuperarSenha";
+import RecuperarSenha from "../../components/modals/recuperarSenha/ModalRecuperarSenha";
 
 import "antd/dist/reset.css";
 
@@ -19,6 +19,7 @@ import "antd/dist/reset.css";
 import { showMessage } from "../../components/messageHelper/ShowMessage";
 
 import "./Login.scss";
+import ModalContaInativa from "../../components/modals/avisoContaInativa/ModalAvisoContaInativa";
 
 function Login() {
   const [userLogin, setUserLogin] = useState("");
@@ -26,7 +27,11 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
   const [isRecuperarOpen, setIsRecuperarOpen] = useState(false);
+  const [openAvisoContaDesativada, setOpenAvisoContaDesativada] =
+    useState(false);
   const [isCadastroOpen, setIsCadastroOpen] = useState(false);
+
+  const [fluxoContaInativa, setFluxoContaInativa] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,7 +42,6 @@ function Login() {
 
       if (!payloadBase64) return null;
 
-      // Ajusta Base64URL para Base64 normal
       const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/");
       const padded = base64.padEnd(
         base64.length + ((4 - (base64.length % 4)) % 4),
@@ -99,6 +103,11 @@ function Login() {
       }
     } catch (error: any) {
       const msg = error?.message || "Erro ao fazer login.";
+      if (msg.toLowerCase().includes("inativ")) {
+        setOpenAvisoContaDesativada(true);
+        setFluxoContaInativa(true);
+        setLoading(false);
+      }
       showMessage(msg, "error");
     } finally {
       setLoading(false);
@@ -122,7 +131,6 @@ function Login() {
 
         <div className="container-login">
           <h1>Login</h1>
-
           <Form
             className="login-form"
             layout="vertical"
@@ -201,7 +209,22 @@ function Login() {
           />
           <RecuperarSenha
             open={isRecuperarOpen}
+            titulo={fluxoContaInativa ? "Recuperar conta" : "Recuperar senha"}
+            fluxoContaInativa={fluxoContaInativa}
+            descricao={
+              fluxoContaInativa
+                ? "Recupere sua conta informando o seu e-mail cadastrado."
+                : "Recupere sua senha informando o seu e-mail cadastrado."
+            }
             onClose={() => setIsRecuperarOpen(false)}
+          />
+          <ModalContaInativa
+            onClose={() => setOpenAvisoContaDesativada(false)}
+            open={openAvisoContaDesativada}
+            onReativar={() => {
+              setOpenAvisoContaDesativada(false);
+              setIsRecuperarOpen(true);
+            }}
           />
         </div>
       </div>

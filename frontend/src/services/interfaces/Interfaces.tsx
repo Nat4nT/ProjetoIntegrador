@@ -79,6 +79,7 @@ export type ExameRow = {
 
 export type PacienteRow = {
   key: number;
+  status?: string;
   nome: string;
   cpf: string;
   dataNascimento: string;

@@ -3,34 +3,80 @@ import { Form, Input, Button } from "antd";
 
 import { showMessage } from "../../components/messageHelper/ShowMessage";
 import { padraoDeSenha } from "../../utils/Masks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import "./RecuperarSenha.scss";
+import {
+  recuperarSenha,
+  verificarCodigo,
+} from "../../services/apiInterna/FluxoIdentificacao";
+
+import "./RecuperarSenhaScreen.scss";
 
 export default function RecuperarSenha() {
   const [novaSenha, setNovaSenha] = useState("");
   const [secondNovaSenha, setSecondNovaSenha] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [codigoEmail, setCodigoEmail] = useState("");
+  const [token, setToken] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [codigoValidado, setCodigoValidado] = useState(false);
+  const [loadingCodigo, setLoadingCodigo] = useState(false);
+
+  const location = useLocation();
+  const emailDoUsuario = location.state?.email ?? "";
   const navigate = useNavigate();
 
-  const handleAlterarSenha = async (values: any) => {
-    setLoading(true);
+  const handleAlterarSenha = async () => {
     try {
-      console.log("Nova senha:", values.novaSenha);
-
-      showMessage("Senha alterada com sucesso!", "success");
-
+      setLoading(true);
+      const payload = {
+        nova_senha: novaSenha,
+        confirmacao_senha: secondNovaSenha,
+      };
+      await recuperarSenha(payload as any, token);
+      showMessage("Senha atualizada com sucesso.", "success");
+      setNovaSenha("");
+      setSecondNovaSenha("");
       navigate("/");
-    } catch (error) {
-      showMessage("Erro ao alterar senha.", "error");
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Erro ao alterar senha.";
+      showMessage(msg, "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const onFinishFailed = () => {
+  const handleValidarCodigo = async () => {
+    if (!codigoEmail) {
+      showMessage("Informe o código enviado para seu e-mail.", "warning");
+      return;
+    }
+
+    try {
+      const payload = {
+        email: emailDoUsuario,
+        validation_code: codigoEmail,
+      };
+
+      const response = await verificarCodigo(payload);
+
+      setToken(response.data.token);
+      setLoadingCodigo(true);
+      setCodigoValidado(true);
+      showMessage("Código validado com sucesso!", "success");
+    } catch (error) {
+      showMessage("Código inválido ou expirado.", "error");
+      setCodigoValidado(false);
+    } finally {
+      setLoadingCodigo(false);
+    }
   };
+
+  const onBackToLogin = () => {
+    navigate("/");
+  };
+
+  const onFinishFailed = () => {};
 
   return (
     <div className="container">
@@ -45,7 +91,7 @@ export default function RecuperarSenha() {
       </div>
 
       <div className="container-recuperar-senha">
-        <h1>Alterar senha</h1>
+        <h1>Alterar senha </h1>
 
         <div className="recuperar-senha-header">
           <p className="descricao-recuperar-senha">
@@ -67,8 +113,34 @@ export default function RecuperarSenha() {
           />
 
           <Form.Item
+            label="Código de verificação"
+            name="codigo"
+            style={{ paddingTop: "10px" }}
+            rules={[{ required: true, message: "Digite o código recebido!" }]}
+          >
+            <Input
+              onChange={(e: any) => setCodigoEmail(e.target.value)}
+              value={codigoEmail}
+              placeholder="Informe o código enviado para seu e-mail"
+            />
+          </Form.Item>
+
+          <Button
+            type="default"
+            className="button-validar-codigo"
+            block
+            onClick={handleValidarCodigo}
+            loading={loadingCodigo}
+            disabled={codigoValidado}
+            style={{ marginBottom: 16 }}
+          >
+            {codigoValidado ? "Código validado" : "Validar código"}
+          </Button>
+
+          <Form.Item
             label="Nova senha"
             name="novaSenha"
+            hidden={!codigoValidado}
             style={{ paddingTop: "10px" }}
             rules={[
               { required: true, message: "Digite a nova senha!" },
@@ -90,6 +162,7 @@ export default function RecuperarSenha() {
           <Form.Item
             label="Confirmar nova senha"
             name="confirmarNovaSenha"
+            hidden={!codigoValidado}
             style={{ paddingTop: "8px" }}
             rules={[
               { required: true, message: "Confirme a nova senha!" },
@@ -119,10 +192,18 @@ export default function RecuperarSenha() {
               block
               loading={loading}
               htmlType="submit"
+              hidden={!codigoValidado}
             >
               Confirmar
             </Button>
           </div>
+          <button
+            type="button"
+            className="rs-back-link-login"
+            onClick={onBackToLogin}
+          >
+            Voltar para o login
+          </button>
         </Form>
       </div>
     </div>

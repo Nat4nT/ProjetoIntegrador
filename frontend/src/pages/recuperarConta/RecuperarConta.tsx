@@ -3,32 +3,51 @@ import { Form, Input, Button } from "antd";
 
 import { showMessage } from "../../components/messageHelper/ShowMessage";
 import { padraoDeSenha } from "../../utils/Masks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import {
+  recuperarSenha,
+  verificarCodigo,
+} from "../../services/apiInterna/FluxoIdentificacao";
 
 import "./RecuperarConta.scss";
 
 export default function RecuperarConta() {
   const [novaSenha, setNovaSenha] = useState("");
   const [secondNovaSenha, setSecondNovaSenha] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const [codigoValidado, setCodigoValidado] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [loadingCodigo, setLoadingCodigo] = useState(false);
+  const [token, setToken] = useState("");
+  const [codigoEmail, setCodigoEmail] = useState("")
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const location = useLocation();
+  const emailDoUsuario = location.state?.email ?? "";
 
   // VALIDAR CÓDIGO E-MAIL
   const handleValidarCodigo = async () => {
-    const codigo = form.getFieldValue("codigo");
 
-    if (!codigo) {
-      showMessage("Informe o código enviado para seu e-mail.", "warning");
+    if (!emailDoUsuario) {
+      showMessage(
+        "Não foi possível identificar o e-mail. Tente iniciar a recuperação novamente.",
+        "error"
+      );
       return;
     }
 
     try {
       setLoadingCodigo(true);
+
+      const payload = {
+        email: emailDoUsuario,
+        validation_code: codigoEmail,
+      };
+
+      const response = await verificarCodigo(payload);
+
+      setToken(response.data.token);
       setCodigoValidado(true);
       showMessage("Código validado com sucesso!", "success");
     } catch (error) {
@@ -47,21 +66,24 @@ export default function RecuperarConta() {
 
     setLoading(true);
     try {
-      console.log("Nova senha:", values.novaSenha);
+      const payload = {
+        nova_senha: values.novaSenha,
+        confirmacao_senha: values.confirmarNovaSenha,
+      };
+
+      await recuperarSenha(payload as any, token);
 
       showMessage("Senha alterada com sucesso!", "success");
-
       navigate("/");
-    } catch (error) {
-      showMessage("Erro ao alterar senha.", "error");
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Erro ao alterar senha.";
+      showMessage(msg, "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const onFinishFailed = () => {
-
-  };
+  const onFinishFailed = () => {};
 
   return (
     <div className="container">
@@ -107,7 +129,8 @@ export default function RecuperarConta() {
           >
             <Input
               placeholder="Informe o código enviado para seu e-mail"
-              maxLength={6}
+              onChange={(e: any) => setCodigoEmail(e.target.value)}
+              value={codigoEmail}
             />
           </Form.Item>
 
@@ -142,7 +165,6 @@ export default function RecuperarConta() {
               value={novaSenha}
               onChange={(e) => setNovaSenha(e.target.value)}
               autoComplete="new-password"
-              hidden={!codigoValidado}
               disabled={!codigoValidado}
             />
           </Form.Item>
@@ -169,7 +191,6 @@ export default function RecuperarConta() {
               value={secondNovaSenha}
               onChange={(e) => setSecondNovaSenha(e.target.value)}
               autoComplete="new-password"
-              hidden={!codigoValidado}
               disabled={!codigoValidado}
             />
           </Form.Item>
@@ -183,7 +204,7 @@ export default function RecuperarConta() {
               loading={loading}
               htmlType="submit"
               hidden={!codigoValidado}
-              disabled={!codigoValidado} 
+              disabled={!codigoValidado}
             >
               Confirmar
             </Button>

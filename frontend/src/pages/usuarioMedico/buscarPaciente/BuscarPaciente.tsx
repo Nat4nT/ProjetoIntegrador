@@ -146,7 +146,7 @@ export default function BuscarPaciente() {
       <Card style={{ marginTop: 16 }}>
         <Form
           form={form}
-          layout="vertical"
+          layout="horizontal"
           onFinish={handleBuscar}
           className="container-buscar-paciente"
         >

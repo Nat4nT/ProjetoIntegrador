@@ -40,7 +40,21 @@ export function alterarSenha(payload: any): Promise<any> {
   return handleApi(api.post("/minha-conta/alterar-senha", payload));
 }
 
+// ALTERAR SENHA
+export function recuperarSenha(payload: any, token: string) {
+  return api.post("/minha-conta/alterar-senha", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 // RECUPERAR CONTA
 export function recuperarConta(payload: any): Promise<any> {
   return handleApi(api.post("/recuperar-conta", payload));
+}
+
+// VERIFICAR CODIGO
+export function verificarCodigo(payload: any): Promise<any> {
+  return handleApi(api.post("/verificar-codigo", payload));
 }

@@ -21,41 +21,6 @@
     }
   }
 
-  .rs-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 18px;
-    margin-bottom: 12px;
-
-    .rs-label {
-      font-weight: 700;
-      color: #0f172a;
-      position: relative;
-    }
-
-    .rs-label::before {
-      content: " *";
-      color: #ef4444;
-      font-weight: 900;
-    }
-
-    .ant-input {
-      background: #f8fafc;
-      border-color: #e2e8f0;
-
-      &::placeholder {
-        color: #94a3b8;
-      }
-      &:focus,
-      &:focus-within {
-        background: #fff;
-        border-color: #14b8a6;
-        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25);
-      }
-    }
-  }
-
   .rs-submit {
     margin-top: 12px;
     background: #14b8a6;
@@ -81,6 +46,7 @@
     &:hover {
       text-decoration: underline;
     }
+
     &:focus,
     &:focus-visible,
     &:active {

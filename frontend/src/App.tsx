@@ -17,7 +17,7 @@ import Medicos from "./pages/medicosComAcesso/Medicos";
 import CadastrarExames from "./pages/exames/cadastrarExames/CadastrarExames";
 import MeusPacientes from "./pages/usuarioMedico/meusPacientes/MeusPacientes";
 import BuscarPaciente from "./pages/usuarioMedico/buscarPaciente/BuscarPaciente";
-import RecuperarSenha from "./pages/recuperarSenha/RecuperarSenha";
+import RecuperarSenha from "./pages/recuperarSenha/RecuperarSenhaScreen";
 import RecuperarConta from "./pages/recuperarConta/RecuperarConta";
 
 dayjs.locale("pt-br");

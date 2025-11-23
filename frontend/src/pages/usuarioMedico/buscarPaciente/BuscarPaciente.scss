@@ -9,12 +9,9 @@
     position: relative;
   }
 
-  // evita empurrar o botão para baixo
   .cpf-field .ant-form-item {
     margin-bottom: 0;
   }
-
-  // posiciona o erro abaixo do input sem alterar a altura do container
   .cpf-field .ant-form-item-explain {
     position: absolute;
     top: calc(100% + 2px);
@@ -25,10 +22,10 @@
 
   .buscar-btn-item {
     margin-bottom: 0;
+    margin-left: 32px;
   }
 }
 
-/* Botão Buscar */
 .button-buscar-paciente {
   width: 75px !important;
   background-color: #14b8a6;
@@ -78,7 +75,6 @@
   }
 }
 
-/* Input CPF */
 .input-buscar-paciente {
-  width: 80% !important;
+  width: 110%;
 }

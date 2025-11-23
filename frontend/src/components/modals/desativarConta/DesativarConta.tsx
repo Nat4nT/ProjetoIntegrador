@@ -64,10 +64,14 @@ export default function DesativarContaModal({
         <p>
           Tem certeza de que deseja desativar sua conta?
           <br />
-          Após confirmar, você <b>não terá mais acesso</b> e todos os seus dados
-          e histórico serão <b>permanentemente removidos</b>.
+          Após confirmar, você <b>perderá temporariamente o acesso</b> ao
+          sistema e não poderá visualizar seus exames ou informações.
         </p>
-        <p>Esta ação é irreversível.</p>
+
+        <p>
+          Para reativar sua conta no futuro, será necessário seguir o fluxo de
+          <b> verificação por código enviado ao seu e-mail cadastrado</b>.
+        </p>
       </div>
 
       <div className="dc-buttons-desativar-conta">

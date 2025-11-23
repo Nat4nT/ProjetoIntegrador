@@ -6,7 +6,7 @@ import { Card, Typography, Table, Button, Space, Grid } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 //data
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 //api
 import { buscarPacientes } from "../../../services/apiInterna/buscarPacientes";
@@ -18,6 +18,9 @@ import type { PacienteRow } from "../../../services/interfaces/Interfaces";
 import { showMessage } from "../../../components/messageHelper/ShowMessage";
 import { maskCPF } from "../../../utils/Masks";
 import { useNavigate } from "react-router-dom";
+import { StatusAcesso } from "../../../utils/Enum";
+
+import "./MeusPacientes.scss";
 
 const { Title, Paragraph } = Typography;
 const { useBreakpoint } = Grid;
@@ -51,25 +54,81 @@ export default function SeusExames() {
       defaultSortOrder: "ascend",
       responsive: ["xl"],
     },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      responsive: ["xl"],
+      render: (_, record) => {
+        if (record.status === StatusAcesso.APROVADO) {
+          return (
+            <span style={{ color: "green", fontWeight: "bold" }}>Ativo</span>
+          );
+        }
+        if (record.status === StatusAcesso.PENDENTE) {
+          return (
+            <span style={{ color: "orange", fontWeight: "bold" }}>
+              Pendente
+            </span>
+          );
+        }
 
+        if (record.status === StatusAcesso.REVOGADO) {
+          return (
+            <span style={{ color: "#8888888f", fontWeight: "bold" }}>
+              Revogado
+            </span>
+          );
+        }
+        return null;
+      },
+    },
     {
       title: "Ações",
       key: "acoes",
       responsive: ["xl"],
-      render: (_, record) => (
-        <Space>
-          <Button
-            className="button-solicitar-acesso"
-            size="small"
-            type="primary"
-            onClick={() =>
-              navigate(`/exames/paciente/${record.key}/${record.nome}`)
-            }
-          >
-            Ver exames
-          </Button>
-        </Space>
-      ),
+      render: (_, record) => {
+        if (record.status === StatusAcesso.APROVADO) {
+          return (
+            <div className="container-buttons-paciente-ativo">
+              <Button
+                className="button-ver-exames"
+                size="small"
+                type="primary"
+                onClick={() =>
+                  navigate(`/exames/paciente/${record.key}/${record.nome}`)
+                }
+              >
+                Ver exames
+              </Button>
+              <Button
+                className="button-cancelar-acesso-paciente"
+                size="small"
+                danger
+                onClick={() =>
+                  navigate(`/exames/paciente/${record.key}/${record.nome}`)
+                }
+              >
+                Cancelar acesso
+              </Button>
+            </div>
+          );
+        }
+
+        if (record.status === StatusAcesso.PENDENTE) {
+          return (
+            <Button className="button-paciente-pendente" size="small">
+              Pedido pendente
+            </Button>
+          );
+        }
+
+        if (record.status === StatusAcesso.REVOGADO) {
+          return <span style={{ color: "#8888888f" }}>Acesso revogado</span>;
+        }
+
+        return null;
+      },
     },
   ];
 
@@ -92,6 +151,10 @@ export default function SeusExames() {
             especialidade: s.especialidade ?? "Não informado",
             dataNascimento: dayjs(s.data_nascimento).format("DD/MM/YYYY"),
             cpf,
+            autorizadoEm: s.data_atualizacao
+              ? dayjs(s.data_atualizacao).format("DD/MM/YYYY")
+              : "",
+            status: s.status,
           };
         });
 
@@ -158,22 +221,33 @@ export default function SeusExames() {
                         <strong>Autorizado em: </strong>
                         {record.autorizadoEm}
                       </div>
-                      <div>
-                        <Space>
-                          <Button
-                            className="button-solicitar-acesso"
-                            size="small"
-                            type="primary"
-                            onClick={() =>
-                              navigate(
-                                `/exames/paciente/${record.key}/${record.nome}`
-                              )
-                            }
-                          >
-                            Ver exames
-                          </Button>
-                        </Space>
-                      </div>
+                      <Space wrap>
+                        <Button
+                          className="button-ver-exames"
+                          size="small"
+                          type="primary"
+                          onClick={() =>
+                            navigate(
+                              `/exames/paciente/${record.key}/${record.nome}`
+                            )
+                          }
+                        >
+                          Ver exames
+                        </Button>
+
+                        <Button
+                          className="button-cancelar-acesso-paciente"
+                          size="small"
+                          danger
+                          onClick={() =>
+                            navigate(
+                              `/exames/paciente/${record.key}/${record.nome}`
+                            )
+                          }
+                        >
+                          Cancelar acesso
+                        </Button>
+                      </Space>
                     </div>
                   ),
                 }
