@@ -1,4 +1,10 @@
+backend/readme.md
+backend/requests/
 backend/uploads/*
 #backend/vendor
 backend/public_html
+
 .env
+
+
+frontend/README.md
