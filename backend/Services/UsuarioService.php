@@ -228,7 +228,7 @@ class UsuarioService
             'peso' => isset($dados['peso']) ? $cript->encriptarDado($dados['peso']) : "",
             'altura' => isset($dados['altura']) ? $cript->encriptarDado($dados['altura']) : "",
             'doencas_diagnosticadas' => isset($dados['doencas_diagnosticadas']) ? $cript->encriptarDado(json_encode($dados['doencas_diagnosticadas'])) : "",
-            'desc_deficiencia' => isset($dados['desc_deficiencia']) ? $cript->encriptarDado($dados['desc_deficiencia']) : "",
+            'desc_deficiencia' => isset($dados['desc_deficiencia']) ? $cript->encriptarDado(json_encode($dados['desc_deficiencia'])) : "",
             'tipo_sanguineo' => isset($dados['tipo_sanguineo']) ? $cript->encriptarDado($dados['tipo_sanguineo']) : "",
             'alergias' => isset($dados['alergias']) ?  $cript->encriptarDado(json_encode($dados['alergias'])) : "",
             'medicacao' => isset($dados['medicacao']) ?  $cript->encriptarDado(json_encode($dados['medicacao'])) : "",
