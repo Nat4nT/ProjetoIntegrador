@@ -39,6 +39,7 @@ return function (App $app) {
     $app->group('/categoria', function ($cat) {
         $cat->get('', [CategoriaController::class, 'index']);
         $cat->post('', [CategoriaController::class, 'create']);
+        $cat->post('/editar', [CategoriaController::class, 'edit']);
         $cat->post('/deletar', [CategoriaController::class, 'delete']);
     })->add(LogMiddleware::class)->add(AutenticacaoMiddleware::class);
 

@@ -1,5 +1,5 @@
 {
-    "route": "localhost:8080/cartegoria/deletar",
+    "route": "localhost:8080/categoria/deletar",
     "method": "POST",
     "Header": {
       "Auth": "Bearer token"

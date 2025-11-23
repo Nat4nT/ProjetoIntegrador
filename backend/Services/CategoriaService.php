@@ -75,6 +75,38 @@ class CategoriaService
         return ['code' => 200, 'message' => 'Categoria registrada com sucesso'];
     }
 
+    public function alterarCategoria($categoriaDados, $user)
+    {
+        $categoriaModel = new CategoriaModel($categoriaDados['categoria_id']);
+        $categoria = $categoriaModel->getInfo();
+        if (!$categoria) {
+            return [
+                "message" => 'Erro ao editar categoria',
+                'code' => 400
+            ];
+        }
+        if (!$categoria['sis_cat'] && $categoria['usuario_id'] == $user) {
+            $dados = $this->prepareCategoriaData($categoriaDados,$user);
+            $response = (new CategoriaModel($categoriaDados['categoria_id']))->editData($dados);
+
+            if ($response) {
+                return [
+                    "message" => 'Cartegoria editada com sucesso',
+                    'code' => 200
+                ];
+            } else {
+                return [
+                    "message" => 'Erro ao editar categoria',
+                    'code' => 400
+                ];
+            }
+        } else {
+            return [
+                "message" => 'Não é possivel editar a categoria',
+                'code' => 400
+            ];
+        }
+    }
     public function deletarCategoria($categoria_id, $user)
     {
         $categoriaModel = new CategoriaModel($categoria_id);

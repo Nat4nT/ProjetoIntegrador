@@ -34,9 +34,20 @@ class CategoriaController
         $dadosUsuario = $request->getAttribute('usuario');
         $dadosFormulario = $request->getParsedBody();
 
-  
 
-        $resposta = (new CategoriaService())->deletarCategoria($dadosFormulario['categoria_id'],$dadosUsuario->usuario_id);
+
+        $resposta = (new CategoriaService())->deletarCategoria($dadosFormulario['categoria_id'], $dadosUsuario->usuario_id);
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+
+    public function edit(Request $request, Response $response)
+    {
+        $jsonResponse = new JsonResponse();
+        $dadosUsuario = $request->getAttribute('usuario');
+        $dadosFormulario = $request->getParsedBody();
+
+        $resposta = (new CategoriaService())->alterarCategoria($dadosFormulario, $dadosUsuario->usuario_id);
+
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
 }

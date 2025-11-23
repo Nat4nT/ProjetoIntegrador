@@ -1,7 +1,7 @@
 {
-    "route": "localhost:8080/cartegoria",
-    "method": "GET",
-    "Header": {
-      "Auth": "Bearer token"
-    }
+  "route": "localhost:8080/categoria",
+  "method": "GET",
+  "Header": {
+    "Auth": "Bearer token"
+  }
 }
