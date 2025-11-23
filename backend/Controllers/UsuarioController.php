@@ -76,6 +76,15 @@ class UsuarioController
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
 
+    public function reativacaoDeConta(Request $request, Response $response)
+    {
+        $email = $request->getParsedBody()['email'];
+        $resposta = (new EmailService())->genereteReativCode($email);
+        $jsonResponse = new JsonResponse();
+
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
+
     public function validarCodigoRecup(Request $request, Response $response)
     {
         $dados = $request->getParsedBody();

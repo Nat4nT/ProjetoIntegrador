@@ -18,6 +18,7 @@ return function (App $app) {
     $app->post('/login', [LoginController::class, 'realizarLogin'])->add(LogMiddleware::class);
     $app->post('/registrar', [UsuarioController::class, 'realizarCadastro'])->add(LogMiddleware::class);
     $app->post('/recuperar-conta', [UsuarioController::class, 'recuperacaoDeConta'])->add(LogMiddleware::class);
+    $app->post('/reativar-conta', [UsuarioController::class, 'reativacaoDeConta'])->add(LogMiddleware::class);
     $app->post('/verificar-codigo', [UsuarioController::class, 'validarCodigoRecup'])->add(LogMiddleware::class);
 
     $app->group('/minha-conta', function ($user) {
