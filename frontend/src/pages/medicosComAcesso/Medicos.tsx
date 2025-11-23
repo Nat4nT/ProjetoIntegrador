@@ -25,6 +25,7 @@ import { StatusAcesso } from "../../utils/Enum";
 
 import "./Medicos.scss";
 import AvisoExclusaoModal from "../../components/modals/avisoExclusão/AvisoExclusao";
+import { parseMaybeJsonArray } from "../../utils/Utilidades";
 
 const { Title, Paragraph } = Typography;
 const { useBreakpoint } = Grid;
@@ -183,6 +184,14 @@ export default function SeusExames() {
             </span>
           );
         }
+
+          if (record.status === StatusAcesso.RECUSADO) {
+            return (
+              <span style={{ color: "red", fontWeight: "bold" }}>
+                Recusado
+              </span>
+            );
+          }
         return null;
       },
     },
@@ -224,6 +233,9 @@ export default function SeusExames() {
         if (record.status === StatusAcesso.REVOGADO) {
           return <span style={{ color: "#8888888f" }}>Acesso revogado</span>;
         }
+        if (record.status === StatusAcesso.RECUSADO) {
+          return <span style={{ color: "red" }}>Acesso recusado</span>;
+        }
 
         return null;
       },
@@ -251,11 +263,14 @@ export default function SeusExames() {
             "Médico";
           const crm = `CRM-${s.estado_atuacao ?? ""} ${s.crm ?? ""}`.trim();
           const d = dayjs(s.data_criacao);
+          const parsed = parseMaybeJsonArray(s.especialidade);
 
           return {
             key: String(s.solcitacao_id ?? s.solicitacao_id ?? s.id),
             nome,
-            especialidade: s.especialidade ?? "Não informado",
+            especialidade: Array.isArray(parsed)
+              ? parsed.join(", ")
+              : "Não informado",
             crm,
             dataPedido: d.isValid()
               ? d.format("DD/MM/YYYY")

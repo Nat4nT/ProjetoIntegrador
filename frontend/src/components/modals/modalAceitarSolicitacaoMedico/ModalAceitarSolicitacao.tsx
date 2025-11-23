@@ -2,13 +2,13 @@ import { Modal, Button, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 import "./ModalAceitarSolicitacao.scss";
+import { parseMaybeJsonArray } from "../../../utils/Utilidades";
 
 type PedidoAcessoModalProps = {
   open: boolean;
   onClose: () => void;
-
   medico: string;
-  especialidade: string;
+  especialidade: string[] | string;
   dataPedido: string;
   crm: string;
 
@@ -62,7 +62,10 @@ export default function PedidoAcessoModal({
             <strong>Médico:</strong> {medico}
           </p>
           <p>
-            <strong>Especialidade:</strong> {especialidade}
+            <strong>Especialidade:</strong>{" "}
+            {Array.isArray(parseMaybeJsonArray(especialidade))
+              ? parseMaybeJsonArray(especialidade).join(", ")
+              : especialidade}
           </p>
           <p>
             <strong>Data pedido:</strong> {dataPedido}

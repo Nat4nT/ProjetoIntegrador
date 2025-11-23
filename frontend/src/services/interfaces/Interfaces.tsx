@@ -90,7 +90,7 @@ export type PacienteRow = {
 export type SolicitacaoRow = {
   key: string;
   nome: string;
-  especialidade: string;
+  especialidade: string[] | string;
   crm: string;
   dataPedido: string;
   rawDate: string;
@@ -101,7 +101,7 @@ export type SolicitacaoRow = {
 export type SolicitacaoAcesso = {
   id: number;
   medico: string;
-  especialidade: string;
+  especialidade: string[] | string;
   data_pedido: string;
   crm: string;
   status: string;

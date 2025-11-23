@@ -212,7 +212,7 @@ export default function Home() {
         draggable={false}
         dotPosition="bottom"
         autoplaySpeed={5000}
-        style={{marginTop: 18}}
+        style={{ marginTop: 18 }}
       >
         <div>
           <img src={banner1} alt="Banner MedExame" className="home-banner" />

@@ -443,7 +443,7 @@ export default function SeusExames() {
             return {
               key: String(e.exame_id),
               exame: e.nome_exame,
-              categoria: e.categoria?.[0]?.nome ?? "-",
+              categoria: e.categoria?.[0]?.nome ?? "Todos",
               categoriaId: e.categoria?.[0]?.categoria_id,
               dataRealizacao: d.isValid()
                 ? d.format("DD/MM/YYYY")
@@ -467,7 +467,7 @@ export default function SeusExames() {
             return {
               key: String(e.exame_id),
               exame: e.nome_exame,
-              categoria: e.categoria?.[0]?.nome ?? "-",
+              categoria: e.categoria?.[0]?.nome ?? "Todos",
               categoriaId: e.categoria?.[0]?.categoria_id,
               dataRealizacao: d.isValid()
                 ? d.format("DD/MM/YYYY")

@@ -211,7 +211,7 @@ export default function Perfil() {
           email: user.email,
           crm: user.crm ?? null,
           estado_atuacao: user.estado_atuacao ?? null,
-          especialidade: user.especialidade ?? null,
+          especialidade: parseMaybeJsonArray(user.especialidade) ?? null,
           cpf: maskCPF(user.cpf),
           genero: user.genero != null ? Number(user.genero) : undefined,
           tipoSanguineo: user.tipo_sanguineo,
