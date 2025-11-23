@@ -189,7 +189,7 @@ export default function SeusExames() {
     {
       title: "Ações",
       key: "acoes",
-      responsive: ["md"],
+      responsive: ["xl"],
       render: (_, record) => {
         if (record.status === StatusAcesso.APROVADO) {
           return (
