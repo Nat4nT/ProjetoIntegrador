@@ -193,7 +193,7 @@ class UsuarioService
         }
         return [
             'medico_id' => $usuarioId,
-            'especialidade' => $dados['especialidade'] ?? null,
+            'especialidade' => json_encode($dados['especialidade']) ?? null,
             'crm' => $dados['crm'],
             'estado_atuacao' => $dados['estado_atuacao'],
         ];
