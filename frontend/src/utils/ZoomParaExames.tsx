@@ -29,14 +29,14 @@ export default function ZoomableImage({
 
   const handleWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
-    const delta = -e.deltaY; // para cima = zoom in
+    const delta = -e.deltaY;
     const step = delta > 0 ? 0.1 : -0.1;
     const next = clamp(Number((scale + step).toFixed(2)), minScale, maxScale);
     setScale(next);
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    if (scale === 1) return; // sem pan quando não estiver zoomado
+    if (scale === 1) return;
     setDrag({
       active: true,
       startX: e.clientX,
@@ -66,17 +66,14 @@ export default function ZoomableImage({
   };
 
   const onDoubleClick: React.MouseEventHandler<HTMLDivElement> = () => {
-    // alterna 1x ↔ 2x
     if (scale === 1) setScale(2);
     else reset();
   };
 
   return (
     <div className="zoom-img-container">
-      {/* Controles */}
       <div className="zoom-controls">
         <button onClick={zoomOut} aria-label="Diminuir zoom">
-          −
         </button>
         <span className="zoom-level">{Math.round(scale * 100)}%</span>
         <button onClick={zoomIn} aria-label="Aumentar zoom">
@@ -87,7 +84,6 @@ export default function ZoomableImage({
         </button>
       </div>
 
-      {/* Área de pan/zoom */}
       <div
         ref={containerRef}
         className="zoom-img-stage"

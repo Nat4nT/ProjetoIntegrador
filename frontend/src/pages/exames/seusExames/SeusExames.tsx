@@ -159,7 +159,7 @@ export default function SeusExames() {
     }, 0);
   }
 
-  // SALVAR EDIÇÃO INLINE DE CATEGORIA (apenas no Enter)
+  // SALVAR EDIÇÃO INLINE DE CATEGORIA 
   async function salvarCategoriaEditada() {
     if (!editingCategoriaId) return;
     const nomeTrim = editingNome.trim();
@@ -488,7 +488,7 @@ export default function SeusExames() {
     carregarExames();
   }, [tipoUsuario, pacienteId]);
 
-  // CARREGAR CATEGORIAS (inicial)
+  // CARREGAR CATEGORIAS 
   useEffect(() => {
     async function carregarCategoriasInicial() {
       try {
@@ -524,7 +524,7 @@ export default function SeusExames() {
     carregarCategoriasInicial();
   }, []);
 
-  // CARREGAR CATEGORIAS (para onSuccess do modal)
+  // CARREGAR CATEGORIAS 
   async function carregarCategorias() {
     try {
       setLoading(true);
