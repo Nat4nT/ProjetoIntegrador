@@ -19,7 +19,7 @@ export default function RecuperarConta() {
   const [loading, setLoading] = useState(false);
   const [loadingCodigo, setLoadingCodigo] = useState(false);
   const [token, setToken] = useState("");
-  const [codigoEmail, setCodigoEmail] = useState("")
+  const [codigoEmail, setCodigoEmail] = useState("");
 
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ export default function RecuperarConta() {
 
   // VALIDAR CÓDIGO E-MAIL
   const handleValidarCodigo = async () => {
-
     if (!emailDoUsuario) {
       showMessage(
         "Não foi possível identificar o e-mail. Tente iniciar a recuperação novamente.",
@@ -81,6 +80,10 @@ export default function RecuperarConta() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onBackToLogin = () => {
+    navigate("/");
   };
 
   const onFinishFailed = () => {};
@@ -195,7 +198,7 @@ export default function RecuperarConta() {
             />
           </Form.Item>
 
-          <div className="container-button-alterar-conta">
+          <div className="container-button-reacuperar-conta">
             <Button
               className="button-recuperar-conta"
               type="primary"
@@ -208,6 +211,13 @@ export default function RecuperarConta() {
             >
               Confirmar
             </Button>
+            <button
+              type="button"
+              className="button-voltar-login"
+              onClick={onBackToLogin}
+            >
+              Voltar para o login
+            </button>
           </div>
         </Form>
       </div>

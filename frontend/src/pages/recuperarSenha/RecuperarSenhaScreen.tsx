@@ -91,7 +91,7 @@ export default function RecuperarSenha() {
       </div>
 
       <div className="container-recuperar-senha">
-        <h1>Alterar senha </h1>
+        <h1>Alterar senha</h1>
 
         <div className="recuperar-senha-header">
           <p className="descricao-recuperar-senha">
@@ -184,7 +184,7 @@ export default function RecuperarSenha() {
             />
           </Form.Item>
 
-          <div className="container-button-alterar-senha">
+          <div className="container-button-esqueci-senha">
             <Button
               className="button-recuperar-senha"
               type="primary"
@@ -196,14 +196,14 @@ export default function RecuperarSenha() {
             >
               Confirmar
             </Button>
+            <button
+              type="button"
+              className="button-voltar-login"
+              onClick={onBackToLogin}
+            >
+              Voltar para o login
+            </button>
           </div>
-          <button
-            type="button"
-            className="rs-back-link-login"
-            onClick={onBackToLogin}
-          >
-            Voltar para o login
-          </button>
         </Form>
       </div>
     </div>

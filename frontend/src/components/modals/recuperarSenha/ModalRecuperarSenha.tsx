@@ -3,7 +3,10 @@ import { Modal, Input, Button, Form } from "antd";
 
 import "./ModalRecuperarSenha.scss";
 import { emailRegex } from "../../../utils/Masks";
-import { recuperarConta } from "../../../services/apiInterna/FluxoIdentificacao";
+import {
+  reativarConta,
+  recuperarConta,
+} from "../../../services/apiInterna/FluxoIdentificacao";
 import { showMessage } from "../../messageHelper/ShowMessage";
 import { useNavigate } from "react-router-dom";
 
@@ -35,15 +38,17 @@ export default function RecuperarSenha({
     const payload = { email: values.email };
 
     try {
-      await recuperarConta(payload);
+      if (fluxoContaInativa) {
+        await reativarConta(payload);
+        showMessage("Código enviado para o seu e-mail", "success");
 
-      showMessage("Código enviado para o seu e-mail", "success");
-
-      if (fluxoContaInativa == true) {
         navigate("/recuperar/conta", {
           state: { email: values.email, recuperarSenha: true },
         });
       } else {
+        await recuperarConta(payload);
+        showMessage("Código enviado para o seu e-mail", "success");
+
         navigate("/recuperar/senha", {
           state: { email: values.email, recuperarSenha: true },
         });
@@ -51,10 +56,10 @@ export default function RecuperarSenha({
 
       onClose();
     } catch (err: any) {
-      showMessage(err.message || "Usuário não encontrado", "error");
+      showMessage(err?.message || "Usuário não encontrado", "error");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
