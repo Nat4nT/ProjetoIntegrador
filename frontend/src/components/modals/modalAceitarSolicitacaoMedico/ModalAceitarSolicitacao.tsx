@@ -81,21 +81,20 @@ export default function PedidoAcessoModal({
 
       <div className="pa-actions">
         <Button
-          danger
-          className="pa-btn-recusar"
-          onClick={onRecusar}
-          loading={loadingRecusar}
-        >
-          Recusar
-        </Button>
-
-        <Button
           type="primary"
           className="pa-btn-permitir"
           onClick={onPermitir}
           loading={loadingPermitir}
         >
           Permitir acesso
+        </Button>
+        <Button
+          danger
+          className="pa-btn-recusar"
+          onClick={onRecusar}
+          loading={loadingRecusar}
+        >
+          Recusar
         </Button>
       </div>
     </Modal>

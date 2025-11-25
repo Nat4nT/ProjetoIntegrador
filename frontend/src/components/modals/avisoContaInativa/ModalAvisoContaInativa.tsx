@@ -5,7 +5,7 @@ import "./ModalAvisoContaInativa.scss";
 type ModalContaInativaProps = {
   open: boolean;
   onClose: () => void;
-  onReativar: () => void; // 👈 nova prop
+  onReativar: () => void; 
 };
 
 export default function ModalContaInativa({

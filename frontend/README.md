@@ -15,7 +15,6 @@ Gerenciador de pacotes: **npm**
 ### 1- Clonar e entrar na pasta
 ```bash
 git clone <URL_DO_REPOSITORIO>
-cd ProjetoIntegrador/medExame
 ```
 
 ### 2- (Opcional) Selecionar a versão do Node com nvm
@@ -24,33 +23,15 @@ nvm install 20
 nvm use 20
 ```
 
-### 3- Instalar as dependências
+### 3- Instalar as dependências dentro da pasta frontend
 ```bash
 npm install
 ```
 
-### 4- Rodar em modo desenvolvimento (HMR)
+### 4- Rodar em modo desenvolvimento (HMR) dentro da pasta frontend
 ```bash
 npm run dev
 ```
 - O Vite exibirá uma URL local (ex.: `http://localhost:5173`). Acesse no navegador.
-
-
-### PARA SUBIR O DOCKER DO BACKEND
-
-#### (opcional) derruba e zera os volumes do MySQL
-docker compose down -v
-
-#### sobe de novo
-docker compose up -d --build
-
-# dentro do container app
-docker exec -it medihub bash
-
-#### migra e semeia com config explícita
-```bash
-php vendor/bin/phinx migrate -e development --configuration=/var/www/html/phinx.php -vvv
-php vendor/bin/phinx seed:run -e development --configuration=/var/www/html/phinx.php -vvv
-```
 
 

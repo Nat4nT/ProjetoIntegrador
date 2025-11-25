@@ -240,19 +240,19 @@ export default function SeusExames() {
             <Col span={24}>
               <Space>
                 <Button
-                  onClick={handleClear}
-                  danger
-                  style={{ borderColor: "#ef4444", color: "#ef4444" }}
-                >
-                  Limpar
-                </Button>
-                <Button
                   className="button-enviar-exame"
                   type="primary"
                   onClick={handleSubmit}
                   loading={submitting}
                 >
                   Enviar
+                </Button>
+                <Button
+                  onClick={handleClear}
+                  danger
+                  style={{ borderColor: "#ef4444", color: "#ef4444" }}
+                >
+                  Limpar
                 </Button>
               </Space>
             </Col>

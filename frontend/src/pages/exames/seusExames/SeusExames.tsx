@@ -61,7 +61,7 @@ const { useBreakpoint } = Grid;
 type CategoriaOption = {
   value: string;
   label: string;
-  podeEditar: boolean; 
+  podeEditar: boolean;
 };
 
 export default function SeusExames() {
@@ -224,7 +224,7 @@ export default function SeusExames() {
     return arr;
   }, [rows, tab, categoriaFiltro, periodo]);
 
-  // ARRAY PARA OS TABS ITENS 
+  // ARRAY PARA OS TABS ITENS
   const tabItems: TabsProps["items"] = useMemo(
     () => [
       { key: "Todos", label: "Todos" },
@@ -317,6 +317,14 @@ export default function SeusExames() {
       render: (_, record) => (
         <Space>
           <Button
+            className="button-ver-exame"
+            type="primary"
+            onClick={() => verExame(record)}
+            disabled={!record.url}
+          >
+            Ver exame
+          </Button>
+          <Button
             danger
             style={{ borderColor: "#ef4444", color: "#ef4444" }}
             hidden={tipoUsuario === "medico"}
@@ -326,14 +334,6 @@ export default function SeusExames() {
             }}
           >
             Deletar
-          </Button>
-          <Button
-            className="button-ver-exame"
-            type="primary"
-            onClick={() => verExame(record)}
-            disabled={!record.url}
-          >
-            Ver exame
           </Button>
         </Space>
       ),
@@ -637,6 +637,15 @@ export default function SeusExames() {
                       <div style={{ marginTop: 4 }}>
                         <Space>
                           <Button
+                            size="small"
+                            className="button-ver-exame"
+                            type="primary"
+                            onClick={() => verExame(record)}
+                            disabled={!record.url}
+                          >
+                            Ver exame
+                          </Button>
+                          <Button
                             danger
                             size="small"
                             hidden={tipoUsuario === "medico"}
@@ -650,15 +659,6 @@ export default function SeusExames() {
                             }}
                           >
                             Deletar
-                          </Button>
-                          <Button
-                            size="small"
-                            className="button-ver-exame"
-                            type="primary"
-                            onClick={() => verExame(record)}
-                            disabled={!record.url}
-                          >
-                            Ver exame
                           </Button>
                         </Space>
                       </div>

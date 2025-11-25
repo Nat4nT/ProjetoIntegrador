@@ -51,7 +51,7 @@ export function recuperarSenha(payload: any, token: string) {
 
 // RECUPERAR CONTA
 export function recuperarConta(payload: any): Promise<any> {
-  return handleApi(api.post("/recuperar-conta", payload));
+  return handleApi(api.post("/reativar-conta", payload));
 }
 
 // VERIFICAR CODIGO
