@@ -44,12 +44,12 @@ nvm install 20
 nvm use 20
 ```
 
-###  Instalar as dependências
+###  Instalar as dependências (deve estar dentro da pasta frontend para rodar o comando)
 ```bash
 npm install
 ```
 
-### 4- Rodar em modo desenvolvimento (HMR)
+### 4- Rodar em modo desenvolvimento (HMR) (deve estar dentro da pasta frontend para rodar o comando)
 ```bash
 npm run dev
 ```
