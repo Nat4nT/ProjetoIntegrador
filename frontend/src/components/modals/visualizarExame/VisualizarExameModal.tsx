@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 // componentes antd
 import {
+  Avatar,
   Button,
   Dropdown,
   Input,
@@ -8,7 +9,7 @@ import {
   Typography,
   type MenuProps,
 } from "antd";
-import { MoreOutlined, SendOutlined } from "@ant-design/icons";
+import { MoreOutlined, SendOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
 // api's
@@ -312,7 +313,19 @@ export default function VisualizarExameModal({
                   >
                     <div className="comentario-header">
                       <div className="comentario-avatar">
-                        {(c.primeiro_nome || "P")[0]}
+                        <div className="comentario-avatar">
+                          <Avatar
+                            size={32}
+                            src={
+                              c.imagem_perfil
+                                ? `/api${c.imagem_perfil}`
+                                : undefined
+                            }
+                            icon={
+                              !c.imagem_perfil ? <UserOutlined /> : undefined
+                            }
+                          />
+                        </div>
                       </div>
 
                       <div className="comentario-header-main">
@@ -322,9 +335,9 @@ export default function VisualizarExameModal({
                           </div>
                           {(c.data_criacao || c.data_criacao) && (
                             <div className="comentario-data">
-                              {dayjs(c.data_criacao || c.data_criacao).format(
-                                "DD/MM/YYYY HH:mm"
-                              )}
+                              {dayjs(c.data_criacao || c.data_criacao)
+                                .subtract(3, "hour")
+                                .format("DD/MM/YYYY HH:mm")}
                             </div>
                           )}
                         </div>
