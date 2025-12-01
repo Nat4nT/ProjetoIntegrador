@@ -1,0 +1,7 @@
+{
+  "route": "localhost:8080/reativar-conta",
+  "method": "POST",
+  "body": {
+    "email": "joao.pedro@example.com"
+  }
+}

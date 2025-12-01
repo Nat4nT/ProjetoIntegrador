@@ -67,6 +67,14 @@ class UsuarioController
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
 
+    public function ativacaoDeConta(Request $request, Response $response)
+    {
+        $email = $request->getParsedBody()['email'];
+        $resposta = (new EmailService())->genereteActiveCode($email);
+        $jsonResponse = new JsonResponse();
+
+        return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
+    }
     public function recuperacaoDeConta(Request $request, Response $response)
     {
         $email = $request->getParsedBody()['email'];
@@ -75,6 +83,8 @@ class UsuarioController
 
         return $jsonResponse->emitirResposta($response, ["message" => $resposta['message'], 'code' => $resposta['code']], $resposta['code']);
     }
+
+
 
     public function reativacaoDeConta(Request $request, Response $response)
     {
