@@ -7,6 +7,8 @@ use Models\ComentarioExame;
 use Models\ExameModel;
 use DateTime;
 use Exception;
+use Models\MedicoModel;
+use Models\UsuarioModel;
 
 class ExameService
 {
@@ -188,9 +190,23 @@ class ExameService
 
 
         $comentario = (new ComentarioExame())->AddData($data);
+        $comentario = (new ComentarioExame($comentario))->getInfo();
+        $medico_comentario = (new MedicoModel($comentario['usuario_id']))->getInfo();
+        $usuario_info = (new UsuarioModel($comentario['usuario_id']))->getInfo();
+
+        $retorno = [
+            'comentario_exame_id'=>$comentario['comentario_exame_id'],
+            'comentario'=>$comentario['comentario'],
+            'data_criacao'=>$comentario['data_criacao'],
+            'primeiro_nome'=> $usuario_info['primeiro_nome'],
+            'ultimo_nome'=>$usuario_info['ultimo_nome'],
+            'foto_medico'=>$usuario_info['imagem_perfil'],
+            'crm'=>$medico_comentario['crm'],
+            'estado_atuacao'=>$medico_comentario['estado_atuacao']
+        ];
 
         return [
-            "data"=>(new ComentarioExame($comentario))->getInfo(),
+            "data"=>$retorno,
             'message' => 'Comentario realizado com sucesso',
             'code' => 200
         ];
