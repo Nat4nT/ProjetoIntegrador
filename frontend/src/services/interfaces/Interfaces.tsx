@@ -34,11 +34,10 @@ export interface LoginResponse {
     token: string;
     firstname: string;
     lastname: string;
+    user_photo: string;
   };
   code?: number;
 }
-
-// SALVAR DADOS
 
 // EXAME
 export interface AdicionarExamePayload {
@@ -91,11 +90,13 @@ export type SolicitacaoRow = {
   key: string;
   nome: string;
   especialidade: string[] | string;
+  especialidadeModal: string[] | string;
   crm: string;
   dataPedido: string;
   rawDate: string;
   status: string;
   solcitacao_id?: number;
+  imagem_perfil: string;
 };
 
 export type SolicitacaoAcesso = {
@@ -105,4 +106,5 @@ export type SolicitacaoAcesso = {
   data_pedido: string;
   crm: string;
   status: string;
+  imagem_perfil: string;
 };

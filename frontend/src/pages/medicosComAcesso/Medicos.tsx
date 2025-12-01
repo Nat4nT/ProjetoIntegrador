@@ -185,13 +185,11 @@ export default function SeusExames() {
           );
         }
 
-          if (record.status === StatusAcesso.RECUSADO) {
-            return (
-              <span style={{ color: "red", fontWeight: "bold" }}>
-                Recusado
-              </span>
-            );
-          }
+        if (record.status === StatusAcesso.RECUSADO) {
+          return (
+            <span style={{ color: "red", fontWeight: "bold" }}>Recusado</span>
+          );
+        }
         return null;
       },
     },
@@ -264,6 +262,7 @@ export default function SeusExames() {
           const crm = `CRM-${s.estado_atuacao ?? ""} ${s.crm ?? ""}`.trim();
           const d = dayjs(s.data_criacao);
           const parsed = parseMaybeJsonArray(s.especialidade);
+          const especialidadeModal = s.especialidade;
 
           return {
             key: String(s.solcitacao_id ?? s.solicitacao_id ?? s.id),
@@ -278,6 +277,8 @@ export default function SeusExames() {
             rawDate: s.data_criacao ?? "",
             status: s.status,
             solcitacao_id: s.solcitacao_id,
+            imagem_perfil: s.imagem_perfil,
+            especialidadeModal,
           };
         });
 
@@ -338,7 +339,7 @@ export default function SeusExames() {
                     >
                       <div>
                         <strong>Especialidade: </strong>
-                        {record.especialidade}
+                        {parseMaybeJsonArray(record.especialidade).join(", ")}
                       </div>
 
                       <div>
@@ -402,9 +403,10 @@ export default function SeusExames() {
           open={modalOpen}
           onClose={handleCloseModal}
           medico={solicitacaoSelecionada.nome}
-          especialidade={solicitacaoSelecionada.especialidade}
+          especialidade={solicitacaoSelecionada.especialidadeModal}
           dataPedido={solicitacaoSelecionada.dataPedido}
           crm={solicitacaoSelecionada.crm}
+          imagem_perfil={solicitacaoSelecionada.imagem_perfil}
           onPermitir={handlePermitir}
           onRecusar={handleRecusar}
           loadingPermitir={loadingPermitir}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //componentes antd
 import {
@@ -48,6 +48,20 @@ export default function AppLayout() {
   const isLogged = Boolean(localStorage.getItem("token"));
   const userName = localStorage.getItem("primeiroNomeUsuario") || "Usuário";
   const tipoUsuario = localStorage.getItem("tipo_usuario");
+  const [userPhoto, setUserPhoto] = useState<string | null>(
+    localStorage.getItem("user_photo")
+  );
+
+  // FUNÇÃO PARA IDENTIFICAR QUE O USUÁRIO TROCOU DE IMAGEM E TROCAR SEM RELOAD DA PÁGINA.
+  useEffect(() => {
+    const handler = () => {
+      const novaFoto = localStorage.getItem("user_photo");
+      setUserPhoto(novaFoto);
+    };
+
+    window.addEventListener("user_photo_updated", handler);
+    return () => window.removeEventListener("user_photo_updated", handler);
+  }, []);
 
   // FUNÇÃO PARA ABRIR MENU LATERAL NO CLICK E TIRAR A AÇÃO DE ABRIR/FECHAR AO CLICAR EM ALGUM ELEMENTO DO MENU
   const abrirMenuLateral = (e: any) => {
@@ -194,12 +208,13 @@ export default function AppLayout() {
                 >
                   <Avatar
                     size={32}
+                    src={userPhoto ? `/api${userPhoto}` : undefined}
                     style={{
                       backgroundColor: "#2f4892",
                       color: "#fff",
                       fontWeight: 600,
                     }}
-                    icon={<UserOutlined />}
+                    icon={!userPhoto ? <UserOutlined /> : undefined}
                   />
                   {`Olá, ${userName}`}
                 </Button>

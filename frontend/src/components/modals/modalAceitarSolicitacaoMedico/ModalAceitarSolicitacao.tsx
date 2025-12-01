@@ -11,6 +11,7 @@ type PedidoAcessoModalProps = {
   especialidade: string[] | string;
   dataPedido: string;
   crm: string;
+  imagem_perfil?: string;
 
   onPermitir: () => void;
   onRecusar: () => void;
@@ -25,18 +26,20 @@ export default function PedidoAcessoModal({
   especialidade,
   dataPedido,
   crm,
+  imagem_perfil,
   onPermitir,
   onRecusar,
   loadingPermitir,
   loadingRecusar,
 }: PedidoAcessoModalProps) {
+   const userPhoto = imagem_perfil ? `/api${imagem_perfil}` : undefined;
   return (
     <Modal
       open={open}
       onCancel={onClose}
       footer={null}
       centered
-      width={420}
+      width={460}
       maskClosable={false}
       title={null}
       rootClassName="pedido-acesso-modal"
@@ -54,7 +57,11 @@ export default function PedidoAcessoModal({
 
       <div className="pa-content">
         <div className="pa-avatar">
-          <Avatar size={72} icon={<UserOutlined />} />
+          <Avatar
+            size={120}
+            src={userPhoto}
+            icon={!userPhoto ? <UserOutlined /> : undefined}
+          />
         </div>
 
         <div className="pa-info">

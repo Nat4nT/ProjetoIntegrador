@@ -182,6 +182,7 @@ export default function Home() {
             data_pedido: dayjs(s.data_criacao).format("DD-MM-YYYY"),
             crm: crm ?? "",
             status: s.status,
+            imagem_perfil: s.imagem_perfil,
           });
 
           setModalOpen(true);
@@ -255,6 +256,7 @@ export default function Home() {
           especialidade={solicitacao.especialidade}
           dataPedido={solicitacao.data_pedido}
           crm={solicitacao.crm}
+          imagem_perfil={solicitacao.imagem_perfil}
           onPermitir={handlePermitir}
           onRecusar={handleRecusar}
           loadingPermitir={loadingPermitir}

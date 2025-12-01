@@ -25,9 +25,52 @@ export function condicoes(): Promise<any> {
   return handleApi(api.get("/condicoes"));
 }
 
-// EDITAR DADOS CADASTRAIS
-export function editarUsuario(payload: any): Promise<any> {
-  return handleApi(api.post("/minha-conta", payload));
+// EDITAR DADOS CADASTRAIS (em form-data)
+export function editarUsuario(
+  payload: any,
+  avatarFile?: File | null
+): Promise<any> {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === null || value === undefined) return;
+
+    // Como foi mudado para form-data, essa condição serve para mandar endereço como array.
+    if (
+      key === "endereco" &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    ) {
+      Object.entries(value as Record<string, any>).forEach(([campo, v]) => {
+        if (v !== null && v !== undefined) {
+          formData.append(`endereco[${campo}]`, String(v));
+        }
+      });
+      return;
+    }
+
+    // mesmo cenário do de cima
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        formData.append(`${key}[]`, String(item));
+      });
+      return;
+    }
+
+    formData.append(key, String(value));
+  });
+
+  if (avatarFile) {
+    formData.append("imagem_perfil", avatarFile);
+  }
+
+  return handleApi(
+    api.post("/minha-conta", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  );
 }
 
 // DESATIVAR CONTA
@@ -58,7 +101,6 @@ export function recuperarConta(payload: any): Promise<any> {
 export function reativarConta(payload: any): Promise<any> {
   return handleApi(api.post("/reativar-conta", payload));
 }
-
 
 // VERIFICAR CODIGO
 export function verificarCodigo(payload: any): Promise<any> {

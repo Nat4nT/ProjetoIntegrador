@@ -86,11 +86,13 @@ function Login() {
 
         const primeiroNome = response.data.firstname;
         const ultimoNome = response.data.lastname;
+        const userPhoto = response.data.user_photo;
 
         localStorage.setItem("token", token);
         localStorage.setItem("primeiroNomeUsuario", primeiroNome);
         localStorage.setItem("ultimoNomeUsuario", ultimoNome);
         localStorage.setItem("usuario_id", usuarioId);
+        localStorage.setItem("user_photo", userPhoto);
 
         if (tipoUsuario) {
           localStorage.setItem("tipo_usuario", tipoUsuario);

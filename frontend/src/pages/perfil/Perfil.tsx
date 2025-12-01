@@ -17,6 +17,7 @@ import {
   Spin,
   Typography,
   Upload,
+  type UploadProps,
 } from "antd";
 import { CameraOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -70,23 +71,39 @@ export default function Perfil() {
 
   const [cepError, setCepError] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [doencasDiagnosticadas, setDoencasDiagnosticas] = useState([]);
-  const [medicacoes, setMedicacoes] = useState([]);
-  const [alergias, setAlergias] = useState([]);
-  const [deficiencias, setDeficiencias] = useState([]);
+  const [doencasDiagnosticadas, setDoencasDiagnosticas] = useState<string[]>(
+    []
+  );
+  const [medicacoes, setMedicacoes] = useState<string[]>([]);
+  const [alergias, setAlergias] = useState<string[]>([]);
+  const [deficiencias, setDeficiencias] = useState<string[]>([]);
 
   const primeiroNomeUsuario = localStorage.getItem("primeiroNomeUsuario");
   const ultimoNomeUsuario = localStorage.getItem("ultimoNomeUsuario");
   const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   const { Title, Paragraph } = Typography;
-  // const { TextArea } = Input;
 
   // CONVERTE ARRAY SIMPLES PARA {label: "", value: ""}
   const toOptions = (arr: string[]) => arr.map((v) => ({ label: v, value: v }));
+
+  // PEGAR ARQUIVO DO AVATAR E MOSTRAR PRÉVIA
+  const handleAvatarBeforeUpload: UploadProps["beforeUpload"] = (file) => {
+    if (!file.type.startsWith("image/")) {
+      showMessage("Envie apenas arquivos de imagem.", "warning");
+      return Upload.LIST_IGNORE;
+    }
+    setAvatarFile(file as File);
+
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarUrl(previewUrl);
+
+    return false;
+  };
 
   // FUNÇÃO PARA EDITAR DADOS
   const handleSubmit = async (values: any) => {
@@ -134,8 +151,17 @@ export default function Perfil() {
         payload.estado_atuacao = values.estado_atuacao;
         payload.especialidade = values.especialidade;
       }
+      await editarUsuario(payload, avatarFile);
 
-      await editarUsuario(payload);
+       const respPerfil = await dadosUsuario();
+       const userAtualizado = respPerfil.data;
+
+       if (userAtualizado.imagem_perfil) {
+         setAvatarUrl(`/api${userAtualizado.imagem_perfil}`);
+         localStorage.setItem("user_photo", userAtualizado.imagem_perfil);
+         window.dispatchEvent(new Event("user_photo_updated"));
+       }
+
       showMessage("Dados salvos com sucesso!", "success");
     } catch (err: any) {
       showMessage("Erro ao salvar dados pessoais.", "error");
@@ -229,6 +255,12 @@ export default function Perfil() {
           peso: user.peso,
           altura: user.altura,
         });
+
+        if (user.imagem_perfil) {
+          setAvatarUrl(`/api${user.imagem_perfil}`);
+        }
+
+        localStorage.setItem("user_photo", user.imagem_perfil);
       } catch (err: any) {
         showMessage("Erro ao carregar dados pessoais.", "error");
       } finally {
@@ -258,8 +290,7 @@ export default function Perfil() {
             <Upload
               accept="image/*"
               showUploadList={false}
-              beforeUpload={() => false}
-              customRequest={() => {}}
+              beforeUpload={handleAvatarBeforeUpload}
             >
               <Button
                 type="default"
