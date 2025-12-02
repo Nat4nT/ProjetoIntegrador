@@ -434,7 +434,7 @@ export default function SeusExames() {
 
           <Button
             danger
-            style={{ borderColor: "#ef4444", color: "#ef4444" }}
+            style={{ borderColor: "#ef4444", color: "#ef4444", height: "28px" }}
             hidden={tipoUsuario === "medico"}
             onClick={() => {
               setExameSelecionadoId(String(record.key));
