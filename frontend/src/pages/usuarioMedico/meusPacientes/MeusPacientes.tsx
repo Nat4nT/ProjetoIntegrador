@@ -158,7 +158,9 @@ export default function SeusExames() {
                 size="small"
                 type="primary"
                 onClick={() =>
-                  navigate(`/exames/paciente/${record.key}/${record.nome}`)
+                  navigate(`/exames/paciente/${record.key}/${record.nome}`, {
+                    state: { paciente: record },
+                  })
                 }
               >
                 Ver exames
@@ -215,22 +217,47 @@ export default function SeusExames() {
         const response = await buscarPacientes();
 
         const mapped: PacienteRow[] = response.data.map((s: any) => {
-          const nome =
-            `${s.primeiro_nome ?? ""} ${s.ultimo_nome ?? ""}`.trim() ||
-            "Médico";
+          const nomeCompleto = `${s.primeiro_nome ?? ""} ${
+            s.ultimo_nome ?? ""
+          }`.trim();
+          const nome = nomeCompleto || "Paciente";
           const cpf = maskCPF(s.cpf);
+
+          const dataNascRaw = s.data_nascimento;
+          const dataAtualizacaoRaw = s.data_atualizacao;
 
           return {
             key: s.paciente_id,
+
             solicitacao_id: s.solicitacao_id,
             nome,
             especialidade: s.especialidade ?? "Não informado",
-            dataNascimento: dayjs(s.data_nascimento).format("DD/MM/YYYY"),
             cpf,
-            autorizadoEm: s.data_atualizacao
-              ? dayjs(s.data_atualizacao).format("DD/MM/YYYY")
+            dataNascimento: dataNascRaw
+              ? dayjs(dataNascRaw).format("DD/MM/YYYY")
+              : "",
+            rawDate: dataNascRaw,
+            autorizadoEm: dataAtualizacaoRaw
+              ? dayjs(dataAtualizacaoRaw).format("DD/MM/YYYY")
               : "",
             status: s.status,
+
+            paciente_id: s.paciente_id,
+            primeiro_nome: s.primeiro_nome,
+            ultimo_nome: s.ultimo_nome,
+            email: s.email,
+            telefone: s.telefone,
+            imagem_perfil: s.imagem_perfil,
+
+            alergias: s.alergias,
+            desc_deficiencia: s.desc_deficiencia,
+            doencas_diagnosticadas: s.doencas_diagnosticadas,
+            medicacao: s.medicacao,
+
+            tipo_sanguineo: s.tipo_sanguineo,
+            altura: s.altura,
+            peso: s.peso,
+            data_atualizacao: s.data_atualizacao,
           };
         });
 
@@ -342,7 +369,10 @@ export default function SeusExames() {
                               type="primary"
                               onClick={() =>
                                 navigate(
-                                  `/exames/paciente/${record.key}/${record.nome}`
+                                  `/exames/paciente/${record.key}/${record.nome}`,
+                                  {
+                                    state: { paciente: record },
+                                  }
                                 )
                               }
                             >

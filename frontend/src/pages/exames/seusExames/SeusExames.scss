@@ -35,3 +35,72 @@
   height: 28px !important;
   color: #14b8a6 !important;
 }
+
+.seus-exames-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.seus-exames-header-left {
+  flex: 1;
+}
+
+.seus-exames-header-right {
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.seus-exames-paciente-top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.seus-exames-paciente-ident {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.seus-exames-paciente-nome {
+  font-weight: 600;
+  font-size: 22px;
+  color: #111827;
+}
+
+.seus-exames-paciente-sub {
+  font-size: 14px;
+  color: #4b5563;
+
+  span + span {
+    margin-left: 4px;
+  }
+}
+
+.seus-exames-paciente-tags {
+  font-size: 16px;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.seus-exames-paciente-linha strong {
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .seus-exames-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .seus-exames-header-right {
+    width: 100%;
+  }
+}

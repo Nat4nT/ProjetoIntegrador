@@ -94,6 +94,21 @@ export type PacienteRow = {
   rawDate?: string;
   autorizadoEm?: string;
   solicitacao_id: number;
+  paciente_id: number;
+  primeiro_nome: string;
+  ultimo_nome: string;
+  email: string;
+  telefone: string;
+  imagem_perfil?: string | null;
+  alergias?: string; 
+  desc_deficiencia?: string; 
+  doencas_diagnosticadas?: string; 
+  medicacao?: string; 
+
+  tipo_sanguineo?: string;
+  altura?: string; 
+  peso?: string; 
+  data_atualizacao?: string;
 };
 
 export type SolicitacaoRow = {

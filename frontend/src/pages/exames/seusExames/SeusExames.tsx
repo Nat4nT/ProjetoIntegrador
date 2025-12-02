@@ -19,11 +19,13 @@ import {
   Modal,
   Row,
   Col,
+  Avatar,
 } from "antd";
 import {
   PlusCircleOutlined,
   MoreOutlined,
   InboxOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
@@ -46,6 +48,7 @@ import {
 import type {
   ComentarioExame,
   ExameRow,
+  PacienteRow,
 } from "../../../services/interfaces/Interfaces";
 
 //validações
@@ -56,7 +59,7 @@ import CadatrarCategoria from "../../../components/modals/cadastrarCategoria/Cad
 import AvisoExclusaoModal from "../../../components/modals/avisoExclusão/AvisoExclusao";
 import VisualizarExameModal from "../../../components/modals/visualizarExame/VisualizarExameModal";
 
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import {
   buscarCategoriasPaciente,
   buscarExamesPaciente,
@@ -107,7 +110,10 @@ export default function SeusExames() {
   const isMobile = !screens.xl;
 
   const { pacienteId } = useParams();
-  const { nome } = useParams();
+  const location = useLocation();
+  const pacienteInfo = (location.state as { paciente?: PacienteRow } | null)
+    ?.paciente;
+
   const tipoUsuario = localStorage.getItem("tipo_usuario");
 
   const closeModalCadastrarCat = () => {
@@ -662,17 +668,101 @@ export default function SeusExames() {
     }
   }, [tipoUsuario]);
 
+  const parseCampoLista = (valor?: string): string[] => {
+    if (!valor) return [];
+    try {
+      const parsed = JSON.parse(valor);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [valor];
+    }
+  };
+
+  const alergiasLista = parseCampoLista(pacienteInfo?.alergias);
+  const doencasLista = parseCampoLista(pacienteInfo?.doencas_diagnosticadas);
+  const medicacaoLista = parseCampoLista(pacienteInfo?.medicacao);
+  const deficienciasLista = parseCampoLista(pacienteInfo?.desc_deficiencia);
+
   return (
     <div>
       <Card>
-        <Title>
-          {tipoUsuario === "medico" ? "Exames do " + nome : "Seus Exames"}
-        </Title>
-        <Paragraph className="descricao-pages">
-          Use as categorias acima da tabela para filtrar os resultados. Você
-          pode usar filtros como categoria e data.
-        </Paragraph>
+        {tipoUsuario === "medico" && pacienteInfo ? (
+          <div className="seus-exames-header-right">
+            <div className="seus-exames-paciente-top">
+              <Avatar
+                size={88}
+                src={
+                  pacienteInfo.imagem_perfil
+                    ? `/api${pacienteInfo.imagem_perfil}`
+                    : `${pacienteInfo.primeiro_nome[0]} ${pacienteInfo.ultimo_nome[0]}`
+                }
+                icon={
+                  !pacienteInfo.imagem_perfil ? <UserOutlined /> : undefined
+                }
+              />
+              <div className="seus-exames-paciente-ident">
+                <div className="seus-exames-paciente-nome">
+                  {pacienteInfo.primeiro_nome} {pacienteInfo.ultimo_nome}
+                </div>
+                <div className="seus-exames-paciente-sub">
+                  {pacienteInfo.tipo_sanguineo && (
+                    <span>
+                      Tipo sanguíneo: {pacienteInfo.tipo_sanguineo ?? "-"}
+                    </span>
+                  )}
+                  {pacienteInfo.altura && pacienteInfo.peso && (
+                    <span>
+                      {" "}
+                      Altura: {pacienteInfo.altura ?? "-"}m Peso:{" "}
+                      {pacienteInfo.peso ?? "-"}kg
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="seus-exames-paciente-tags">
+              {alergiasLista.length > 0 && (
+                <div className="seus-exames-paciente-linha">
+                  <strong>Alergias:</strong>{" "}
+                  <span>{alergiasLista.join(", ") ?? "Não possui"}</span>
+                </div>
+              )}
+              {doencasLista.length > 0 && (
+                <div className="seus-exames-paciente-linha">
+                  <strong>Doenças:</strong>{" "}
+                  <span>{doencasLista.join(", ") ?? "Não possui"}</span>
+                </div>
+              )}
+              {medicacaoLista.length > 0 && (
+                <div className="seus-exames-paciente-linha">
+                  <strong>Medicações:</strong>{" "}
+                  <span>{medicacaoLista.join(", ") ?? "Não utiliza"}</span>
+                </div>
+              )}
+              {deficienciasLista.length > 0 && (
+                <div className="seus-exames-paciente-linha">
+                  <strong>Deficiências:</strong>{" "}
+                  <span>{deficienciasLista.join(", ") ?? "Não possui"}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="seus-exames-header">
+            <div className="seus-exames-header-left">
+              <Title>
+                {tipoUsuario === "medico" ? "Exames" : "Seus Exames"}
+              </Title>
+              <Paragraph className="descricao-pages">
+                Use as categorias acima da tabela para filtrar os resultados.
+                Você pode usar filtros como categoria e data.
+              </Paragraph>
+            </div>
+          </div>
+        )}
       </Card>
+
       <Card style={{ marginTop: 16 }}>
         <div
           style={{

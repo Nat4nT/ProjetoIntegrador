@@ -269,7 +269,7 @@ export default function VisualizarExameModal({
         <div className="visualizar-exame-modal">
           <div className="exame-view">
             <div className="exame-info-header">
-              <div>
+              <div className="container-descricao-exames-modal">
                 <div className="exame-info-titulo">
                   Exame: <span className="info-exame">{exame.exame}</span>
                 </div>
