@@ -84,6 +84,7 @@ export type PacienteRow = {
   dataNascimento: string;
   rawDate?: string;
   autorizadoEm?: string;
+  solicitacao_id: number;
 };
 
 export type SolicitacaoRow = {

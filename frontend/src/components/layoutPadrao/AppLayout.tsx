@@ -46,7 +46,8 @@ export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   const isLogged = Boolean(localStorage.getItem("token"));
-  const userName = localStorage.getItem("primeiroNomeUsuario") || "Usuário";
+  const primeiroNome = localStorage.getItem("primeiroNomeUsuario") || "Usuário";
+  const ultimoNome = localStorage.getItem("ultimoNomeUsuario") || "Usuário";
   const tipoUsuario = localStorage.getItem("tipo_usuario");
   const [userPhoto, setUserPhoto] = useState<string | null>(
     localStorage.getItem("user_photo")
@@ -214,9 +215,15 @@ export default function AppLayout() {
                       color: "#1677ff",
                       fontWeight: 600,
                     }}
-                    icon={!userPhoto ? <UserOutlined /> : undefined}
+                    icon={
+                      !userPhoto ? (
+                        <UserOutlined />
+                      ) : (
+                        `${primeiroNome[0] + ultimoNome[0]}`
+                      )
+                    }
                   />
-                  {`Olá, ${userName}`}
+                  {`Olá, ${primeiroNome}`}
                 </Button>
               </Dropdown>
             ) : (

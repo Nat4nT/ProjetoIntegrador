@@ -9,7 +9,11 @@ import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 
 //api
-import { buscarPacientes } from "../../../services/apiInterna/buscarPacientes";
+import {
+  buscarPacientes,
+  solicitarAcesso,
+} from "../../../services/apiInterna/buscarPacientes";
+import { revogarAcesso } from "../../../services/apiInterna/verificarSolicitacoesAcesso";
 
 //interface
 import type { PacienteRow } from "../../../services/interfaces/Interfaces";
@@ -19,6 +23,7 @@ import { showMessage } from "../../../components/messageHelper/ShowMessage";
 import { maskCPF } from "../../../utils/Masks";
 import { useNavigate } from "react-router-dom";
 import { StatusAcesso } from "../../../utils/Enum";
+import AvisoExclusaoModal from "../../../components/modals/avisoExclusão/AvisoExclusao";
 
 import "./MeusPacientes.scss";
 
@@ -27,11 +32,65 @@ const { useBreakpoint } = Grid;
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
+  const [openModalAvisoExclusao, setOpenModalAvisoExclusao] = useState(false);
   const [pacientes, setPacientes] = useState<PacienteRow[]>([]);
+  const [solicitacaoSelecionada, setSolicitacaoSelecionada] = useState<
+    any | null
+  >(null);
 
   const navigate = useNavigate();
   const screens = useBreakpoint();
   const isMobile = !screens.xl;
+
+  const closeModalAvisoExclusao = () => {
+    setOpenModalAvisoExclusao(false);
+  };
+
+  const handleCloseModal = () => {
+    setSolicitacaoSelecionada(null);
+  };
+
+  // FUNÇÃO PARA REVOGAR ACESSO
+  const handlerRevogar = async () => {
+    if (!solicitacaoSelecionada) return;
+    try {
+      debugger;
+      const solicitacao_id = Number(solicitacaoSelecionada.solicitacao_id);
+      await revogarAcesso({ solicitacao_id });
+
+      setPacientes((prev) =>
+        prev.map((r) =>
+          r.solicitacao_id === solicitacao_id
+            ? { ...r, status: StatusAcesso.REVOGADO }
+            : r
+        )
+      );
+
+      showMessage("Acesso cancelado com sucesso.", "success");
+      handleCloseModal();
+      closeModalAvisoExclusao();
+    } catch (err) {
+      console.error(err);
+      showMessage("Erro ao cancelado acesso.", "error");
+    }
+  };
+
+  //FUNÇÃO PARA SOLICITAR ACESSO AO PERFIL DO USUÁRIO
+  const handleSolicitarAcesso = async (pacienteId: string | number) => {
+    setLoading(true);
+    try {
+      const payload = { paciente_id: pacienteId };
+
+      await solicitarAcesso(payload);
+
+      showMessage("Solicitação enviada com sucesso.", "success");
+    } catch (err: any) {
+      console.error(err);
+      showMessage("Erro ao solicitar acesso.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const colunas: ColumnsType<PacienteRow> = [
     { title: "Nome", dataIndex: "nome", key: "nome" },
@@ -80,6 +139,9 @@ export default function SeusExames() {
             </span>
           );
         }
+        if (record.status === StatusAcesso.RECUSADO) {
+          return <span style={{ color: "red" }}>Acesso recusado</span>;
+        }
         return null;
       },
     },
@@ -105,9 +167,10 @@ export default function SeusExames() {
                 className="button-cancelar-acesso-paciente"
                 size="small"
                 danger
-                onClick={() =>
-                  navigate(`/exames/paciente/${record.key}/${record.nome}`)
-                }
+                onClick={() => {
+                  setSolicitacaoSelecionada(record);
+                  setOpenModalAvisoExclusao(true);
+                }}
               >
                 Cancelar acesso
               </Button>
@@ -127,6 +190,18 @@ export default function SeusExames() {
           return <span style={{ color: "#8888888f" }}>Acesso revogado</span>;
         }
 
+        if (record.status === StatusAcesso.RECUSADO) {
+          return (
+            <Button
+              className="button-ver-exames"
+              size="small"
+              type="primary"
+              onClick={() => handleSolicitarAcesso(record.key)}
+            >
+              Solicitar acesso
+            </Button>
+          );
+        }
         return null;
       },
     },
@@ -147,6 +222,7 @@ export default function SeusExames() {
 
           return {
             key: s.paciente_id,
+            solicitacao_id: s.solicitacao_id,
             nome,
             especialidade: s.especialidade ?? "Não informado",
             dataNascimento: dayjs(s.data_nascimento).format("DD/MM/YYYY"),
@@ -170,6 +246,14 @@ export default function SeusExames() {
 
   return (
     <div>
+      <AvisoExclusaoModal
+        onClose={closeModalAvisoExclusao}
+        open={openModalAvisoExclusao}
+        onSubmit={handlerRevogar}
+        tituloModal={"Cancelar acesso ao paciente"}
+        fraseUmModal={"Tem certeza de que deseja cancelar o acesso?"}
+        fraseDoiModal={""}
+      />
       <Card>
         <Title>Meus pacientes</Title>
         <Paragraph className="descricao-pages">
@@ -219,35 +303,92 @@ export default function SeusExames() {
                       </div>
                       <div>
                         <strong>Autorizado em: </strong>
-                        {record.autorizadoEm}
+                        {record.autorizadoEm || "-"}
                       </div>
-                      <Space wrap>
-                        <Button
-                          className="button-ver-exames"
-                          size="small"
-                          type="primary"
-                          onClick={() =>
-                            navigate(
-                              `/exames/paciente/${record.key}/${record.nome}`
-                            )
-                          }
-                        >
-                          Ver exames
-                        </Button>
 
-                        <Button
-                          className="button-cancelar-acesso-paciente"
-                          size="small"
-                          danger
-                          onClick={() =>
-                            navigate(
-                              `/exames/paciente/${record.key}/${record.nome}`
-                            )
-                          }
-                        >
-                          Cancelar acesso
-                        </Button>
-                      </Space>
+                      <div>
+                        <strong>Status: </strong>
+                        {record.status === StatusAcesso.APROVADO && (
+                          <span style={{ color: "green", fontWeight: "bold" }}>
+                            Ativo
+                          </span>
+                        )}
+
+                        {record.status === StatusAcesso.PENDENTE && (
+                          <span style={{ color: "orange", fontWeight: "bold" }}>
+                            Pendente
+                          </span>
+                        )}
+
+                        {record.status === StatusAcesso.REVOGADO && (
+                          <span
+                            style={{ color: "#8888888f", fontWeight: "bold" }}
+                          >
+                            Revogado
+                          </span>
+                        )}
+
+                        {record.status === StatusAcesso.RECUSADO && (
+                          <span style={{ color: "red" }}>Acesso recusado</span>
+                        )}
+                      </div>
+
+                      <div style={{ marginTop: 8 }}>
+                        {record.status === StatusAcesso.APROVADO && (
+                          <Space wrap>
+                            <Button
+                              className="button-ver-exames"
+                              size="small"
+                              type="primary"
+                              onClick={() =>
+                                navigate(
+                                  `/exames/paciente/${record.key}/${record.nome}`
+                                )
+                              }
+                            >
+                              Ver exames
+                            </Button>
+
+                            <Button
+                              className="button-cancelar-acesso-paciente"
+                              size="small"
+                              danger
+                              onClick={() => {
+                                setSolicitacaoSelecionada(record);
+                                setOpenModalAvisoExclusao(true);
+                              }}
+                            >
+                              Cancelar acesso
+                            </Button>
+                          </Space>
+                        )}
+
+                        {record.status === StatusAcesso.PENDENTE && (
+                          <Button
+                            className="button-paciente-pendente"
+                            size="small"
+                          >
+                            Pedido pendente
+                          </Button>
+                        )}
+
+                        {record.status === StatusAcesso.REVOGADO && (
+                          <span style={{ color: "#8888888f" }}>
+                            Acesso revogado
+                          </span>
+                        )}
+
+                        {record.status === StatusAcesso.RECUSADO && (
+                          <Button
+                            className="button-ver-exames"
+                            size="small"
+                            type="primary"
+                            onClick={() => handleSolicitarAcesso(record.key)}
+                          >
+                            Solicitar acesso
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   ),
                 }

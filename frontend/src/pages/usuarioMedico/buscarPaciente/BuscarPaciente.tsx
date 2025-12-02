@@ -71,6 +71,7 @@ export default function BuscarPaciente() {
           ? dayjs(usuario.data_nascimento).format("DD/MM/YYYY")
           : usuario.data_nascimento,
         rawDate: usuario.data_nascimento,
+        solicitacao_id: usuario.solicitacao_id,
       };
 
       setUsuario([row]);
