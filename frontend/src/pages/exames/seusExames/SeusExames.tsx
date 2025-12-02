@@ -59,7 +59,7 @@ import CadatrarCategoria from "../../../components/modals/cadastrarCategoria/Cad
 import AvisoExclusaoModal from "../../../components/modals/avisoExclusão/AvisoExclusao";
 import VisualizarExameModal from "../../../components/modals/visualizarExame/VisualizarExameModal";
 
-import { useParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   buscarCategoriasPaciente,
   buscarExamesPaciente,
@@ -109,7 +109,6 @@ export default function SeusExames() {
   const screens = useBreakpoint();
   const isMobile = !screens.xl;
 
-  const { pacienteId } = useParams();
   const location = useLocation();
   const pacienteInfo = (location.state as { paciente?: PacienteRow } | null)
     ?.paciente;
@@ -546,8 +545,10 @@ export default function SeusExames() {
 
         let data: any[] = [];
 
-        if (tipoUsuario === "medico" && pacienteId) {
-          const resp = await buscarExamesPaciente({ paciente_id: pacienteId });
+        if (tipoUsuario === "medico" && pacienteInfo?.paciente_id) {
+          const resp = await buscarExamesPaciente({
+            paciente_id: pacienteInfo.paciente_id,
+          });
           data = resp.data || [];
 
           const mapped: ExameRow[] = data.map((it: any) => {
@@ -600,16 +601,16 @@ export default function SeusExames() {
       }
     }
     carregarExames();
-  }, [tipoUsuario, pacienteId]);
+  }, [tipoUsuario, pacienteInfo?.paciente_id]);
 
   // CARREGAR CATEGORIAS
   useEffect(() => {
     async function carregarCategoriasInicial() {
       try {
         setLoading(true);
-        if (tipoUsuario === "medico" && pacienteId) {
+        if (tipoUsuario === "medico" && pacienteInfo?.paciente_id) {
           const categoriasMedicoView = await buscarCategoriasPaciente({
-            paciente_id: pacienteId,
+            paciente_id: pacienteInfo?.paciente_id,
           });
           const invertida = [...categoriasMedicoView.data].reverse();
           setCat(

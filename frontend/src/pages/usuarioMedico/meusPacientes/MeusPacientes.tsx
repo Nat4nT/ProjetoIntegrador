@@ -158,7 +158,7 @@ export default function SeusExames() {
                 size="small"
                 type="primary"
                 onClick={() =>
-                  navigate(`/exames/paciente/${record.key}/${record.nome}`, {
+                  navigate(`/exames/paciente`, {
                     state: { paciente: record },
                   })
                 }
@@ -369,7 +369,7 @@ export default function SeusExames() {
                               type="primary"
                               onClick={() =>
                                 navigate(
-                                  `/exames/paciente/${record.key}/${record.nome}`,
+                                  `/exames/paciente`,
                                   {
                                     state: { paciente: record },
                                   }

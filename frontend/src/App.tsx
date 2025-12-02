@@ -38,7 +38,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/exames/seusExames" element={<SeusExamesPage />} />
               <Route
-                path="/exames/paciente/:pacienteId/:nome"
+                path="/exames/paciente"
                 element={<SeusExamesPage />}
               />
               <Route path="/exames/cadastrar" element={<CadastrarExames />} />
