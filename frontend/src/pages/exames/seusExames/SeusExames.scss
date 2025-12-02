@@ -58,7 +58,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 14px;
 }
 
 .seus-exames-paciente-ident {
@@ -76,10 +76,9 @@
 .seus-exames-paciente-sub {
   font-size: 14px;
   color: #4b5563;
-
-  span + span {
-    margin-left: 4px;
-  }
+  display: flex;
+  flex-direction: column;
+  font-weight: 300;
 }
 
 .seus-exames-paciente-tags {

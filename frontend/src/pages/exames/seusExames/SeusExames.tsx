@@ -691,7 +691,7 @@ export default function SeusExames() {
           <div className="seus-exames-header-right">
             <div className="seus-exames-paciente-top">
               <Avatar
-                size={88}
+                size={98}
                 src={
                   pacienteInfo.imagem_perfil
                     ? `/api${pacienteInfo.imagem_perfil}`
@@ -708,14 +708,20 @@ export default function SeusExames() {
                 <div className="seus-exames-paciente-sub">
                   {pacienteInfo.tipo_sanguineo && (
                     <span>
-                      Tipo sanguíneo: {pacienteInfo.tipo_sanguineo ?? "-"}
+                      <strong>Tipo sanguíneo:</strong>{" "}
+                      {pacienteInfo.tipo_sanguineo ?? "-"}
                     </span>
                   )}
-                  {pacienteInfo.altura && pacienteInfo.peso && (
+                  {pacienteInfo.altura && (
                     <span>
                       {" "}
-                      Altura: {pacienteInfo.altura ?? "-"}m Peso:{" "}
-                      {pacienteInfo.peso ?? "-"}kg
+                      <strong>Altura:</strong> {pacienteInfo.altura ?? "-"}
+                    </span>
+                  )}
+                  {pacienteInfo.peso && (
+                    <span>
+                      {" "}
+                      <strong>Peso:</strong> {pacienteInfo.peso ?? "-"}
                     </span>
                   )}
                 </div>
