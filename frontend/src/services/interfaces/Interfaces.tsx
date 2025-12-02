@@ -48,6 +48,15 @@ export interface AdicionarExamePayload {
   arquivo_exame: File;
 }
 
+export interface EditarExamePayload {
+  exame_id: string | number;
+  nome_exame: string;
+  data_realizacao: string;
+  nome_lab: string;
+  categorias: string[];
+  arquivo_exame?: File; 
+}
+
 //CATEGORIAS
 
 export interface Categoria {}

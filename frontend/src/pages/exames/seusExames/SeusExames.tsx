@@ -10,12 +10,21 @@ import {
   Select,
   DatePicker,
   Tabs,
+  Form,
   type TabsProps,
   Grid,
   Dropdown,
   Input,
+  Upload,
+  Modal,
+  Row,
+  Col,
 } from "antd";
-import { PlusCircleOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  MoreOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
 //data
@@ -25,6 +34,7 @@ import dayjs, { Dayjs } from "dayjs";
 import {
   buscarExames,
   deletarExame,
+  editarExame,
 } from "../../../services/apiInterna/Exames";
 import {
   buscarCategoria,
@@ -57,6 +67,7 @@ import "./SeusExames.scss";
 const { Title, Paragraph } = Typography;
 const { RangePicker } = DatePicker;
 const { useBreakpoint } = Grid;
+const { Dragger } = Upload;
 
 type CategoriaOption = {
   value: string;
@@ -66,6 +77,7 @@ type CategoriaOption = {
 
 export default function SeusExames() {
   const [loading, setLoading] = useState(false);
+  const [loadingEditarExame, setLoadingEditarExame] = useState(false);
   const [openModalAvisoExclusao, setOpenModalAvisoExclusao] = useState(false);
   const [openModalVisualizar, setOpenModalVisualizar] = useState(false);
   const [openModalCadastrarCategoria, setModalCadastrarCategoria] =
@@ -80,6 +92,10 @@ export default function SeusExames() {
   );
   const [periodo, setPeriodo] = useState<[Dayjs, Dayjs] | null>(null);
   const [exameVisualizar, setExameVisualizar] = useState<ExameRow | null>(null);
+  const [openModalEditar, setOpenModalEditar] = useState(false);
+  const [exameEditando, setExameEditando] = useState<ExameRow | null>(null);
+  const [editForm] = Form.useForm();
+
   const [categoriaFiltro, setCategoriaFiltro] = useState<string | undefined>();
 
   const [editingCategoriaId, setEditingCategoriaId] = useState<string | null>(
@@ -159,7 +175,7 @@ export default function SeusExames() {
     }, 0);
   }
 
-  // SALVAR EDIÇÃO INLINE DE CATEGORIA 
+  // SALVAR EDIÇÃO INLINE DE CATEGORIA
   async function salvarCategoriaEditada() {
     if (!editingCategoriaId) return;
     const nomeTrim = editingNome.trim();
@@ -286,6 +302,89 @@ export default function SeusExames() {
     [cat, tipoUsuario, editingCategoriaId, editingNome]
   );
 
+  // PARA POPULAR CAMPO CATEGORIAS NO EDITAR.
+  const getCategoriaLabelFromValue = (value: string | string[]): string => {
+    const values = Array.isArray(value) ? value : [value];
+    const labels = cat
+      .filter((c) => values.includes(c.value))
+      .map((c) => c.label);
+    return labels.join(", ");
+  };
+
+  const handleAbrirModalEditar = (exame: ExameRow) => {
+    setExameEditando(exame);
+
+    editForm.setFieldsValue({
+      exame: exame.exame,
+      local: exame.local,
+      dataRealizacao: dayjs(exame.rawDate),
+      categorias: [String(exame.categoriaId)],
+    });
+
+    setOpenModalEditar(true);
+  };
+
+  const handleFecharModalEditar = () => {
+    setOpenModalEditar(false);
+    setExameEditando(null);
+    editForm.resetFields();
+  };
+
+  // FUNÇÃO PARA EDITAR EXAME
+  const handleSalvarEdicao = async () => {
+    if (!exameEditando) return;
+
+    try {
+      setLoadingEditarExame(true);
+      const values = await editForm.validateFields();
+
+      const data_realizacao = values.dataRealizacao.format("YYYY-MM-DD");
+
+      const payload = {
+        exame_id: exameEditando.key,
+        nome_exame: values.exame,
+        data_realizacao,
+        nome_lab: values.local,
+        categorias: values.categorias,
+      };
+
+      await editarExame(payload);
+
+      showMessage("Exame atualizado com sucesso.", "success");
+
+      setRows((prev) =>
+        prev.map((row) =>
+          row.key === exameEditando.key
+            ? {
+                ...row,
+                exame: values.exame,
+                local: values.local,
+                categoria: getCategoriaLabelFromValue(values.categorias),
+                categoriaId: Number(
+                  Array.isArray(values.categorias)
+                    ? values.categorias[0]
+                    : values.categorias
+                ),
+                dataRealizacao: values.dataRealizacao.format("DD/MM/YYYY"),
+                rawDate: data_realizacao,
+              }
+            : row
+        )
+      );
+
+      handleFecharModalEditar();
+    } catch (err: any) {
+      if (err?.errorFields) return;
+      showMessage(
+        err?.response?.data?.message ||
+          "Erro ao atualizar exame. Tente novamente.",
+        "error"
+      );
+    } finally {
+      setLoadingEditarExame(false);
+    }
+  };
+
   //COLUNAS TABELA
   const colunas: ColumnsType<ExameRow> = [
     {
@@ -324,6 +423,15 @@ export default function SeusExames() {
           >
             Ver exame
           </Button>
+
+          <Button
+            hidden={tipoUsuario === "medico"}
+            className="button-editar-exame"
+            onClick={() => handleAbrirModalEditar(record)}
+          >
+            Editar
+          </Button>
+
           <Button
             danger
             style={{ borderColor: "#ef4444", color: "#ef4444" }}
@@ -488,7 +596,7 @@ export default function SeusExames() {
     carregarExames();
   }, [tipoUsuario, pacienteId]);
 
-  // CARREGAR CATEGORIAS 
+  // CARREGAR CATEGORIAS
   useEffect(() => {
     async function carregarCategoriasInicial() {
       try {
@@ -524,7 +632,7 @@ export default function SeusExames() {
     carregarCategoriasInicial();
   }, []);
 
-  // CARREGAR CATEGORIAS 
+  // CARREGAR CATEGORIAS
   async function carregarCategorias() {
     try {
       setLoading(true);
@@ -645,6 +753,16 @@ export default function SeusExames() {
                           >
                             Ver exame
                           </Button>
+
+                          <Button
+                            className="button-editar-exame"
+                            size="small"
+                            hidden={tipoUsuario === "medico"}
+                            onClick={() => handleAbrirModalEditar(record)}
+                          >
+                            Editar
+                          </Button>
+
                           <Button
                             danger
                             size="small"
@@ -695,6 +813,124 @@ export default function SeusExames() {
             : null
         }
       />
+      <Modal
+        open={openModalEditar}
+        onCancel={handleFecharModalEditar}
+        width={900}
+        title="Editar exame"
+        confirmLoading={loadingEditarExame}
+        destroyOnHidden
+        footer={
+          <Space style={{ width: "100%", justifyContent: "flex-start" }}>
+            <Button onClick={handleFecharModalEditar}>Cancelar</Button>
+
+            <Button
+              type="primary"
+              onClick={handleSalvarEdicao}
+              loading={loadingEditarExame}
+              style={{
+                background: "#14b8a6",
+                color: "#fff",
+                fontWeight: "600",
+                width: "85px",
+              }}
+            >
+              Salvar
+            </Button>
+          </Space>
+        }
+      >
+        <Form form={editForm} layout="vertical">
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Exame"
+                name="exame"
+                rules={[{ required: true, message: "Informe o nome do exame" }]}
+              >
+                <Input placeholder="Digite para buscar ou adicionar" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Categorias"
+                name="categorias"
+                rules={[
+                  {
+                    required: true,
+                    message: "Selecione ao menos uma categoria",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Selecione"
+                  allowClear
+                  showSearch
+                  mode="multiple"
+                  options={cat.map(({ value, label }) => ({
+                    value,
+                    label,
+                  }))}
+                  filterOption={(input, option) =>
+                    (option?.label as string)
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Data realização"
+                name="dataRealizacao"
+                rules={[
+                  {
+                    required: true,
+                    message: "Informe a data de realização",
+                  },
+                ]}
+              >
+                <DatePicker
+                  placeholder="DD/MM/YYYY"
+                  style={{ width: "100%" }}
+                  format="DD/MM/YYYY"
+                  disabledDate={(current) =>
+                    current &&
+                    (current > dayjs().endOf("day") ||
+                      current < dayjs("1900-01-01"))
+                  }
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} sm={12}>
+              <Form.Item
+                label="Local"
+                name="local"
+                rules={[{ required: true, message: "Informe o local" }]}
+              >
+                <Input placeholder="Ex: Clínica Unimed / Laboratório Master" />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
+              <Form.Item label="Arquivo do exame">
+                <Dragger multiple={false} maxCount={1} disabled={true}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">
+                    Já existe um arquivo vinculado a este exame. Para usar outro
+                    arquivo, exclua este exame e cadastre um novo.
+                  </p>
+                </Dragger>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
     </div>
   );
 }
