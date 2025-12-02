@@ -770,6 +770,7 @@ export default function SeusExames() {
                             style={{
                               borderColor: "#ef4444",
                               color: "#ef4444",
+                              height: "28px",
                             }}
                             onClick={() => {
                               setExameSelecionadoId(String(record.key));
