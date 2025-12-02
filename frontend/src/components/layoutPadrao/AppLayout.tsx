@@ -210,8 +210,8 @@ export default function AppLayout() {
                     size={32}
                     src={userPhoto ? `/api${userPhoto}` : undefined}
                     style={{
-                      backgroundColor: "#2f4892",
-                      color: "#fff",
+                      backgroundColor: "#e6f4ff",
+                      color: "#1677ff",
                       fontWeight: 600,
                     }}
                     icon={!userPhoto ? <UserOutlined /> : undefined}

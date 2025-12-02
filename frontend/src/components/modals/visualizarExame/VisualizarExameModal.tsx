@@ -100,8 +100,12 @@ export default function VisualizarExameModal({
       };
 
       const resp = await criarComentario(payload);
-
       const raw = resp?.data?.data || resp?.data || payload;
+
+      const imagemPerfilNormalizada =
+        raw.imagem_perfil ??
+        raw.foto_medico ??
+        undefined;
 
       const comentarioSalvo: ComentarioExame = {
         ...raw,
@@ -111,6 +115,7 @@ export default function VisualizarExameModal({
           raw.comentario_exame_id ?? raw.comentario_id ?? raw.id ?? undefined,
         usuario_id:
           raw.usuario_id ?? (usuario_id ? Number(usuario_id) : undefined),
+        imagem_perfil: imagemPerfilNormalizada,
       };
 
       setComentariosExame((prev) => [...prev, comentarioSalvo]);
@@ -306,6 +311,8 @@ export default function VisualizarExameModal({
                   c.ultimo_nome ?? ""
                 }`.trim();
 
+                const imagemPerfil = c.imagem_perfil;
+
                 return (
                   <div
                     key={c.comentario_exame_id || idx}
@@ -317,13 +324,9 @@ export default function VisualizarExameModal({
                           <Avatar
                             size={32}
                             src={
-                              c.imagem_perfil
-                                ? `/api${c.imagem_perfil}`
-                                : undefined
+                              imagemPerfil ? `/api${imagemPerfil}` : undefined
                             }
-                            icon={
-                              !c.imagem_perfil ? <UserOutlined /> : undefined
-                            }
+                            icon={!imagemPerfil ? <UserOutlined /> : undefined}
                           />
                         </div>
                       </div>

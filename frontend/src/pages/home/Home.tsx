@@ -20,7 +20,7 @@ import {
 
 //banners
 import banner1 from "../../assets/banner3.png";
-import banner2 from "../../assets/banner2.png";
+import banner2 from "../../assets/Group 157.png";
 
 //validações
 import { showMessage } from "../../components/messageHelper/ShowMessage";
