@@ -116,7 +116,7 @@ class MedicoService
         if ($pacientes) {
             foreach ($pacientes as $paciente) {
                 $dados[] = [
-                    'autorizacao_acesso_id' => $paciente['autorizacao_acesso_id'],
+                    'solicitacao_id' => $paciente['autorizacao_acesso_id'],
                     'status' => $paciente['status'],
                     'data_atualizacao' => $paciente['data_atualizacao'],
                     'paciente_id' => $paciente['paciente_id'],
