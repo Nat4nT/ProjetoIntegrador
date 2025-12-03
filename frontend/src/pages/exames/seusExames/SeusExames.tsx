@@ -20,6 +20,7 @@ import {
   Row,
   Col,
   Avatar,
+  Tag,
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -126,6 +127,16 @@ export default function SeusExames() {
   // AO CLICAR EM VER EXAME
   function verExame(record: ExameRow) {
     if (!record.url) return;
+    if (tipoUsuario === "paciente" && record.ultimaDataComentario) {
+      setLastSeenComment(String(record.key), record.ultimaDataComentario);
+
+      setRows((prev) =>
+        prev.map((row) =>
+          row.key === record.key ? { ...row, hasNewComment: false } : row
+        )
+      );
+    }
+
     setExameVisualizar(record);
     setOpenModalVisualizar(true);
   }
@@ -133,6 +144,30 @@ export default function SeusExames() {
   const closeModalVisualizar = () => {
     setOpenModalVisualizar(false);
     setExameVisualizar(null);
+  };
+
+  const ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY = "medexame:lastSeenComments";
+
+  type LastSeenCommentsMap = Record<string, string>;
+
+  const getLastSeenComments = (): LastSeenCommentsMap => {
+    try {
+      const raw = localStorage.getItem(ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  };
+
+  const setLastSeenComment = (examId: string, date: string) => {
+    try {
+      const current = getLastSeenComments();
+      current[examId] = date;
+      localStorage.setItem(
+        ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY,
+        JSON.stringify(current)
+      );
+    } catch {}
   };
 
   // FUNÇÃO PARA DELETAR EXAME
@@ -398,6 +433,14 @@ export default function SeusExames() {
       key: "exame",
       sorter: (a, b) => dayjs(a.rawDate).valueOf() - dayjs(b.rawDate).valueOf(),
       defaultSortOrder: "ascend",
+      render: (text, record) => (
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {tipoUsuario === "paciente" && record.hasNewComment && (
+            <Tag color="red">Novo comentário</Tag>
+          )}
+          <span>{text}</span>
+        </span>
+      ),
     },
     {
       title: "Categoria",
@@ -458,16 +501,21 @@ export default function SeusExames() {
     exameId: string,
     comentario: ComentarioExame
   ) => {
+    const novaDataComentario = comentario.data_criacao;
+
     setRows((prev) =>
-      prev.map((row) =>
-        row.key === exameId
-          ? {
-              ...row,
-              comentarios: [...(row.comentarios ?? []), comentario],
-            }
-          : row
-      )
+      prev.map((row) => {
+        if (row.key !== exameId) return row;
+
+        return {
+          ...row,
+          comentarios: [...(row.comentarios ?? []), comentario],
+          hasNewComment: true,
+          ultimaDataComentario: novaDataComentario,
+        };
+      })
     );
+
     setExameVisualizar((prev) =>
       prev && prev.key === exameId
         ? {
@@ -544,62 +592,69 @@ export default function SeusExames() {
         setLoading(true);
 
         let data: any[] = [];
+        const lastSeenMap = getLastSeenComments();
+
+        const mapExames = (data: any[]): ExameRow[] => {
+          return data.map((it: any) => {
+            const e = it.exame;
+            const d = dayjs(e.data_realizacao);
+
+            const comentarios: ComentarioExame[] = e.comentario ?? [];
+
+            const datasComentarios = comentarios
+              .map((c: any) => c.created_at || c.data_criacao || c.criado_em)
+              .filter(Boolean);
+
+            const ultimaDataComentario: string | null =
+              datasComentarios.length > 0
+                ? datasComentarios.sort()[datasComentarios.length - 1]
+                : null;
+
+            let hasNewComment = false;
+
+            if (tipoUsuario === "paciente" && ultimaDataComentario) {
+              const lastSeen = lastSeenMap[String(e.exame_id)];
+              if (!lastSeen) {
+                hasNewComment = true;
+              } else if (dayjs(ultimaDataComentario).isAfter(dayjs(lastSeen))) {
+                hasNewComment = true;
+              }
+            }
+
+            return {
+              key: String(e.exame_id),
+              exame: e.nome_exame,
+              categoria: e.categoria?.[0]?.nome ?? "Todos",
+              categoriaId: e.categoria?.[0]?.categoria_id,
+              dataRealizacao: d.isValid()
+                ? d.format("DD/MM/YYYY")
+                : e.data_realizacao,
+              rawDate: e.data_realizacao,
+              local: e.nome_lab,
+              url: e.arquivo_exame,
+              comentarios,
+              ultimaDataComentario,
+              hasNewComment,
+            };
+          });
+        };
 
         if (tipoUsuario === "medico" && pacienteInfo?.paciente_id) {
           const resp = await buscarExamesPaciente({
             paciente_id: pacienteInfo.paciente_id,
           });
           data = resp.data || [];
-
-          const mapped: ExameRow[] = data.map((it: any) => {
-            const e = it.exame;
-            const d = dayjs(e.data_realizacao);
-
-            return {
-              key: String(e.exame_id),
-              exame: e.nome_exame,
-              categoria: e.categoria?.[0]?.nome ?? "Todos",
-              categoriaId: e.categoria?.[0]?.categoria_id,
-              dataRealizacao: d.isValid()
-                ? d.format("DD/MM/YYYY")
-                : e.data_realizacao,
-              rawDate: e.data_realizacao,
-              local: e.nome_lab,
-              url: e.arquivo_exame,
-              comentarios: e.comentario ?? [],
-            };
-          });
-
-          setRows(mapped);
+          setRows(mapExames(data));
         } else {
           const resp = await buscarExames();
           data = resp.data || [];
-
-          const mapped: ExameRow[] = data.map((it: any) => {
-            const e = it.exame;
-            const d = dayjs(e.data_realizacao);
-
-            return {
-              key: String(e.exame_id),
-              exame: e.nome_exame,
-              categoria: e.categoria?.[0]?.nome ?? "Todos",
-              categoriaId: e.categoria?.[0]?.categoria_id,
-              dataRealizacao: d.isValid()
-                ? d.format("DD/MM/YYYY")
-                : e.data_realizacao,
-              rawDate: e.data_realizacao,
-              local: e.nome_lab,
-              url: e.arquivo_exame,
-              comentarios: e.comentario ?? [],
-            };
-          });
-
-          setRows(mapped);
+          setRows(mapExames(data));
         }
       } finally {
         setLoading(false);
       }
     }
+
     carregarExames();
   }, [tipoUsuario, pacienteInfo?.paciente_id]);
 

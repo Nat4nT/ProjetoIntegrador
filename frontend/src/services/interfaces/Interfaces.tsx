@@ -83,6 +83,9 @@ export type ExameRow = {
   categoriaId: number;
   rawDate: string;
   comentarios?: ComentarioExame[];
+
+  hasNewComment?: boolean; 
+  ultimaDataComentario?: string | null;
 };
 
 export type PacienteRow = {
