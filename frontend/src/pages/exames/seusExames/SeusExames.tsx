@@ -266,11 +266,13 @@ export default function SeusExames() {
       const [ini, fim] = periodo;
       arr = arr.filter((r) => {
         const d = dayjs(r.rawDate);
-        return (
-          d.isValid() &&
-          d.isAfter(ini.startOf("day")) &&
-          d.isBefore(fim.endOf("day"))
-        );
+        if (!d.isValid() || !ini || !fim) return false;
+
+        const exameTime = d.valueOf();
+        const inicioTime = ini.startOf("day").valueOf();
+        const fimTime = fim.endOf("day").valueOf();
+
+        return exameTime >= inicioTime && exameTime <= fimTime;
       });
     }
 
