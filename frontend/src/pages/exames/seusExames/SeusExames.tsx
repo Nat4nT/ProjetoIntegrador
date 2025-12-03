@@ -146,13 +146,13 @@ export default function SeusExames() {
     setExameVisualizar(null);
   };
 
-  const ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY = "medexame:lastSeenComments";
+  const LAST_SEEN_COMMENTS_KEY = "medexame:lastSeenComments";
 
   type LastSeenCommentsMap = Record<string, string>;
 
   const getLastSeenComments = (): LastSeenCommentsMap => {
     try {
-      const raw = localStorage.getItem(ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY);
+      const raw = localStorage.getItem(LAST_SEEN_COMMENTS_KEY);
       return raw ? JSON.parse(raw) : {};
     } catch {
       return {};
@@ -163,10 +163,7 @@ export default function SeusExames() {
     try {
       const current = getLastSeenComments();
       current[examId] = date;
-      localStorage.setItem(
-        ULTIMA_VEZ_QUE_VIU_COMENTARIOS_KEY,
-        JSON.stringify(current)
-      );
+      localStorage.setItem(LAST_SEEN_COMMENTS_KEY, JSON.stringify(current));
     } catch {}
   };
 

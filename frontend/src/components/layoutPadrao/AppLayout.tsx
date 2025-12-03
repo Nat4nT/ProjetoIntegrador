@@ -74,8 +74,14 @@ export default function AppLayout() {
   };
 
   // FUNÇÃO PARA DESLOGAR E LIMPAR LOCALSTORAGE
+
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("tipo_usuario");
+    localStorage.removeItem("primeiroNomeUsuario");
+    localStorage.removeItem("ultimoNomeUsuario");
+    localStorage.removeItem("user_photo");
+    localStorage.removeItem("usuario_id");
     navigate("/");
     window.location.reload();
   };
