@@ -35,7 +35,7 @@ class ExameController
         $dadosUsuario = $request->getAttribute('usuario');
         $dadosFormulario = $request->getParsedBody();
         $uploadedFiles = $request->getUploadedFiles();
-        $dadosFormulario['files'] = $uploadedFiles;
+        // $dadosFormulario['files'] = $uploadedFiles;
 
 
         $resposta = (new ExameService())->editExame($dadosUsuario, $dadosFormulario);

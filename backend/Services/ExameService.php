@@ -75,6 +75,48 @@ class ExameService
             'mensagem' => $mensagem
         ];
     }
+    private function validarCamposEditExame($dados)
+    {
+        $erro = 0;
+        $mensagem = [];
+
+        if (!isset($dados['nome_exame']) || is_null($dados['nome_exame'])) {
+            $erro = 1;
+            $mensagem['nome_exame'] = "Campo nome_exame invalido";
+        }
+        if (empty($dados['data_realizacao'])) {
+            $erro = 1;
+            $mensagem['data_realizacao'] = "Campo data_realizacao é obrigatório.";
+        } else {
+            try {
+                $dataRealizacao = new DateTime($dados['data_realizacao']);
+                $hoje = new DateTime('today');
+
+                if ($dataRealizacao > $hoje) {
+                    $erro = 1;
+                    $mensagem['data_realizacao'] = "A data de realização não pode ser futura.";
+                }
+            } catch (Exception $e) {
+                $erro = 1;
+                $mensagem['data_realizacao'] = "Formato de data de realização inválido.";
+            }
+        }
+
+        if (!isset($dados["nome_lab"]) || is_null($dados["nome_lab"])) {
+            $erro = 1;
+            $mensagem["nome_lab"] = "Campo nome_lab invalido.";
+        }
+        if (!isset($dados["categorias"]) || is_null($dados["categorias"])) {
+            $erro = 1;
+            $mensagem["categorias"] = "Campo categorias invalido.";
+        }
+
+
+        return [
+            'erro' => $erro,
+            'mensagem' => $mensagem
+        ];
+    }
     private function prepareExameData($dados, $usuario_id)
     {
         $validacao = $this->validarCamposExame($dados);
@@ -89,6 +131,24 @@ class ExameService
                 'nome_exame' => $dados['nome_exame'],
                 'data_realizacao' => $dados['data_realizacao'],
                 'files' => $dados['files'],
+                'nome_lab' => $dados['nome_lab']
+            ],
+            "categorias" => $dados["categorias"],
+        ];
+    }
+    private function prepareExameDataEdit($dados, $usuario_id)
+    {
+        $validacao = $this->validarCamposEditExame($dados);
+
+        if ($validacao['erro']) {
+            return ["message" => $validacao['mensagem'], 'error' => 1];
+        }
+
+        return [
+            "exame" => [
+                'usuario_id' => $usuario_id,
+                'nome_exame' => $dados['nome_exame'],
+                'data_realizacao' => $dados['data_realizacao'],
                 'nome_lab' => $dados['nome_lab']
             ],
             "categorias" => $dados["categorias"],
@@ -121,6 +181,7 @@ class ExameService
         }
         return ['code' => 200, 'message' => 'Exame registrado com sucesso'];
     }
+
     public function editExame($dadosUsuario, $dadosFormulario)
     {
 
@@ -129,8 +190,7 @@ class ExameService
         }
 
 
-        $dadosExame = $this->prepareExameData($dadosFormulario, $dadosUsuario->usuario_id);
-
+        $dadosExame = $this->prepareExameDataEdit($dadosFormulario, $dadosUsuario->usuario_id);
         if (isset($dadosExame['error'])) {
             $retonro_erro[] = ['code' => 400, 'message' => $dadosExame['message']];
         }
