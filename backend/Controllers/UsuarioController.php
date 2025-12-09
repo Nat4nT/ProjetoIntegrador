@@ -27,7 +27,7 @@ class UsuarioController
         $data['files'] = $uploadedFiles;
         $jsonResponse = new JsonResponse();
 
-        //RN 06 e RN 07
+        //RN06 e RN07
         if (is_null($data) || empty($data) || !isset($data['consentimento_lgpd']) || $data['consentimento_lgpd'] == 0) {
             return   $jsonResponse->emitirResposta($response, ['message' => "Não consente com a LGPD", 'code' => 400], 400);
         }

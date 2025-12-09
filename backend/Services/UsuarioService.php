@@ -76,7 +76,7 @@ class UsuarioService
         if ($validacao['erro']) {
             return ["message" => $validacao['mensagem'], 'error' => 1];
         }
-        // RN 04
+        // RN04
         if ($is_logged) {
             $dadosUsuario = [
                 'data_nascimento' => $dados['data_nascimento'],
@@ -260,7 +260,7 @@ class UsuarioService
             return ['code' => 401, 'message' => "Dados Inválidos"];
         }
 
-        //RN 02
+        //RN02
         if ($usuarioModel->buscarPorEmail($dados["email"] ?? '')) {
             return ['code' => 401, 'message' => "Email já cadastrado!"];
         }
@@ -321,7 +321,7 @@ class UsuarioService
         return ['code' => 200, 'message' => "Cadastro realizado com sucesso", "token" => $data['token'], 'firstname' => $data['firstname'], 'lastname' => $data['lastname'], "user_photo" => $data['imagem_perfil']];
     }
 
-    // RN 05
+    // RN05
     public function buscarDados($dadosUsuario): array
     {
         $dados = (new UsuarioModel($dadosUsuario->usuario_id))->buscarUsuario($dadosUsuario->tipo_usuario);

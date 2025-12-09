@@ -6,6 +6,7 @@ use Models\CategoriaModel;
 
 class CategoriaService
 {
+    // RN12
     public function getCategorias($dadosUsuario)
     {
         $categoriaModel = new CategoriaModel();
@@ -75,6 +76,7 @@ class CategoriaService
         return ['code' => 200, 'message' => 'Categoria registrada com sucesso'];
     }
 
+    // RN12
     public function alterarCategoria($categoriaDados, $user)
     {
         $categoriaModel = new CategoriaModel($categoriaDados['categoria_id']);
@@ -86,7 +88,7 @@ class CategoriaService
             ];
         }
         if (!$categoria['sis_cat'] && $categoria['usuario_id'] == $user) {
-            $dados = $this->prepareCategoriaData($categoriaDados,$user);
+            $dados = $this->prepareCategoriaData($categoriaDados, $user);
             $response = (new CategoriaModel($categoriaDados['categoria_id']))->editData($dados);
 
             if ($response) {
@@ -107,6 +109,7 @@ class CategoriaService
             ];
         }
     }
+    // RN12
     public function deletarCategoria($categoria_id, $user)
     {
         $categoriaModel = new CategoriaModel($categoria_id);
@@ -117,8 +120,10 @@ class CategoriaService
                 'code' => 400
             ];
         }
-        if (!$categoria['sis_cat'] 
-        && $categoria['usuario_id'] == $user) {
+        if (
+            !$categoria['sis_cat']
+            && $categoria['usuario_id'] == $user
+        ) {
 
             $response = (new CategoriaModel($categoria_id))->deleteData();
 
