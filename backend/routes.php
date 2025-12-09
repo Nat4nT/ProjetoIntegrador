@@ -65,7 +65,4 @@ return function (App $app) {
         $exam->post('/editar-comentario', [ExameController::class, 'editarComentario'])->add(TipeMiddleware::class);
         $exam->post('/deletar-comentario', [ExameController::class, 'deletarComentario'])->add(TipeMiddleware::class);
     })->add(LogMiddleware::class)->add(AutenticacaoMiddleware::class);
-
-
-    $app->post('/teste', function ($request, $response) {});
 };

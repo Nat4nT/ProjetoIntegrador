@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class JsonResponse
 {
+    // RN19
     function emitirResposta(Response $response, array $data, int $status = 200): Response
     {
         $response->getBody()->write(json_encode($data));

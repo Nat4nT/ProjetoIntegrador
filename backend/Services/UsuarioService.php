@@ -24,17 +24,18 @@ class UsuarioService
             return ['message' => "Senhas diferentes", 'code' => 400];
         }
 
-        if(isset($camposFormulario['senha'])){
+        if (isset($camposFormulario['senha'])) {
             if (!password_verify($camposFormulario['senha'], $usuarioData['senha'])) {
                 return ['message' => "Senha incorreta.", 'code' => 400];
             }
         }
 
+        // RN21
         if (password_verify($camposFormulario['nova_senha'], $usuarioData['senha'])) {
             return ['message' => "A Senha deve ser diferente da anterior.", 'code' => 400];
         }
 
-        $usuarioModel->editData(['status'=>1,'senha' => password_hash($camposFormulario['nova_senha'], PASSWORD_DEFAULT)]);
+        $usuarioModel->editData(['status' => 1, 'senha' => password_hash($camposFormulario['nova_senha'], PASSWORD_DEFAULT)]);
 
         return ['code' => 200, 'message' => "Senha alterada com sucesso"];
     }
@@ -75,7 +76,7 @@ class UsuarioService
         if ($validacao['erro']) {
             return ["message" => $validacao['mensagem'], 'error' => 1];
         }
-
+        // RN 04
         if ($is_logged) {
             $dadosUsuario = [
                 'data_nascimento' => $dados['data_nascimento'],
@@ -83,8 +84,6 @@ class UsuarioService
                 'ultimo_nome' => $dados['ultimo_nome'],
                 'genero' => $dados['genero'] ?? 3,
                 'telefone' => $dados['telefone'] ? $cript->encriptarDado($dados['telefone']) : null,
-                'email' => $dados['email'],
-                'consentimento_lgpd' => $dados['consentimento_lgpd'] ?? 0
             ];
         } else {
             $dadosUsuario = [
@@ -237,6 +236,7 @@ class UsuarioService
         return $dados_usuario;
     }
 
+    // RN02
     private function verificarCPF($dados)
     {
         $usuarioModel = new UsuarioModel();
@@ -260,12 +260,10 @@ class UsuarioService
             return ['code' => 401, 'message' => "Dados Inválidos"];
         }
 
+        //RN 02
         if ($usuarioModel->buscarPorEmail($dados["email"] ?? '')) {
             return ['code' => 401, 'message' => "Email já cadastrado!"];
         }
-
-
-
 
         $senhaLogin = $dados['senha'] ?? null;
 
@@ -323,6 +321,7 @@ class UsuarioService
         return ['code' => 200, 'message' => "Cadastro realizado com sucesso", "token" => $data['token'], 'firstname' => $data['firstname'], 'lastname' => $data['lastname'], "user_photo" => $data['imagem_perfil']];
     }
 
+    // RN 05
     public function buscarDados($dadosUsuario): array
     {
         $dados = (new UsuarioModel($dadosUsuario->usuario_id))->buscarUsuario($dadosUsuario->tipo_usuario);
@@ -422,6 +421,7 @@ class UsuarioService
         ];
     }
 
+    // RN13
     public function desativar(int $idPerfil): array
     {
         if (empty($idPerfil)) {
