@@ -41,6 +41,7 @@ export default function SeusExames() {
   const [cat, setCat] = useState<{ value: string; label: string }[]>([]);
 
   // VALIDAR ARQUIVO
+  //RN18 VALIDAÇÃO DE EXAME
   const beforeUpload: UploadProps["beforeUpload"] = (file) => {
     const isAllowedType = [
       "application/pdf",

@@ -140,6 +140,8 @@ export default function RecuperarSenha() {
           <Form.Item
             label="Nova senha"
             name="novaSenha"
+            //RN25 TODOS OS CAMPOS QUE SÃO EXIBIDOS PÓS VERIFICAÇÃO DO CÓDIGO ESTÃO COM A VALIDAÇÃO hidden={!codigoValidado}
+            //OU SEJA SE O CÓDIGO AINDA NÃO FOI VALIDADO NÃO EXIBE, O VALOR DA VARIAVEL codigoValidado É SETADO NA LINHA 65.
             hidden={!codigoValidado}
             style={{ paddingTop: "10px" }}
             rules={[

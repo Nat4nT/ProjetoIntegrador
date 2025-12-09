@@ -150,6 +150,8 @@ export default function SeusExames() {
       key: "acoes",
       responsive: ["xl"],
       render: (_, record) => {
+        //RN08, médico só consegue acessar os exames do usuário caso status com status aprovado
+        //record.status é o valor que vem do backend, populado na linha 245.
         if (record.status === StatusAcesso.APROVADO) {
           return (
             <div className="container-buttons-paciente-ativo">
@@ -300,7 +302,7 @@ export default function SeusExames() {
             marginBottom: 16,
           }}
         ></div>
-
+        {/* RN17 tabela de listagem dos pacientes.*/}
         <Table
           rowKey="key"
           columns={colunas}
@@ -368,12 +370,9 @@ export default function SeusExames() {
                               size="small"
                               type="primary"
                               onClick={() =>
-                                navigate(
-                                  `/exames/paciente`,
-                                  {
-                                    state: { paciente: record },
-                                  }
-                                )
+                                navigate(`/exames/paciente`, {
+                                  state: { paciente: record },
+                                })
                               }
                             >
                               Ver exames

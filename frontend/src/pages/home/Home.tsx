@@ -156,6 +156,9 @@ export default function Home() {
   //FUNÇÃO PARA CARREGAR SOLICITAÇÕES E EXIBIR MODAL NA HOME.
   useEffect(() => {
     async function carregarSolicitacoes() {
+      //RN15 CHAMA O ENDPOINT PARA VERIFICAR SE TEM SOLICITAÇÕES DE ACESSO.
+      //NO ENDPOINT É PASSADO O TOKEN DE SESSÃO NO HEADER DA REQUISIÇÃO
+      //COM ISSO É FEITO A VALIDAÇÃO DE QUAL USUÁRIO ESTÁ CHAMANDO O ENDPOINT
       try {
         setLoading(true);
         if (tipoUsuario !== "paciente") return;
@@ -224,6 +227,7 @@ export default function Home() {
       </Carousel>
 
       <div className="home-atalhos-container">
+        {/* RN23 */}
         <Row gutter={[16, 16]}>
           {atalhosAtuais.map((item) => (
             <Col

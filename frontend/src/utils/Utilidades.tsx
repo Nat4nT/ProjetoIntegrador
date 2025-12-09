@@ -13,6 +13,7 @@ export const parseMaybeJsonArray = (v: unknown): string[] => {
   return [];
 };
 
+//RN02 VALIDAÇÃO DE CPF VÁLIDO
 export function isValidCPF(cpfRaw: string): boolean {
   if (!cpfRaw) return false;
   const cpf = cpfRaw.replace(/\D/g, "");

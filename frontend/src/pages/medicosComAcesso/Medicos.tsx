@@ -114,6 +114,7 @@ export default function SeusExames() {
   };
 
   // FUNÇÃO PARA REVOGAR ACESSO
+  //RN10 CHAMADA PARA REVOGAR ACESSO MÉDICO E ATAULIZAR COM BASE NO RETORNO
   const handlerRevogar = async () => {
     if (!solicitacaoSelecionada) return;
     try {
@@ -314,6 +315,7 @@ export default function SeusExames() {
       </Card>
 
       <Card style={{ marginTop: 16 }}>
+        {/* RN22 */}
         <Table
           rowKey="key"
           columns={colunas}

@@ -72,6 +72,11 @@ export default function BuscarPaciente() {
           : usuario.data_nascimento,
         rawDate: usuario.data_nascimento,
         solicitacao_id: usuario.solicitacao_id,
+        paciente_id: 0,
+        primeiro_nome: "",
+        ultimo_nome: "",
+        email: "",
+        telefone: ""
       };
 
       setUsuario([row]);
@@ -160,6 +165,7 @@ export default function BuscarPaciente() {
                 validateTrigger={["onBlur", "onSubmit"]}
                 rules={[
                   { required: true, message: "Informe o CPF" },
+                  //RN16 GARANTINDO QUE SEJA UM CPF NO CAMPO DE BUSCA
                   {
                     validator: (_, value) => {
                       const digits = onlyDigits(value || "");

@@ -452,6 +452,7 @@ export default function SeusExames() {
       dataIndex: "dataRealizacao",
       key: "dataRealizacao",
       responsive: ["sm"],
+      //RN09
       sorter: (a, b) => dayjs(a.rawDate).valueOf() - dayjs(b.rawDate).valueOf(),
       defaultSortOrder: "ascend",
     },

@@ -415,6 +415,7 @@ export default function Perfil() {
                     name="email"
                     rules={[{ type: "email", required: true }]}
                   >
+                    {/* RN04 PARA DEIXAR O CAMPO DESABILIDADE PARA EDITAR, PARAMETRO disabled={true} */}
                     <Input placeholder="email@exemplo.com" disabled={true} />
                   </Form.Item>
                 </Col>
@@ -443,6 +444,7 @@ export default function Perfil() {
                       },
                     ]}
                   >
+                    {/* RN04 PARA DEIXAR O CAMPO DESABILIDADE PARA EDITAR, PARAMETRO disabled={true} */}
                     <Input
                       placeholder="000.000.000-00"
                       maxLength={14}
@@ -615,8 +617,8 @@ export default function Perfil() {
                 )}
               </Row>
             </Col>
-
             {/* DADOS OPCIONAIS */}
+            {/* RN20 CASO NÃO SEJA USUÁRIO MÉDICO É EXIBIDO AS OPÇÕES DE DADOS OPCIONAIS*/}
             {tipoUsuario === "medico" ? (
               ""
             ) : (

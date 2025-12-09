@@ -1,5 +1,6 @@
 export const onlyDigits = (v: string) => (v || "").replace(/\D+/g, "");
 
+//RN01
 export const padraoDeSenha =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 

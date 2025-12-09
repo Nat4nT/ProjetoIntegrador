@@ -112,6 +112,7 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
 
   // FUNÇÃO PARA CADASTRAR
   const handleSubmit = async (values: any) => {
+    //RNO7
     if (!agree) {
       showMessage("Você precisa aceitar os termos para continuar.", "warning");
       return;
@@ -120,6 +121,8 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
       showMessage("As senhas não conferem.", "error");
       return;
     }
+
+    //RN20  PAYLOAD DE CADASTRO NÃO É NECESSÁRIO PASSAR OS CAMPOS OPCIONAIS
 
     const payload: any = {
       tipo_usuario: tipoUsuario,
@@ -584,6 +587,7 @@ export default function CadastroModal({ open, onClose }: CadastroModalProps) {
         </p>
 
         <div className="cad-terms" style={{ marginTop: 8 }}>
+          {/* RN06 */}
           <Checkbox
             checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
