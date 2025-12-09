@@ -39,7 +39,7 @@ class MedicoService
             return ['code' => 400, 'message' => "Dados Invalidos"];
         }
     }
-
+    // RN16
     public function buscar_usuario($dado)
     {
         $usuario = (new UsuarioModel())->buscarUsuarioPorPerfil((new Criptografia())->encriptarDado($dado));
@@ -68,25 +68,28 @@ class MedicoService
         }
     }
 
+    // RN05 e RN08 RN10
+
     public function buscar_exames($medico, $paciente_id)
     {
         $medicoModel = new MedicoModel($medico);
-        if ($medicoModel->buscarPaciente($paciente_id)->status) {
+        if ($medicoModel->buscarPaciente($paciente_id)->status === 'APROVADO') {
             return ["code" => 200, "message" => "Exames encontrados", "data" => (new ExameModel())->getUserExames($paciente_id)];
         } else {
             return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
         }
     }
+
+    // RN05 e RN08 RN10
     public function buscar_exame($medico, $dados_pesquisa)
     {
         $medicoModel = new MedicoModel($medico);
-        if ($medicoModel->buscarPaciente($dados_pesquisa['paciente_id'])->status) {
+        if ($medicoModel->buscarPaciente($dados_pesquisa['paciente_id'])->status === 'APROVADO') {
             return ["code" => 200, "message" => "Exame encontrado", "data" => (new ExameModel($dados_pesquisa['exame_id']))->getExame()];
         } else {
             return ["code" => 400, "message" => "Não ha permissão de acesso", "data" => []];
         }
     }
-
 
     public function buscar_categorias($medico, $paciente_id)
     {
@@ -106,6 +109,7 @@ class MedicoService
         }
     }
 
+    // RN17
     public function buscar_pacientes($medico_id)
     {
         $medicoModel = new MedicoModel($medico_id);

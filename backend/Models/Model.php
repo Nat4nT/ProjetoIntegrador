@@ -169,6 +169,7 @@ abstract class Model
 
         $clientFilename = $fileObject->getClientFilename();
         $extension = strtolower(pathinfo($clientFilename, PATHINFO_EXTENSION));
+        // RN18
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
 
         if (!in_array($extension, $allowedTypes)) return null;

@@ -6,7 +6,7 @@ use Phinx\Seed\AbstractSeed;
 
 class CategoriaSeeder extends AbstractSeed
 {
-
+    // RN11
     public function run(): void
     {
 

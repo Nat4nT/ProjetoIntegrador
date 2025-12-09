@@ -10,6 +10,7 @@ class ExameModel extends Model
     public $id_column_name = "exame_id";
     public $column_reference = "usuario_id";
 
+    // RN14
     public function getUserExames($id_usuario)
     {
         $data = [];

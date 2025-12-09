@@ -19,7 +19,7 @@ class EmailService
         return $redis;
     }
 
-
+    // RN25
     public function validateCode($email, $code)
     {
         $redis = $this->generateRedis();
@@ -56,11 +56,10 @@ class EmailService
         ];
     }
 
-
     public function genereteRecupCode($email_user)
     {
         $usuario = (new UsuarioModel())->buscarPorEmail($email_user);
-
+        // RN24
         if (!$usuario) {
             return [
                 'message' => "Usuario não encontrado",
@@ -95,10 +94,11 @@ class EmailService
             'code' => 200
         ];
     }
+
     public function genereteActiveCode($email_user)
     {
         $usuario = (new UsuarioModel())->buscarPorEmail($email_user);
-
+        // RN24
         if (!$usuario) {
             return [
                 'message' => "Usuario não encontrado",
@@ -136,6 +136,7 @@ class EmailService
     }
     public function genereteReativCode($email_user)
     {
+        // RN24
         $usuario = (new UsuarioModel())->buscarPorEmail($email_user);
 
         if (!$usuario) {
